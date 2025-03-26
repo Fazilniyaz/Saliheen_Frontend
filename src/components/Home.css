@@ -1,0 +1,58 @@
+/* Home Component Styling */
+.baritems {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* Image Carousel Styles */
+  .image-carousel {
+    width: 100%;
+    max-width: 800px; /* Set max width for large screens */
+    margin: 0 auto;
+  }
+  
+  .image-carousel img {
+    width: 100%; /* Full width within the carousel container */
+    max-height: 400px; /* Restrict max height to keep image proportions */
+    object-fit: contain; /* Display the full image without cropping */
+    border-radius: 10px;
+    margin: 0 auto;
+  }
+  
+  /* Quote Carousel Styles */
+  .quote-carousel {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    color: white;
+  }
+  
+  /* Responsive Styles */
+  @media (min-width: 1200px) {
+    .image-carousel {
+      width: 60%;
+    }
+  
+    .quote-carousel {
+      width: 80%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .image-carousel {
+      width: 100%;
+    }
+  
+    .image-carousel img {
+      width: 100%; /* Ensure full image width on smaller screens */
+      max-height: 350px; /* Adjust max height for smaller screens */
+      object-fit: contain; /* Ensure the image is fully visible without cropping */
+      transform: scale(0.9);
+  }
+  
+    .quote-carousel {
+      width: 90%;
+    }
+  }
+  

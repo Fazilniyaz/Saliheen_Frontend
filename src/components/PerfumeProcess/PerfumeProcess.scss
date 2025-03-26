@@ -1,0 +1,77 @@
+.perfume-process-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  color: #e0e0e0; /* Light text for readability */
+}
+
+.title-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title-section h1 {
+  font-size: 2.5em;
+  color: #ffffff; /* White title text */
+}
+
+.title-section p {
+  font-size: 1.2em;
+  color: #b3b3b3; /* Soft light gray for paragraph text */
+}
+
+.step-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.step-section:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.step-image {
+  width: 40%;
+  height: auto;
+  max-width: 100%;
+  filter: brightness(0.85); /* Adjust brightness for dark mode */
+}
+
+.step-description {
+  width: 55%;
+  padding: 10px;
+}
+
+.step-description h2 {
+  font-size: 1.8em;
+  color: #ffffff; /* White headings */
+}
+
+.step-description p {
+  font-size: 1.1em;
+  color: #d0d0d0; /* Light gray for paragraph text */
+}
+
+/* Add hover effects for interactivity */
+.step-section:hover .step-image {
+  filter: brightness(1); /* Brighten image on hover */
+}
+
+.step-section:hover .step-description h2 {
+  color: #ffcc00; /* Highlight heading on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .step-section {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .step-description {
+      width: 100%;
+  }
+}

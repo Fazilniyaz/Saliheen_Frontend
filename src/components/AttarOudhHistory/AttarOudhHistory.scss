@@ -1,0 +1,108 @@
+.wrapper
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    transition: all .5s linear;
+	.attar{
+		border-left: 1px solid whitesmoke;
+		padding-left: 12px;
+	}
+	.oudh{
+		border-right: 1px solid whitesmoke;
+		padding-right: 12px;
+	}
+p
+{
+	/*Space it out a bit*/
+	line-height: 1.2;
+	letter-spacing: 2px;
+	word-spacing: -1px;
+	/*Make it stand out a little more*/
+	// margin-left: 45px;
+	// margin-top: 15px;
+
+	/*Prepare for a neat hover effect, slightly less transparent when not hovered*/
+	opacity: .6;
+
+	/*Pump up the size a bit*/
+	font-size: 16px;
+
+	/*Make it a bit prettier and book-like*/
+	text-indent: 20px;
+	font-family: "Times New Roman";
+
+	/*Keep it from spanning the entire browser window*/
+	// max-width: 65%;
+
+	/*Add a thin outline around the text to make it look more like book ink
+	 and all around a much nicer look*/
+	text-shadow: 0 0 1px darkgray;
+}
+
+/*Reminder, this applies to the first line only, even if the browser is resized
+and text is moved to a different line*/
+p::first-line
+{
+	/*Move the first line up more*/
+	line-height: 2;
+
+	/*Make it upper and lower capitalized font*/
+	font-variant: small-caps;
+
+	/*Always have it at maximum opacity*/
+	opacity: 1;
+
+	/*Have the first line a darker ink outline to make it stand
+	 out more*/
+	text-shadow: 0 0 1px black;
+}
+
+/*Make the first letter the signature old storybook look*/
+p::first-letter
+{
+	/*Invert the colors*/
+	background-color: black;
+	color: lightgray;
+
+	/*Change it to a really cursive effect, thanks to
+	 Google Web Fonts for the "Dancing Script" font*/
+	font-family: 'Dancing Script', cursive;
+
+	/*Really pump up the size more*/
+	font-size: 20px;
+
+	/*Space it out, make it really stand out a lot*/
+	padding: 5px;
+	margin-right: 6px;
+
+	/*Curve it to really make it feel old and antique*/
+	border-radius: 5px;
+}
+
+/*Make the simple hover effect really cool*/
+p:hover
+{
+	/*Bring it out more on hover but keep it still faded some
+	 for the additional effect. Works really well for having the page
+	 background bleed out some*/
+	opacity: .8;
+}
+
+/*This improves selection coloring to stay within theme*/
+p::selection
+{
+	/*Invert the colors upon selection*/
+	background-color: rgb(50, 50, 50);
+	color: rgb(150, 150, 150);
+
+	/*Remove text shadow, it just makes the selected text
+	 look a little blurry*/
+	text-shadow: 0 0 0;
+}
+
+
+
+}

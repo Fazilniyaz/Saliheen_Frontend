@@ -44,9 +44,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "vite build",
-    "dev": "vite",
-    "preview": "vite preview"
+    "build": "react-scripts build"
+    
   },
   "eslintConfig": {
     "extends": [

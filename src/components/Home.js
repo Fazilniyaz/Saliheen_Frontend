@@ -61,7 +61,7 @@ export const Home = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       const { data } = await axios.get(
-        "http://13.61.189.197:8000/api/v1/user/category"
+        "http://api.saliheenperfumes.com/api/v1/user/category"
       );
       setCategories(data.categories);
     };

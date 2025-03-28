@@ -61,9 +61,9 @@ function Header() {
           </div>
         </div>
 
-        <div className="col-12 col-md-6 mt-2 mt-md-0">
+        {/* <div className="col-12 col-md-6 mt-2 mt-md-0">
           <Search />
-        </div>
+        </div> */}
 
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
           {isAuthenticated ? (

@@ -88,7 +88,8 @@ function ConfirmOrder() {
     async function getAllCartItemsOfTheParticularUser() {
       try {
         const { data } = await axios.get(
-          `/api/v1/CartProductsOfSingleUser/${userId}`
+          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+          { withCredentials: true }
         );
         setCartItemsFromDB(data.cartItems);
         setIsLoading(false); // Data fetched, stop loading

@@ -23,7 +23,10 @@ export default function Profile() {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const { data } = await axios.get("/api/v1/getAllAddresses");
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/getAllAddresses",
+          { withCredentials: true }
+        );
         setAddresses(data.addresses);
       } catch (error) {
         console.error("Error fetching addresses:", error);
@@ -42,19 +45,30 @@ export default function Profile() {
   const handleSaveAddress = async () => {
     try {
       if (isEditing) {
-        await axios.put(`/api/v1/updateAddress/${addressForm.id}`, addressForm);
+        await axios.put(
+          `https://api.saliheenperfumes.com/api/v1/updateAddress/${addressForm.id}`,
+          addressForm,
+          { withCredentials: true }
+        );
         toast("Address Updated Successfully!", {
           position: "bottom-center",
         });
       } else {
-        await axios.post("/api/v1/createAddress", addressForm);
+        await axios.post(
+          "https://api.saliheenperfumes.com/api/v1/createAddress",
+          addressForm,
+          { withCredentials: true }
+        );
         toast("Address Created Successfully!", {
           position: "bottom-center",
         });
       }
 
       // Refresh addresses
-      const { data } = await axios.get("/api/v1/getAllAddresses");
+      const { data } = await axios.get(
+        "https://api.saliheenperfumes.com/api/v1/getAllAddresses",
+        { withCredentials: true }
+      );
       setAddresses(data.addresses);
 
       // Reset form
@@ -75,7 +89,10 @@ export default function Profile() {
   // Delete address
   const handleDeleteAddress = async (id) => {
     try {
-      await axios.delete(`/api/v1/deleteAddress/${id}`);
+      await axios.delete(
+        `https://api.saliheenperfumes.com/api/v1/deleteAddress/${id}`,
+        { withCredentials: true }
+      );
       setAddresses((prev) => prev.filter((address) => address._id !== id));
       toast("Address Deleted Successfully!", {
         position: "bottom-center",

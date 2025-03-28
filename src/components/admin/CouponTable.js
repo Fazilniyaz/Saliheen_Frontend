@@ -9,7 +9,12 @@ export default function CouponTable() {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const { data } = await axios.get("/api/v1/coupons");
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/coupons",
+          {
+            withCredentials: true,
+          }
+        );
         setCoupons(data.coupons);
       } catch (error) {
         toast.error(
@@ -24,7 +29,10 @@ export default function CouponTable() {
   const handleDelete = async (couponId) => {
     if (window.confirm("Are you sure you want to delete this coupon?")) {
       try {
-        await axios.delete(`/api/v1/delete/${couponId}`);
+        await axios.delete(
+          `https://api.saliheenperfumes.com/api/v1/delete/${couponId}`,
+          { withCredentials: true }
+        );
         toast.success("Coupon deleted successfully.");
         setCoupons(coupons.filter((coupon) => coupon._id !== couponId)); // Update state
       } catch (error) {

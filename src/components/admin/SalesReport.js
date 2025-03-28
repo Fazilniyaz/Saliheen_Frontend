@@ -12,13 +12,13 @@ export default function SalesReport() {
   useEffect(() => {
     async function fetchSalesReport() {
       try {
-        let url = `/api/v1/admin/salesReport?filterBy=${filter}`;
+        let url = `https://api.saliheenperfumes.com/api/v1/admin/salesReport?filterBy=${filter}`;
 
         if (filter === "custom" && startDate && endDate) {
           url += `&startDate=${startDate}&endDate=${endDate}`;
         }
 
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(url, { withCredentials: true });
         setOrders(data.orders);
         setTotalSales(data.totalAmount);
       } catch (error) {

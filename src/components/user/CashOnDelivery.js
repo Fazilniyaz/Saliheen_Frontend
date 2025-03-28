@@ -65,7 +65,8 @@ function CashOnDelivery() {
   useEffect(() => {
     async function getItemsFromDB() {
       const { data } = await axios.get(
-        `/api/v1/CartProductsOfSingleUser/${userId}`
+        `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+        { withCredentials: true }
       );
       console.log(data, "DDDDDDDAAAAAAAAATTTTTTTTTTAAAAAAAAAAA");
       setCartItemsFromDB(data.cartItems);

@@ -40,7 +40,7 @@ export const getProducts =
   async (dispatch) => {
     try {
       dispatch(productsRequest());
-      let link = `/api/v1/products?page=${currentPage}`;
+      let link = `https://api.saliheenperfumes.com/api/v1/products?page=${currentPage}`;
       if (keyword) {
         link += `&keyword=${keyword}`;
       }
@@ -57,7 +57,7 @@ export const getProducts =
         link += `&gender=${gender}`;
       }
       dispatch(productsRequest());
-      const { data } = await axios.get(link);
+      const { data } = await axios.get(link, { withCredentials: true });
       dispatch(productsSuccess(data));
       console.log("called");
     } catch (error) {
@@ -69,7 +69,10 @@ export const getProducts =
 export const getProduct = (id) => async (dispatch) => {
   try {
     dispatch(productRequest());
-    const { data } = await axios.get(`/api/v1/product/${id}`); // The URL is correct
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/product/${id}`,
+      { withCredentials: true }
+    ); // The URL is correct
     console.log(data);
     dispatch(productSuccess(data));
     console.log("called");
@@ -82,7 +85,10 @@ export const getProduct = (id) => async (dispatch) => {
 export const getAdminProducts = async (dispatch) => {
   try {
     dispatch(adminProductsRequest());
-    const { data } = await axios.get(`/api/v1/admin/products`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/admin/products`,
+      { withCredentials: true }
+    );
     dispatch(adminProductsSuccess(data));
   } catch (error) {
     //handle error
@@ -93,7 +99,11 @@ export const getAdminProducts = async (dispatch) => {
 export const createNewProduct = (productData) => async (dispatch) => {
   try {
     dispatch(newProductRequest());
-    const { data } = await axios.post(`/api/v1/admin/product/new`, productData);
+    const { data } = await axios.post(
+      `https://api.saliheenperfumes.com/api/v1/admin/product/new`,
+      productData,
+      { withCredentials: true }
+    );
     dispatch(newProductSuccess(data));
   } catch (error) {
     //handle error
@@ -104,7 +114,10 @@ export const createNewProduct = (productData) => async (dispatch) => {
 export const deleteProduct = (id) => async (dispatch) => {
   try {
     dispatch(deleteProductRequest());
-    await axios.delete(`/api/v1/admin/product/${id}`);
+    await axios.delete(
+      `https://api.saliheenperfumes.com/api/v1/admin/product/${id}`,
+      { withCredentials: true }
+    );
     dispatch(deleteProductSuccess());
   } catch (error) {
     //handle error
@@ -118,7 +131,12 @@ export const createReview = (reviewData) => async (dispatch) => {
     const config = {
       headers: { "Content-type": "application/json" },
     };
-    const { data } = await axios.put(`/api/v1/review`, reviewData, config);
+    const { data } = await axios.put(
+      `https://api.saliheenperfumes.com/api/v1/review`,
+      reviewData,
+      config,
+      { withCredentials: true }
+    );
     dispatch(createReviewSuccess(data));
   } catch (error) {
     //handle error
@@ -130,8 +148,9 @@ export const updateProduct = (id, productData) => async (dispatch) => {
   try {
     dispatch(updateProductRequest());
     const { data } = await axios.put(
-      `/api/v1/admin/product/${id}`,
-      productData
+      `https://api.saliheenperfumes.com/api/v1/admin/product/${id}`,
+      productData,
+      { withCredentials: true }
     );
     dispatch(updateProductSuccess(data));
   } catch (error) {
@@ -143,7 +162,10 @@ export const updateProduct = (id, productData) => async (dispatch) => {
 // Enable Product
 export const enableProduct = (id) => async (dispatch) => {
   try {
-    const { data } = await axios.get(`/api/v1/admin/product/enable/${id}`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/admin/product/enable/${id}`,
+      { withCredentials: true }
+    );
     toast.success(data.message, { position: "bottom-center" });
   } catch (error) {
     dispatch({ type: clearError, payload: error.response.data.message });
@@ -154,7 +176,10 @@ export const enableProduct = (id) => async (dispatch) => {
 // Disable Product
 export const disableProduct = (id) => async (dispatch) => {
   try {
-    const { data } = await axios.get(`/api/v1/admin/product/disable/${id}`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/admin/product/disable/${id}`,
+      { withCredentials: true }
+    );
     toast.success(data.message, { position: "bottom-center" });
   } catch (error) {
     dispatch({ type: clearError, payload: error.response.data.message });

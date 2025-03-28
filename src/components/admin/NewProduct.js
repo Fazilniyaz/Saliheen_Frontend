@@ -34,7 +34,10 @@ export default function NewProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get("/api/v1/admin/category");
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/admin/category",
+          { withCredentials: true }
+        );
         if (data.success) {
           setCategories(
             data.categories.map((cat) => {

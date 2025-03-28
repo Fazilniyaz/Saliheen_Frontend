@@ -17,7 +17,10 @@ const Stats = () => {
     // Fetch data from the backend
     const fetchStats = async () => {
       try {
-        const { data } = await axios.get(`/api/v1/admin/getTopSellingStats`); // Replace with your actual endpoint
+        const { data } = await axios.get(
+          `https://api.saliheenperfumes.com/api/v1/admin/getTopSellingStats`,
+          { withCredentials: true }
+        ); // Replace with your actual endpoint
         console.log(data.data);
         setTopProducts(data.data.topProducts);
         setTopCategories(data.data.topCategories);

@@ -161,7 +161,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function getOrdersCount() {
-      const { data } = await axios.get(`/api/v1/admin/getAllOrdersCount`);
+      const { data } = await axios.get(
+        `https://api.saliheenperfumes.com/api/v1/admin/getAllOrdersCount`,
+        { withCredentials: true }
+      );
       console.log(data);
       setOrdersCount(data.orderCount);
       setBoolean(true);
@@ -169,7 +172,10 @@ export default function Dashboard() {
     getOrdersCount();
 
     async function getUsersCount() {
-      const { data } = await axios.get(`/api/v1/admin/GetCountOfUsers`);
+      const { data } = await axios.get(
+        `https://api.saliheenperfumes.com/api/v1/admin/GetCountOfUsers`,
+        { withCredentials: true }
+      );
       console.log(data);
       setUsersCount(data.userCount);
       setBoolean(true);
@@ -178,7 +184,8 @@ export default function Dashboard() {
 
     async function getTotalSales() {
       const { data } = await axios.get(
-        `/api/v1/admin/salesReport?filterBy=yearly`
+        `https://api.saliheenperfumes.com/api/v1/admin/salesReport?filterBy=yearly`,
+        { withCredentials: true }
       );
       console.log(data);
       setTotalSales(data.totalAmount);

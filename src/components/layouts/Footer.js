@@ -25,7 +25,13 @@ export const Footer = () => {
     // Fetch categories and update state with active one
     async function getAllCategories() {
       try {
-        const { data } = await axios.get("/api/v1/admin/category");
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/admin/category",
+          {
+            // Fetch categories
+            withCredentials: true,
+          }
+        );
         console.log(data);
         const activeCategories = data.categories.filter(
           (item) => item.isActive
@@ -44,13 +50,16 @@ export const Footer = () => {
 
   return (
     <div className="bg-black text-gray-200 py-10 px-6 mt-6">
-      <Divider/>
+      <Divider />
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Address Section */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Address</h2>
           <p className="leading-relaxed">
-          Saliheen Perfumes #2, <br/>Vincent Rd,<br/> near Masjidul Muslimeen , Fort, Coimbatore, Tamil Nadu 641001.
+            Saliheen Perfumes #2, <br />
+            Vincent Rd,
+            <br /> near Masjidul Muslimeen , Fort, Coimbatore, Tamil Nadu
+            641001.
           </p>
         </div>
 

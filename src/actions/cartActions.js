@@ -5,7 +5,12 @@ import axios from "axios";
 export const addCartItem = (id, quantity) => async (dispatch) => {
   try {
     dispatch(addCartItemRequest());
-    const { data } = await axios.get(`/api/v1/product/${id}`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/product/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
 
     dispatch(
       addCartItemSuccess({
@@ -28,14 +33,18 @@ export const addCartItemInDB =
     try {
       dispatch(addCartItemRequest());
 
-      const { data } = await axios.post(`/api/v1/createCartItem`, {
-        itemName,
-        userId,
-        productId,
-        quantity,
-        type,
-        overallPrice,
-      });
+      const { data } = await axios.post(
+        `https://api.saliheenperfumes.com/api/v1/createCartItem`,
+        {
+          itemName,
+          userId,
+          productId,
+          quantity,
+          type,
+          overallPrice,
+        },
+        { withCredentials: true }
+      );
 
       console.log(data);
 

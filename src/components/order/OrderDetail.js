@@ -51,7 +51,10 @@ export default function OrderDetail() {
     dispatch(orderDetailAction(id));
     async function fetchOrderDetails() {
       try {
-        const { data } = await axios.get(`/api/v1/order/${id}`);
+        const { data } = await axios.get(
+          `https://api.saliheenperfumes.com/api/v1/order/${id}`,
+          { withCredentials: true }
+        );
         setOrder(data.order);
         setBoolean(true);
         console.log("Data in orders", data);
@@ -66,7 +69,8 @@ export default function OrderDetail() {
     async function getAllCartItems() {
       try {
         const { data } = await axios.get(
-          `/api/v1/CartProductsOfSingleUser/${userId}`
+          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+          { withCredentials: true }
         );
         setCartItems(data.cartItems);
         setBoolean2(true);
@@ -93,8 +97,9 @@ export default function OrderDetail() {
     async function CancelOrder() {
       try {
         const { data } = await axios.post(
-          `/api/v1/ReturnOrCancelOrder`,
-          cancelData
+          `https://api.saliheenperfumes.com/api/v1/ReturnOrCancelOrder`,
+          cancelData,
+          { withCredentials: true }
         );
         toast("Order Return request Submitted!", {
           type: "success",
@@ -165,8 +170,9 @@ export default function OrderDetail() {
     async function ReturnOrder() {
       try {
         const { data } = await axios.post(
-          `/api/v1/ReturnOrCancelOrder`,
-          returnData
+          `https://api.saliheenperfumes.com/api/v1/ReturnOrCancelOrder`,
+          returnData,
+          { withCredentials: true }
         );
         toast("Order Return request Submitted!", {
           type: "success",

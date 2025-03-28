@@ -51,7 +51,11 @@ export const login = (email, password) => async (dispatch) => {
   if (email && password) {
     try {
       dispatch(loginRequest());
-      const { data } = await axios.post(`/api/v1/login`, { email, password });
+      const { data } = await axios.post(
+        `https://api.saliheenperfumes.com/api/v1/login`,
+        { email, password },
+        { withCredentials: true }
+      );
       if (data.message == "User is blocked") {
         console.log("User blocked");
         toast("You are blocked by admin!", {
@@ -87,9 +91,13 @@ export const login = (email, password) => async (dispatch) => {
     console.log("GOogleSignin triggered");
     try {
       dispatch(loginRequest());
-      const { data } = await axios.post(`/api/v1/google/signin`, {
-        email,
-      });
+      const { data } = await axios.post(
+        `https://api.saliheenperfumes.com/api/v1/google/signin`,
+        {
+          email,
+        },
+        { withCredentials: true }
+      );
       dispatch(loginSuccess(data));
     } catch (error) {
       dispatch(loginFail(error.response.data.message));
@@ -100,9 +108,13 @@ export const googleLogin = (email) => async (dispatch) => {
   console.log(email);
   try {
     dispatch(loginRequest());
-    const { data } = await axios.post(`/api/v1/google/signin`, {
-      email,
-    });
+    const { data } = await axios.post(
+      `https://api.saliheenperfumes.com/api/v1/google/signin`,
+      {
+        email,
+      },
+      { withCredentials: true }
+    );
     dispatch(loginSuccess(data));
   } catch (error) {
     dispatch(loginFail(error.response.data.message));
@@ -122,7 +134,12 @@ export const register = (userData) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post(`/api/v1/register`, userData, config);
+    const { data } = await axios.post(
+      `https://api.saliheenperfumes.com/api/v1/register`,
+      userData,
+      config,
+      { withCredentials: true }
+    );
     dispatch(registerSuccess(data));
   } catch (error) {
     console.log(error.response.data.message);
@@ -134,7 +151,10 @@ export const loadUser = async (dispatch) => {
   try {
     dispatch(loadUserRequest());
 
-    const { data } = await axios.get(`/api/v1/myprofile`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/myprofile`,
+      { withCredentials: true }
+    );
     dispatch(loadUserSuccess(data));
   } catch (error) {
     dispatch(loadUserFail(error.response.data.message));
@@ -143,7 +163,9 @@ export const loadUser = async (dispatch) => {
 
 export const logout = async (dispatch) => {
   try {
-    await axios.get(`/api/v1/logout`);
+    await axios.get(`https://api.saliheenperfumes.com/api/v1/logout`, {
+      withCredentials: true,
+    });
     dispatch(logoutSuccess());
   } catch (error) {
     dispatch(logoutFail);
@@ -159,7 +181,12 @@ export const updateProfile = (userData) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.put(`/api/v1/update`, userData, config);
+    const { data } = await axios.put(
+      `https://api.saliheenperfumes.com/api/v1/update`,
+      userData,
+      config,
+      { withCredentials: true }
+    );
     dispatch(updateProfileSuccess(data));
   } catch (error) {
     dispatch(updateProfileFail(error.response.data.message));
@@ -174,7 +201,12 @@ export const updatePassword = (formData) => async (dispatch) => {
         "Content-type": "application/json",
       },
     };
-    await axios.put(`/api/v1/password/change`, formData, config);
+    await axios.put(
+      `https://api.saliheenperfumes.com/api/v1/password/change`,
+      formData,
+      config,
+      { withCredentials: true }
+    );
     dispatch(updatePasswordSuccess());
   } catch (error) {
     dispatch(updatePasswordFail(error.response.data.message));
@@ -190,9 +222,10 @@ export const forgotPassword = (formData) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      `/api/v1/password/forgot`,
+      `https://api.saliheenperfumes.com/api/v1/password/forgot`,
       formData,
-      config
+      config,
+      { withCredentials: true }
     );
     dispatch(forgotPasswordSuccess(data));
   } catch (error) {
@@ -209,9 +242,10 @@ export const resetPassword = (formData, token) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      `/api/v1/password/reset/${token}`,
+      `https://api.saliheenperfumes.com/api/v1/password/reset/${token}`,
       formData,
-      config
+      config,
+      { withCredentials: true }
     );
     dispatch(resetPasswordSuccess(data));
   } catch (error) {
@@ -222,7 +256,10 @@ export const resetPassword = (formData, token) => async (dispatch) => {
 export const getUsers = async (dispatch) => {
   try {
     dispatch(usersRequest());
-    const { data } = await axios.get(`/api/v1/admin/users`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/admin/users`,
+      { withCredentials: true }
+    );
     dispatch(usersSuccess(data));
   } catch (error) {
     dispatch(usersFail(error.response.data.message));
@@ -232,7 +269,10 @@ export const getUsers = async (dispatch) => {
 export const getUser = (id) => async (dispatch) => {
   try {
     dispatch(userRequest());
-    const { data } = await axios.get(`/api/v1/admin/user/${id}`);
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
+      { withCredentials: true }
+    );
     dispatch(userSuccess(data));
   } catch (error) {
     dispatch(userFail(error.response.data.message));
@@ -242,7 +282,10 @@ export const getUser = (id) => async (dispatch) => {
 export const deleteUser = (id) => async (dispatch) => {
   try {
     dispatch(deleteUserRequest());
-    await axios.delete(`/api/v1/admin/user/${id}`);
+    await axios.delete(
+      `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
+      { withCredentials: true }
+    );
     dispatch(deleteUserSuccess());
   } catch (error) {
     dispatch(deleteUserFail(error.response.data.message));
@@ -257,7 +300,12 @@ export const updateUser = (id, formData) => async (dispatch) => {
         "Content-type": "application/json",
       },
     };
-    await axios.put(`/api/v1/admin/user/${id}`, formData, config);
+    await axios.put(
+      `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
+      formData,
+      config,
+      { withCredentials: true }
+    );
     dispatch(updateUserSuccess());
   } catch (error) {
     dispatch(updateUserFail(error.response.data.message));
@@ -266,7 +314,10 @@ export const updateUser = (id, formData) => async (dispatch) => {
 
 export const blockUser = (id) => async (dispatch) => {
   try {
-    await axios.put(`/api/v1/admin/userBlock/${id}`);
+    await axios.put(
+      `https://api.saliheenperfumes.com/api/v1/admin/userBlock/${id}`,
+      { withCredentials: true }
+    );
 
     toast.success("User blocked successfully!", {
       position: "bottom-center",
@@ -286,7 +337,12 @@ export const verifyOtp = (email) => async (dispatch) => {
         "Content-type": "application/json",
       },
     };
-    const { data } = await axios.post(`/api/v1/register/otp`, email, config);
+    const { data } = await axios.post(
+      `https://api.saliheenperfumes.com/api/v1/register/otp`,
+      email,
+      config,
+      { withCredentials: true }
+    );
     dispatch(otpSuccess(data));
     console.log("Verify OTP success");
   } catch (error) {

@@ -11,7 +11,10 @@ const WalletPage = () => {
   useEffect(() => {
     const fetchWalletBalance = async () => {
       try {
-        const { data } = await axios.get("/api/v1/getWalletBalance"); // Replace with your endpoint
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/getWalletBalance",
+          { withCredentials: true }
+        ); // Replace with your endpoint
         setWalletBalance(data.wallet);
       } catch (err) {
         setError("Failed to load wallet balance.");

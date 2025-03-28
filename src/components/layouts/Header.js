@@ -7,7 +7,7 @@ import { logout } from "../../actions/userActions";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Icon } from 'semantic-ui-react';
+import { Icon } from "semantic-ui-react";
 
 function Header() {
   const { isAuthenticated, user = "" } = useSelector(
@@ -28,7 +28,8 @@ function Header() {
       if (user && userId) {
         try {
           const { data } = await axios.get(
-            `/api/v1/CartProductsOfSingleUser/${userId}`
+            `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+            { withCredentials: true }
           );
           setCartData(data.cartItems);
           setBoolean(true);
@@ -67,88 +68,91 @@ function Header() {
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
           {isAuthenticated ? (
             <>
-            <Dropdown className="d-inline">
-              <Dropdown.Toggle
-                variant="default text-white pr-5"
-                id="dropdown-basic"
-              >
-                <figure className="avatar avatar-nav">
-                  <Image
-                    width="50px"
-                    src={user.avatar ?? "./images/default_avatar.png"}
-                  />
-                </figure>
-                <span>{user.name}</span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {/* Profile */}
-                <Dropdown.Item
-                  onClick={() => {
-                    navigate("/myProfile");
-                  }}
-                  className="text-dark"
+              <Dropdown className="d-inline">
+                <Dropdown.Toggle
+                  variant="default text-white pr-5"
+                  id="dropdown-basic"
                 >
-                  Profile
-                </Dropdown.Item>
-
-                {/* Cart */}
-                <Dropdown.Item className="text-dark">
-                  <Link to="/cart">Cart</Link>
-                  <span className="ml-1" id="cart_count">
-                    {cartData.length}
-                  </span>
-                </Dropdown.Item>
-                {/* WishList */}
-                <Dropdown.Item className="text-dark">
-                  <Link to="/WishList">WishList</Link>
-                </Dropdown.Item>
-
-                {/* Dashboard */}
-                {user.role === "admin" && (
+                  <figure className="avatar avatar-nav">
+                    <Image
+                      width="50px"
+                      src={user.avatar ?? "./images/default_avatar.png"}
+                    />
+                  </figure>
+                  <span>{user.name}</span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {/* Profile */}
                   <Dropdown.Item
                     onClick={() => {
-                      navigate("/admin/dashboard");
+                      navigate("/myProfile");
                     }}
-                    className="text-blue"
+                    className="text-dark"
                   >
-                    Dashboard
+                    Profile
                   </Dropdown.Item>
-                )}
 
-                {/* Orders */}
-                <Dropdown.Item
-                  onClick={() => {
-                    navigate("/orders");
-                  }}
-                  className="text-dark"
-                >
-                  Orders
-                </Dropdown.Item>
-                {/* Wallet */}
-                <Dropdown.Item
-                  onClick={() => {
-                    navigate("/getWalletBalance");
-                  }}
-                  className="text-dark"
-                >
-                  Wallet
-                </Dropdown.Item>
+                  {/* Cart */}
+                  <Dropdown.Item className="text-dark">
+                    <Link to="/cart">Cart</Link>
+                    <span className="ml-1" id="cart_count">
+                      {cartData.length}
+                    </span>
+                  </Dropdown.Item>
+                  {/* WishList */}
+                  <Dropdown.Item className="text-dark">
+                    <Link to="/WishList">WishList</Link>
+                  </Dropdown.Item>
 
-                {/* Logout */}
-                <Dropdown.Item onClick={logoutHandler} className="text-danger">
-                  Logout
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-                  
-            <span className="ml-1" id="cart_count">
-            <span className="ml-1" id="cart_count">
-  <Link to="/cart">
-    <Icon name="shopping cart" />
-    {cartData.length}
-  </Link>
-</span>
-</span>
+                  {/* Dashboard */}
+                  {user.role === "admin" && (
+                    <Dropdown.Item
+                      onClick={() => {
+                        navigate("/admin/dashboard");
+                      }}
+                      className="text-blue"
+                    >
+                      Dashboard
+                    </Dropdown.Item>
+                  )}
+
+                  {/* Orders */}
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/orders");
+                    }}
+                    className="text-dark"
+                  >
+                    Orders
+                  </Dropdown.Item>
+                  {/* Wallet */}
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/getWalletBalance");
+                    }}
+                    className="text-dark"
+                  >
+                    Wallet
+                  </Dropdown.Item>
+
+                  {/* Logout */}
+                  <Dropdown.Item
+                    onClick={logoutHandler}
+                    className="text-danger"
+                  >
+                    Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+
+              <span className="ml-1" id="cart_count">
+                <span className="ml-1" id="cart_count">
+                  <Link to="/cart">
+                    <Icon name="shopping cart" />
+                    {cartData.length}
+                  </Link>
+                </span>
+              </span>
             </>
           ) : (
             <Link to="/login">

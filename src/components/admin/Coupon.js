@@ -17,7 +17,11 @@ export default function CouponForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/v1/createCoupon", couponData);
+      const { data } = await axios.post(
+        "https://api.saliheenperfumes.com/api/v1/createCoupon",
+        couponData,
+        { withCredentials: true }
+      );
       toast.success(data.message);
       setCouponData({ code: "", discount: "", expiryDate: "" }); // Reset form
     } catch (error) {

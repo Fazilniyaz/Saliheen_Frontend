@@ -37,7 +37,8 @@ const CartPage = () => {
         await setBoolean(false);
 
         const { data } = await axios.get(
-          `/api/v1/CartProductsOfSingleUser/${userId}`
+          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+          { withCredentials: true }
         );
         await setCartData(data.cartItems);
         await setSummary(data.summary);
@@ -53,7 +54,10 @@ const CartPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/v1/deleteCartItem/${id}`);
+      await axios.delete(
+        `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${id}`,
+        { withCredentials: true }
+      );
       setCartData(cartData.filter((item) => item._id !== id));
       setBoolean(true);
     } catch (error) {

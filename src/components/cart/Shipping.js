@@ -275,7 +275,13 @@ export default function Shipping() {
     // }
     if (userAddedExistingAddress == false) {
       async function addNewAddress() {
-        await axios.post("/api/v1/createAddress", addressForm);
+        await axios.post(
+          "https://api.saliheenperfumes.com/api/v1/createAddress",
+          addressForm,
+          {
+            withCredentials: true,
+          }
+        );
         toast("Address Created Successfully!", {
           position: "bottom-center",
         });

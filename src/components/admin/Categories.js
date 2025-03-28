@@ -19,7 +19,10 @@ export default function Categories() {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get("/api/v1/user/category");
+      const { data } = await axios.get(
+        "https://api.saliheenperfumes.com/api/v1/user/category",
+        { withCredentials: true }
+      );
       setCategories(data.categories);
     } catch (error) {
       toast.error("Failed to fetch categories");
@@ -32,9 +35,13 @@ export default function Categories() {
         toast.error("Category name cannot be empty");
         return;
       }
-      const { data } = await axios.post("/api/v1/admin/category", {
-        name: newCategory.trim(),
-      });
+      const { data } = await axios.post(
+        "https://api.saliheenperfumes.com/api/v1/admin/category",
+        {
+          name: newCategory.trim(),
+        },
+        { withCredentials: true }
+      );
       toast.success(data.message);
       setNewCategory("");
       fetchCategories();
@@ -46,8 +53,9 @@ export default function Categories() {
   const saveEditCategory = async () => {
     try {
       const { data } = await axios.put(
-        `/api/v1/admin/category/${editingCategory._id}`,
-        { name: editCategoryName.trim() }
+        `https://api.saliheenperfumes.com/api/v1/admin/category/${editingCategory._id}`,
+        { name: editCategoryName.trim() },
+        { withCredentials: true }
       );
       toast.success(data.message);
       setEditingCategory(null);
@@ -61,9 +69,13 @@ export default function Categories() {
   const toggleCategoryStatus = async (id, isActive) => {
     try {
       const endpoint = isActive
-        ? `/api/v1/admin/category/disable/${id}`
-        : `/api/v1/admin/category/enable/${id}`;
-      const { data } = await axios.patch(endpoint);
+        ? `https://api.saliheenperfumes.com/api/v1/admin/category/disable/${id}`
+        : `https://api.saliheenperfumes.com/api/v1/admin/category/enable/${id}`;
+      const { data } = await axios.patch(
+        endpoint,
+        {},
+        { withCredentials: true }
+      );
       toast.success(data.message);
       fetchCategories();
     } catch (error) {

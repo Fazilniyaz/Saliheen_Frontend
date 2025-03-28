@@ -114,7 +114,8 @@ function ProductDetails() {
     const fetchCartItems = async () => {
       try {
         const { data } = await axios.get(
-          `/api/v1/CartProductsOfSingleUser/${userId}`
+          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+          { withCredentials: true }
         );
         setCartItems(data.cartItems);
         setBoolean(true);
@@ -124,7 +125,12 @@ function ProductDetails() {
     };
     async function getWishlistedProducts() {
       try {
-        const { data } = await axios.get(`/api/v1/getUserWishList/${userId}`);
+        const { data } = await axios.get(
+          `https://api.saliheenperfumes.com/api/v1/getUserWishList/${userId}`,
+          {
+            withCredentials: true,
+          }
+        );
         console.log(data, "WishListedItems");
         setProducts(data.products);
         // setLoading(false);
@@ -138,10 +144,14 @@ function ProductDetails() {
   }, [boolean]);
 
   async function AddToWishList(userId, productId) {
-    const { data } = await axios.post(`/api/v1/addToWishList`, {
-      userId,
-      productId,
-    });
+    const { data } = await axios.post(
+      `https://api.saliheenperfumes.com/api/v1/addToWishList`,
+      {
+        userId,
+        productId,
+      },
+      { withCredentials: true }
+    );
     setBoolean(false);
     setBoolean(true);
     toast("Product Added to WishList Successfully!", {
@@ -150,10 +160,14 @@ function ProductDetails() {
     });
   }
   async function RemoveProductFromWishList(userId, productId) {
-    const { data } = await axios.post(`/api/v1/deleteProductFromWishList`, {
-      userId,
-      productId,
-    });
+    const { data } = await axios.post(
+      `https://api.saliheenperfumes.com/api/v1/deleteProductFromWishList`,
+      {
+        userId,
+        productId,
+      },
+      { withCredentials: true }
+    );
     setBoolean(false);
     setBoolean(true);
     toast("Product Deleted from WishList!", {
@@ -212,11 +226,15 @@ function ProductDetails() {
       return;
     }
     try {
-      const { data } = await axios.post(`/api/v1/applyCoupons`, {
-        code: ids.value,
-        userId,
-        productId: product._id,
-      });
+      const { data } = await axios.post(
+        `https://api.saliheenperfumes.com/api/v1/applyCoupons`,
+        {
+          code: ids.value,
+          userId,
+          productId: product._id,
+        },
+        { withCredentials: true }
+      );
       if (data.success == true) {
         setCoupon(data.discount);
         setCouponApplied(true);

@@ -83,7 +83,10 @@ function App() {
     store.dispatch(loadUser);
     async function getStripeApiKey() {
       try {
-        const { data } = await axios.get("/api/v1/stripeapi");
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/stripeapi",
+          { withCredentials: true }
+        );
         setstripeApiKey(data.stripeApiKey);
         return;
       } catch (err) {
@@ -94,15 +97,14 @@ function App() {
         return;
       }
       try {
-      if (user && userId) {
-        const { data } = await axios.get("/api/v1/stripeapi");
-        setstripeApiKey(data.stripeApiKey);
-      } else {
-        return;
-      }
-
+        if (user && userId) {
+          const { data } = await axios.get("/api/v1/stripeapi");
+          setstripeApiKey(data.stripeApiKey);
+        } else {
+          return;
+        }
       } catch (err) {
-      console.log(err);
+        console.log(err);
       }
     }
     getStripeApiKey();

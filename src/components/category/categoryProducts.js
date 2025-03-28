@@ -26,7 +26,8 @@ const CategoryProducts = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:8000/api/v1/products?category=${category}`
+          `https://api.saliheenperfumes.com/api/v1/products?category=${category}`,
+          { withCredentials: true }
         );
         setProducts(data.products);
       } catch (error) {
@@ -43,7 +44,7 @@ const CategoryProducts = () => {
       const fetchCartItems = async () => {
         try {
           const { data } = await axios.get(
-            `http://localhost:8000/api/v1/CartProductsOfSingleUser/${userId}`,
+            `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
             { withCredentials: true }
           );
           setCartItems(data.cartItems);
@@ -127,8 +128,15 @@ const CategoryProducts = () => {
   };
 
   return (
-    <div className="category-products-container" style={{ backgroundColor: "#000", color: "#fff" }}>
-      <Header as="h1" textAlign="center" style={{ margin: "20px 0", color: "whitesmoke" }}>
+    <div
+      className="category-products-container"
+      style={{ backgroundColor: "#000", color: "#fff" }}
+    >
+      <Header
+        as="h1"
+        textAlign="center"
+        style={{ margin: "20px 0", color: "whitesmoke" }}
+      >
         {category}
       </Header>
       <Grid columns={3} stackable>
@@ -146,29 +154,59 @@ const CategoryProducts = () => {
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <Card.Content>
-                    <Card.Header style={{ color: "whitesmoke" }}>{product.name}</Card.Header>
+                    <Card.Header style={{ color: "whitesmoke" }}>
+                      {product.name}
+                    </Card.Header>
                     <Card.Description>{product.description}</Card.Description>
                     <div className="product-options">
                       <div>
                         <label style={{ color: "whitesmoke" }}>Type:</label>
-                        <div style={{ display: "flex", gap: "5px", marginBottom: "10px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "5px",
+                            marginBottom: "10px",
+                          }}
+                        >
                           <Button
                             style={{
-                              backgroundColor: selectedType[product._id] === "attar" ? "whitesmoke" : "#1c1c1c",
-                              color: selectedType[product._id] === "attar" ? "#000" : "whitesmoke",
-                              border: selectedType[product._id] === "attar" ? "1px solid whitesmoke" : "1px solid whitesmoke",
+                              backgroundColor:
+                                selectedType[product._id] === "attar"
+                                  ? "whitesmoke"
+                                  : "#1c1c1c",
+                              color:
+                                selectedType[product._id] === "attar"
+                                  ? "#000"
+                                  : "whitesmoke",
+                              border:
+                                selectedType[product._id] === "attar"
+                                  ? "1px solid whitesmoke"
+                                  : "1px solid whitesmoke",
                             }}
-                            onClick={() => handleTypeChange(product._id, "attar")}
+                            onClick={() =>
+                              handleTypeChange(product._id, "attar")
+                            }
                           >
                             Attar
                           </Button>
                           <Button
                             style={{
-                              backgroundColor: selectedType[product._id] === "perfume" ? "whitesmoke" : "#1c1c1c",
-                              color: selectedType[product._id] === "perfume" ? "#000" : "whitesmoke",
-                              border: selectedType[product._id] === "perfume" ? "1px solid whitesmoke" : "1px solid whitesmoke",
+                              backgroundColor:
+                                selectedType[product._id] === "perfume"
+                                  ? "whitesmoke"
+                                  : "#1c1c1c",
+                              color:
+                                selectedType[product._id] === "perfume"
+                                  ? "#000"
+                                  : "whitesmoke",
+                              border:
+                                selectedType[product._id] === "perfume"
+                                  ? "1px solid whitesmoke"
+                                  : "1px solid whitesmoke",
                             }}
-                            onClick={() => handleTypeChange(product._id, "perfume")}
+                            onClick={() =>
+                              handleTypeChange(product._id, "perfume")
+                            }
                           >
                             Perfume
                           </Button>
@@ -176,17 +214,40 @@ const CategoryProducts = () => {
                       </div>
                       <div>
                         <label style={{ color: "whitesmoke" }}>Quantity:</label>
-                        <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", color: "whitesmoke" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "5px",
+                            flexWrap: "wrap",
+                            color: "whitesmoke",
+                          }}
+                        >
                           {quantities.map((quantity) => (
                             <Button
                               key={quantity.value}
                               style={{
-                                backgroundColor: selectedQuantity[product._id] === quantity.value ? "whitesmoke" : "#1c1c1c",
-                                color: selectedQuantity[product._id] === quantity.value ? "#000" : "whitesmoke",
-                                border: selectedQuantity[product._id] === quantity.value ? "1px solid whitesmoke" : "1px solid whitesmoke",
+                                backgroundColor:
+                                  selectedQuantity[product._id] ===
+                                  quantity.value
+                                    ? "whitesmoke"
+                                    : "#1c1c1c",
+                                color:
+                                  selectedQuantity[product._id] ===
+                                  quantity.value
+                                    ? "#000"
+                                    : "whitesmoke",
+                                border:
+                                  selectedQuantity[product._id] ===
+                                  quantity.value
+                                    ? "1px solid whitesmoke"
+                                    : "1px solid whitesmoke",
                               }}
                               onClick={() =>
-                                handleQuantityChange(product._id, quantity.value, quantity.price)
+                                handleQuantityChange(
+                                  product._id,
+                                  quantity.value,
+                                  quantity.price
+                                )
                               }
                             >
                               {quantity.value}
@@ -204,7 +265,11 @@ const CategoryProducts = () => {
                     <Button
                       color="yellow"
                       fluid
-                      style={{ marginTop: "10px", backgroundColor: "whitesmoke", color: "#000" }}
+                      style={{
+                        marginTop: "10px",
+                        backgroundColor: "whitesmoke",
+                        color: "#000",
+                      }}
                       onClick={() =>
                         isProductInCart(product._id)
                           ? navigate("/cart")
@@ -216,7 +281,9 @@ const CategoryProducts = () => {
                             )
                       }
                     >
-                      {isProductInCart(product._id) ? "Go to Cart" : "Add to Cart"}
+                      {isProductInCart(product._id)
+                        ? "Go to Cart"
+                        : "Add to Cart"}
                     </Button>
                   </Card.Content>
                 </Card>

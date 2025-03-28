@@ -71,7 +71,8 @@ export default function Payment() {
   useEffect(() => {
     async function getItemsFromDB() {
       const { data } = await axios.get(
-        `/api/v1/CartProductsOfSingleUser/${userId}`
+        `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+        { withCredentials: true }
       );
       setCartItemsFromDB(data.cartItems);
       setBoolean(true);
@@ -101,7 +102,11 @@ export default function Payment() {
     e.preventDefault();
     document.querySelector("#pay_btn").disabled = true;
     try {
-      const { data } = await axios.post("/api/v1/payment/process", paymentData);
+      const { data } = await axios.post(
+        "https://api.saliheenperfumes.com/api/v1/payment/process",
+        paymentData,
+        { withCredentials: true }
+      );
       const clientSecret = data.client_secret;
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {

@@ -100,9 +100,9 @@ function Header() {
                     </span>
                   </Dropdown.Item>
                   {/* WishList */}
-                  <Dropdown.Item className="text-dark">
-                    <Link to="/WishList">WishList</Link>
-                  </Dropdown.Item>
+                  {/* <Dropdown.Item className="text-dark">
+                    <Link to="/WishList">WishList</Link> */}
+                  {/* </Dropdown.Item> */}
 
                   {/* Dashboard */}
                   {user.role === "admin" && (
@@ -126,14 +126,14 @@ function Header() {
                     Orders
                   </Dropdown.Item>
                   {/* Wallet */}
-                  <Dropdown.Item
+                  {/* <Dropdown.Item
                     onClick={() => {
                       navigate("/getWalletBalance");
                     }}
                     className="text-dark"
                   >
                     Wallet
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
 
                   {/* Logout */}
                   <Dropdown.Item

@@ -17,26 +17,22 @@ function ConfirmOrder() {
   const [isLoading, setIsLoading] = useState(true); // Loader state
   const { user } = useSelector((state) => state.authState);
   const navigate = useNavigate();
-  console.log(cartItemsFromDB);
-  let products = cartItemsFromDB.map((item, i) => {
-    return {
-      _id: item.productId._id,
-      quantity: item.quantity,
-      stock: item.stock,
-    };
-  });
 
-  console.log(products);
+  const products = cartItemsFromDB.map((item) => ({
+    _id: item.productId._id,
+    quantity: item.quantity,
+    stock: item.stock,
+  }));
+
   const itemsPrice = cartItemsFromDB.reduce(
     (acc, item) => acc + item.finalPrice,
     0
   );
   const shippingPrice = itemsPrice > 200 ? 0 : 25;
-  let taxPrice = Number(0 * itemsPrice);
-  const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2));
-  taxPrice = Number(taxPrice).toFixed(2);
+  const taxPrice = Number((0 * itemsPrice).toFixed(2)); // Ensure taxPrice is a number
+  const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)); // Ensure totalPrice is calculated correctly
 
-  const processPayment = () => {
+  const processPayment = (method) => {
     const data = {
       itemsPrice,
       shippingPrice,
@@ -45,40 +41,7 @@ function ConfirmOrder() {
       products,
     };
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
-    navigate("/payment");
-  };
-  const processPaymentViaPaypal = () => {
-    const data = {
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-      products,
-    };
-    sessionStorage.setItem("orderInfo", JSON.stringify(data));
-    navigate("/paymentViaPaypal");
-  };
-  const processPaymentWallet = () => {
-    const data = {
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-      products,
-    };
-    sessionStorage.setItem("orderInfo", JSON.stringify(data));
-    navigate("/paymentViaWallet");
-  };
-  const processPaymentCOD = () => {
-    const data = {
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-      products,
-    };
-    sessionStorage.setItem("orderInfo", JSON.stringify(data));
-    navigate("/paymentViaCOD");
+    navigate(`/paymentVia${method}`);
   };
 
   const userId = user._id;
@@ -109,115 +72,194 @@ function ConfirmOrder() {
     <Fragment>
       <MetaData title={"Confirm Order"} />
       <CheckoutSteps shipping confirmOrder />
-      <div className="row d-flex justify-content-between">
-        <div className="col-12 col-lg-8 mt-5 order-confirm">
-          <h4 className="mb-3 headings">Shipping Info</h4>
-          <p className="mb-2 mt-2">
-            <b>Name: </b> {user.name}
-          </p>
-          <p className=" mb-2">
-            <b>Phone: </b>
-            {shippingInfo.phoneNo}
-          </p>
-          <p className="mb-4">
-            <b>Address:</b> {shippingInfo.address}, {shippingInfo.city},{" "}
-            {shippingInfo.postalCode}, {shippingInfo.state},{" "}
-            {shippingInfo.country}{" "}
-          </p>
+      <div
+        style={{
+          margin: "2rem auto",
+          padding: "1rem",
+          maxWidth: "90%",
+          backgroundColor: "black",
+          borderRadius: "10px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        <div className="row d-flex justify-content-between">
+          <div className="col-12 col-lg-8 mt-5 order-confirm">
+            <h4
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                color: "#a2682a",
+                marginBottom: "1rem",
+              }}
+            >
+              Shipping Info
+            </h4>
+            <p style={{ color: "#fff" }}>
+              <b>Name: </b> {user.name}
+            </p>
+            <p style={{ color: "#fff" }}>
+              <b>Phone: </b>
+              {shippingInfo.phoneNo}
+            </p>
+            <p style={{ color: "#fff" }}>
+              <b>Address:</b> {shippingInfo.address}, {shippingInfo.city},{" "}
+              {shippingInfo.postalCode}, {shippingInfo.state},{" "}
+              {shippingInfo.country}
+            </p>
 
-          <hr />
-          <h4 className="mt-4 mb-4 headings">Your Cart Items:</h4>
-          {cartItemsFromDB.map((item) => (
-            <Fragment key={item._id}>
-              <div className="cart-item my-1 m-4">
-                <div className="row">
-                  <div className="col-4 col-lg-2">
-                    <img
-                      src={item.productId?.images[0]?.image}
-                      alt={item.itemName}
-                      height="45"
-                      width="65"
-                    />
-                  </div>
-
-                  <div className="col-5 col-lg-6">
-                    <Link to={`/product/${item.productId._id}`}>
-                      {item.itemName}
-                    </Link>
-                  </div>
-
-                  <div className="col-4 col-lg-4 mt-4 mt-lg-0">
-                    <p>
-                      {item.quantity} x ${item.finalPrice} ={" "}
-                      <b>${item.finalPrice}</b>
-                    </p>
-                  </div>
+            <hr style={{ borderColor: "#a2682a" }} />
+            <h4
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                color: "#a2682a",
+                marginBottom: "1rem",
+              }}
+            >
+              Your Cart Items:
+            </h4>
+            {cartItemsFromDB.map((item) => (
+              <Fragment key={item._id}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "1rem",
+                    color: "#fff",
+                  }}
+                >
+                  <img
+                    src={item.productId?.images[0]?.image}
+                    alt={item.itemName}
+                    style={{
+                      height: "45px",
+                      width: "65px",
+                      marginRight: "1rem",
+                      borderRadius: "5px",
+                    }}
+                  />
+                  <Link
+                    to={`/product/${item.productId._id}`}
+                    style={{
+                      color: "#a2682a",
+                      fontWeight: "bold",
+                      textDecoration: "none",
+                      flex: 1,
+                    }}
+                  >
+                    {item.itemName}
+                  </Link>
+                  <p style={{ margin: 0 }}>
+                    {item.quantity} x ${item.finalPrice} ={" "}
+                    <b>${item.finalPrice}</b>
+                  </p>
                 </div>
-              </div>
-              <hr />
-            </Fragment>
-          ))}
-        </div>
+                <hr style={{ borderColor: "#444" }} />
+              </Fragment>
+            ))}
+          </div>
 
-        <div className="col-12 col-lg-3 my-4">
-          <div id="order_summary">
-            <h4 className="smallHeadings mb-4">Order Summary</h4>
-            <hr />
-            <p className="m-3">
-              Subtotal:{" "}
-              <span className="order-summary-values">${itemsPrice}</span>
-            </p>
-            <p className="m-3">
-              Shipping:{" "}
-              <span className="order-summary-values">${shippingPrice}</span>
-            </p>
-            <p className="m-3">
-              Tax: <span className="order-summary-values">${taxPrice}</span>
-            </p>
-
-            <hr />
-
-            <p className="m-3">
-              Total: <span className="order-summary-values">${totalPrice}</span>
-            </p>
-            <hr />
-
-            <p className="m-2 stock-3">Proceed to Payment</p>
-
-            <hr />
-            <button
-              id="checkout_btn"
-              onClick={processPayment}
-              className="btn btn-primary btn-block"
+          <div className="col-12 col-lg-3 my-4">
+            <div
+              style={{
+                backgroundColor: "#222",
+                padding: "1rem",
+                borderRadius: "10px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
             >
-              via Stripe
-            </button>
-            <button
-              id="checkout_btn"
-              onClick={processPaymentViaPaypal}
-              className="btn btn-primary btn-block"
-            >
-              via PayPal
-            </button>
-            <button
-              id="checkout_btn"
-              onClick={processPaymentCOD}
-              className="btn btn-primary btn-block"
-              disabled={totalPrice > 1000 ? true : false}
-            >
-              Cash On Delivery
-            </button>
-            <button
-              id="checkout_btn"
-              onClick={processPaymentWallet}
-              className="btn btn-primary btn-block"
-            >
-              Utilize Wallet
-            </button>
-            <RazorpayPayment
-              id="checkout_btn"
-              className="btn btn-primary btn-block"
-            />
+              <h4
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  color: "#a2682a",
+                  marginBottom: "1rem",
+                }}
+              >
+                Order Summary
+              </h4>
+              <hr style={{ borderColor: "#444" }} />
+              <p style={{ color: "#fff" }}>
+                Subtotal: <span style={{ float: "right" }}>${itemsPrice}</span>
+              </p>
+              <p style={{ color: "#fff" }}>
+                Shipping:{" "}
+                <span style={{ float: "right" }}>${shippingPrice}</span>
+              </p>
+              <p style={{ color: "#fff" }}>
+                Tax: <span style={{ float: "right" }}>${taxPrice}</span>
+              </p>
+              <hr style={{ borderColor: "#444" }} />
+              <p style={{ color: "#fff", fontWeight: "bold" }}>
+                Total: <span style={{ float: "right" }}>${totalPrice}</span>
+              </p>
+              <hr style={{ borderColor: "#444" }} />
+
+              <p style={{ color: "#a2682a", textAlign: "center" }}>
+                Proceed to Payment
+              </p>
+              <button
+                style={{
+                  backgroundColor: "#a2682a",
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "5px",
+                  border: "none",
+                  width: "100%",
+                  marginBottom: "0.5rem",
+                }}
+                onClick={() => processPayment("Stripe")}
+              >
+                via Stripe
+              </button>
+              <button
+                style={{
+                  backgroundColor: "#a2682a",
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "5px",
+                  border: "none",
+                  width: "100%",
+                  marginBottom: "0.5rem",
+                }}
+                onClick={() => processPayment("Paypal")}
+              >
+                via PayPal
+              </button>
+              <button
+                style={{
+                  backgroundColor: totalPrice > 1000 ? "#444" : "#a2682a",
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "5px",
+                  border: "none",
+                  width: "100%",
+                  marginBottom: "0.5rem",
+                }}
+                onClick={() => processPayment("COD")}
+                disabled={totalPrice > 1000}
+              >
+                Cash On Delivery
+              </button>
+              <button
+                style={{
+                  backgroundColor: "#a2682a",
+                  color: "white",
+                  fontWeight: "bold",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "5px",
+                  border: "none",
+                  width: "100%",
+                }}
+                onClick={() => processPayment("Wallet")}
+              >
+                Utilize Wallet
+              </button>
+              <RazorpayPayment />
+            </div>
           </div>
         </div>
       </div>

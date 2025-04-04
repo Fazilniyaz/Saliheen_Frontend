@@ -98,7 +98,9 @@ function App() {
       }
       try {
         if (user && userId) {
-          const { data } = await axios.get("/api/v1/stripeapi");
+          const { data } = await axios.get("/api/v1/stripeapi", {
+            withCredentials: true,
+          });
           setstripeApiKey(data.stripeApiKey);
         } else {
           return;

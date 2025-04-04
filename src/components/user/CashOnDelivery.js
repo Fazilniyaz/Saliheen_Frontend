@@ -35,7 +35,7 @@ function CashOnDelivery() {
       quantity: item.quantity,
       stock: item.stock,
       image: item.productId.images[0].image,
-      price: item.productId.price,
+      price: item.productId[`price${item.quantity}ml${item.productId.type}`],
       product: item.productId._id,
     };
   });
@@ -49,7 +49,7 @@ function CashOnDelivery() {
 
   if (orderInfo) {
     order.itemsPrice = orderInfo?.itemsPrice;
-    order.shippingPrice = orderInfo?.shippingPrice;
+    order.shippingPrice = orderInfo?.shippingPrice + 100;
     order.taxPrice = orderInfo?.taxPrice;
     order.totalPrice = orderInfo?.totalPrice;
   }
@@ -141,7 +141,7 @@ function CashOnDelivery() {
               <b>Items:</b> ${orderInfo?.itemsPrice}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
-              <b>Shipping:</b> ${orderInfo?.shippingPrice}
+              <b>Shipping:</b> ${orderInfo?.shippingPrice + 100}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
               <b>Tax:</b> ${orderInfo?.taxPrice}
@@ -157,7 +157,7 @@ function CashOnDelivery() {
             >
               Total: $
               {Number(orderInfo?.itemsPrice) +
-                Number(orderInfo?.shippingPrice) +
+                Number(orderInfo?.shippingPrice + 100) +
                 Number(orderInfo?.taxPrice)}
             </p>
           </div>

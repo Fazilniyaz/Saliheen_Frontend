@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-// import { clearError } from "../../slices/productSlice";
 import { Button } from "react-bootstrap";
 import { Fragment } from "react";
 import Loader from "../../components/layouts/Loader";
@@ -26,8 +25,9 @@ export default function ProductList() {
   const { isProductDeleted, error: productError } = useSelector(
     (state) => state.productState
   );
-  console.log(isProductDeleted);
+
   const dispatch = useDispatch();
+
   const setProducts = () => {
     const data = {
       columns: [
@@ -42,8 +42,8 @@ export default function ProductList() {
           sort: "asc",
         },
         {
-          label: "Price",
-          field: "price",
+          label: "Type",
+          field: "type",
           sort: "asc",
         },
         {
@@ -64,7 +64,7 @@ export default function ProductList() {
       data.rows.push({
         id: product._id,
         name: product.name,
-        price: `$${product.price}`,
+        type: product.type,
         stock: product.stock,
         actions: (
           <Fragment>
@@ -135,7 +135,7 @@ export default function ProductList() {
     }
 
     if (isProductDeleted) {
-      toast("Product Deleted Succesfully!", {
+      toast("Product Deleted Successfully!", {
         type: "success",
         position: "bottom-center",
         onOpen: () => dispatch(clearProductDeleted()),
@@ -152,7 +152,22 @@ export default function ProductList() {
         <Sidebar />
       </div>
       <div className="col-12 col-md-10">
-        <h1 class="my-4 headings">Product List</h1>
+        <h1
+          className="my-4 headings"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            fontFamily: "Yantramanav",
+            filter: "drop-shadow(0 0 1px rgba(255, 200, 0, .3))",
+            animation: "MoveBackgroundPosition 6s ease-in-out infinite",
+          }}
+        >
+          Product List
+        </h1>
         <Fragment>
           {loading ? (
             <Loader />
@@ -163,6 +178,12 @@ export default function ProductList() {
               striped
               hover
               className="px-6"
+              style={{
+                backgroundColor: "#000",
+                color: "#fff",
+                borderRadius: "10px",
+                padding: "20px",
+              }}
             />
           )}
         </Fragment>

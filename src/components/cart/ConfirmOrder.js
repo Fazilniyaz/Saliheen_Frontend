@@ -50,15 +50,16 @@ function ConfirmOrder() {
     validateShipping({ shippingInfo, navigate });
     async function getAllCartItemsOfTheParticularUser() {
       try {
+        setIsLoading(true); // Start loader
         const { data } = await axios.get(
           `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
           { withCredentials: true }
         );
         setCartItemsFromDB(data.cartItems);
-        setIsLoading(false); // Data fetched, stop loading
       } catch (error) {
         console.error("Error fetching cart items:", error);
-        setIsLoading(false); // Stop loading even on error
+      } finally {
+        setIsLoading(false); // Stop loader after fetching data
       }
     }
     getAllCartItemsOfTheParticularUser();
@@ -200,37 +201,7 @@ function ConfirmOrder() {
               </p>
               <button
                 style={{
-                  backgroundColor: "#a2682a",
-                  color: "white",
-                  fontWeight: "bold",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "5px",
-                  border: "none",
-                  width: "100%",
-                  marginBottom: "0.5rem",
-                }}
-                onClick={() => processPayment("Stripe")}
-              >
-                via Stripe
-              </button>
-              <button
-                style={{
-                  backgroundColor: "#a2682a",
-                  color: "white",
-                  fontWeight: "bold",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "5px",
-                  border: "none",
-                  width: "100%",
-                  marginBottom: "0.5rem",
-                }}
-                onClick={() => processPayment("Paypal")}
-              >
-                via PayPal
-              </button>
-              <button
-                style={{
-                  backgroundColor: totalPrice > 1000 ? "#444" : "#a2682a",
+                  backgroundColor: totalPrice > 500 ? "#444" : "#a2682a",
                   color: "white",
                   fontWeight: "bold",
                   padding: "0.5rem 1rem",
@@ -240,23 +211,9 @@ function ConfirmOrder() {
                   marginBottom: "0.5rem",
                 }}
                 onClick={() => processPayment("COD")}
-                disabled={totalPrice > 1000}
+                disabled={totalPrice < 500}
               >
                 Cash On Delivery
-              </button>
-              <button
-                style={{
-                  backgroundColor: "#a2682a",
-                  color: "white",
-                  fontWeight: "bold",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "5px",
-                  border: "none",
-                  width: "100%",
-                }}
-                onClick={() => processPayment("Wallet")}
-              >
-                Utilize Wallet
               </button>
               <RazorpayPayment />
             </div>
@@ -266,5 +223,6 @@ function ConfirmOrder() {
     </Fragment>
   );
 }
+//ConfirmOrder
 
 export default ConfirmOrder;

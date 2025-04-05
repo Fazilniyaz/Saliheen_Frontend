@@ -59,13 +59,21 @@ export default function UserList() {
         role: user.role,
         actions: (
           <Fragment>
-            <Link to={`/admin/user/${user._id}`} className="btn btn-primary">
-              {" "}
+            <Link
+              to={`/admin/user/${user._id}`}
+              className="btn btn-sm"
+              style={{
+                backgroundColor: "#be8c3c",
+                color: "#000",
+                marginRight: "5px",
+              }}
+            >
               <i className="fa fa-pencil"></i>
             </Link>
             <Button
               onClick={(e) => deleteHandler(e, user._id)}
-              className="btn btn-danger py-1 px-2 ml-2"
+              className="btn btn-sm"
+              style={{ backgroundColor: "#a4692a", color: "#fff" }}
             >
               <i className="fa fa-trash"></i>
             </Button>
@@ -94,7 +102,7 @@ export default function UserList() {
       return;
     }
     if (isUserDeleted) {
-      toast("User Deleted Succesfully!", {
+      toast("User Deleted Successfully!", {
         type: "success",
         position: "bottom-center",
         onOpen: () => dispatch(clearUserDeleted()),
@@ -106,25 +114,81 @@ export default function UserList() {
   }, [dispatch, error, isUserDeleted]);
 
   return (
-    <div className="row">
-      <div className="col-12 col-md-2">
-        <Sidebar />
-      </div>
-      <div className="col-12 col-md-10">
-        <h1 className="my-4 headings">User List</h1>
-        <Fragment>
+    <div style={{ backgroundColor: "#000", minHeight: "100vh" }}>
+      <style>{`
+        .gradient-heading {
+          background-image: repeating-linear-gradient(
+            to right,
+            #a2682a 0%,
+            #be8c3c 8%,
+            #be8c3c 18%,
+            #d3b15f 27%,
+            #faf0a0 35%,
+            #ffffc2 40%,
+            #faf0a0 50%,
+            #d3b15f 58%,
+            #be8c3c 67%,
+            #b17b32 77%,
+            #bb8332 83%,
+            #d4a245 88%,
+            #e1b453 93%,
+            #a4692a 100%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-size: 28px;
+          font-weight: bold;
+          font-family: "Yantramanav", sans-serif;
+          animation: MoveBackgroundPosition 6s ease-in-out infinite;
+          text-align: center;
+        }
+
+        .custom-table table {
+          color: white !important;
+          background-color: #111 !important;
+        }
+
+        .custom-table .table-bordered th,
+        .custom-table .table-bordered td {
+          border-color: #444 !important;
+        }
+
+        .table-responsive {
+          overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+          .gradient-heading {
+            font-size: 20px;
+          }
+          .btn {
+            padding: 4px 8px !important;
+            font-size: 14px !important;
+          }
+        }
+      `}</style>
+
+      <div className="row">
+        <div className="col-12 col-md-2">
+          <Sidebar />
+        </div>
+        <div className="col-12 col-md-10 p-4">
+          <h1 className="my-4 gradient-heading">User List</h1>
+
           {loading ? (
             <Loader />
           ) : (
-            <MDBDataTable
-              data={setUsers()}
-              bordered
-              striped
-              hover
-              className="px-3"
-            />
+            <div className="table-responsive bg-dark p-3 rounded shadow">
+              <MDBDataTable
+                data={setUsers()}
+                bordered
+                striped
+                hover
+                className="custom-table"
+              />
+            </div>
           )}
-        </Fragment>
+        </div>
       </div>
     </div>
   );

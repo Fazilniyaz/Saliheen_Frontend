@@ -30,12 +30,14 @@ function CashOnDelivery() {
   }
 
   const validOrderItemsFromDB = cartItemsFromDB.map((item, i) => {
+    let price = item.finalPrice;
+    debugger;
     return {
       name: item.itemName,
       quantity: item.quantity,
       stock: item.stock,
       image: item.productId.images[0].image,
-      price: item.productId[`price${item.quantity}ml${item.productId.type}`],
+      price,
       product: item.productId._id,
     };
   });
@@ -51,7 +53,7 @@ function CashOnDelivery() {
     order.itemsPrice = orderInfo?.itemsPrice;
     order.shippingPrice = orderInfo?.shippingPrice + 100;
     order.taxPrice = orderInfo?.taxPrice;
-    order.totalPrice = orderInfo?.totalPrice;
+    order.totalPrice = orderInfo?.totalPrice + 100;
   }
 
   order.paymentInfo = {

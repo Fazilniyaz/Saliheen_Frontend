@@ -10,21 +10,12 @@ import { Fragment } from "react";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
-  const [boolean, setBoolean] = useState(false);
-
+  const [loading, setLoading] = useState(true); // State to manage loader
   const [summary, setSummary] = useState({ totalAmount: 0, totalProducts: 0 });
   const { user = "" } = useSelector((state) => state.authState);
-  const { items = [] } = useSelector((state) => state.cartState);
-
-  const couponData = localStorage.getItem("cartItems");
-  let original;
-
-  console.log(cartData);
 
   const userId = user._id;
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   const checkoutHandler = () => {
@@ -34,23 +25,22 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        await setBoolean(false);
-
+        setLoading(true); // Start loader
         const { data } = await axios.get(
           `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
           { withCredentials: true }
         );
-        await setCartData(data.cartItems);
-        await setSummary(data.summary);
-        await setBoolean(true);
-        console.log(data);
+        setCartData(data.cartItems);
+        setSummary(data.summary);
       } catch (error) {
-        await console.error("Error fetching cart data:", error);
+        console.error("Error fetching cart data:", error);
+      } finally {
+        setLoading(false); // Stop loader after fetching data
       }
     };
 
     fetchCartItems();
-  }, [boolean]);
+  }, [userId]);
 
   const handleDelete = async (id) => {
     try {
@@ -59,17 +49,17 @@ const CartPage = () => {
         { withCredentials: true }
       );
       setCartData(cartData.filter((item) => item._id !== id));
-      setBoolean(true);
     } catch (error) {
       console.error("Error deleting cart item:", error);
     }
   };
 
-  return cartData.length == 0 && !boolean && summary?.totalAmount ? (
-    <Loader />
-  ) : (
+  if (loading) {
+    return <Loader />; // Show loader while fetching cart data
+  }
+
+  return (
     <Fragment>
-      {" "}
       <div className="cart-page" style={styles.cartPage}>
         {cartData.length >= 1 ? (
           <h2 style={styles.heading}>Your Cart</h2>
@@ -89,10 +79,9 @@ const CartPage = () => {
                   {item.itemName}
                 </Link>
                 <p id="card_item_price">Price: ₹{item.finalPrice}</p>
-                <p>Stock: {item.stock > 0 ? "In Stock" : "Out od Stock"}</p>
+                <p>Stock: {item.stock > 0 ? "In Stock" : "Out of Stock"}</p>
                 <div style={styles.quantityControls}>
                   <span>
-                    {" "}
                     <span className="mt-2 mb-2 stock">{item.quantity} ML</span>
                   </span>
                 </div>
@@ -115,7 +104,7 @@ const CartPage = () => {
             <p>Number of Products: {summary.totalProducts}</p>
             <p>Total Amount: ₹{summary.totalAmount}</p>
             <button
-              disabled={cartData.length == 0 ? true : false}
+              disabled={cartData.length === 0}
               style={styles.checkoutButton}
               onClick={checkoutHandler}
             >
@@ -153,7 +142,6 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "8px",
     backgroundColor: "black",
-    // boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
   },
   productImage: {
     width: "100px",

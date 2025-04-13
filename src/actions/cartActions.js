@@ -29,6 +29,7 @@ export const addCartItemInDB =
   (productId, quantity, type, userId, itemName, overallPrice) =>
   async (dispatch) => {
     console.log("Target Triggered");
+
     console.log(productId, quantity, type, userId, itemName, overallPrice);
     try {
       dispatch(addCartItemRequest());
@@ -50,11 +51,11 @@ export const addCartItemInDB =
 
       dispatch(
         addCartItemSuccess({
-          product: data.cartItem._id,
-          name: data.cartItem.itemName,
-          type: data.cartItem.type,
-          image: data.cartItem.images[0].image,
-          price: data.cartItem.price,
+          product: data?.cartItem?._id,
+          name: data.cartItem?.itemName,
+          type: data.cartItem?.type,
+          image: data?.cartItem?.images[0]?.image,
+          price: data.cartItem?.price,
           // price: isCouponAdded ? FinalPriceAfterCoupen : data.cartItem.price,
           stock: data.cartItem.stock,
           // quantity,
@@ -62,9 +63,26 @@ export const addCartItemInDB =
         })
       );
 
-      console.log("Item Added to the Cart");
+      toast("Cart Item Added!", {
+        type: "success",
+        position: "bottom-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        // Redirect to the cart page after the toast closes
+      });
     } catch (error) {
-      console.log("ERRRRRRRRRRRRRRRRRRRRRR", error);
-      toast("Error While adding the Item in the cart!");
+      console.log(error);
+      toast(error?.response?.data?.message + " Try again later" || "", {
+        type: "error",
+        position: "bottom-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };

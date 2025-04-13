@@ -115,10 +115,6 @@ const CategoryProducts = () => {
           price
         )
       );
-      toast("Cart Item Added!", {
-        type: "success",
-        position: "bottom-center",
-      });
     }
   };
 
@@ -151,7 +147,11 @@ const CategoryProducts = () => {
                     src={product.images[0]?.image || "/placeholder.jpg"}
                     alt={product.name}
                     className="product-image"
-                    style={{ height: "200px", objectFit: "cover" }}
+                    style={{
+                      height: "200px",
+                      objectFit: "cover",
+                      width: "100%",
+                    }}
                   />
                   <Card.Content>
                     <Card.Header style={{ color: "whitesmoke" }}>
@@ -270,16 +270,26 @@ const CategoryProducts = () => {
                         backgroundColor: "whitesmoke",
                         color: "#000",
                       }}
-                      onClick={() =>
-                        isProductInCart(product._id)
-                          ? navigate("/cart")
-                          : handleAddToCart(
-                              product._id,
-                              product.name,
-                              product,
-                              selectedQuantity[product._id]
-                            )
-                      }
+                      disabled={
+                        !selectedType[product._id] ||
+                        !selectedQuantity[product._id]
+                      } // Disable button if type or quantity is not selected
+                      onClick={() => {
+                        if (!selectedType[product._id]) {
+                          toast.error("Please select a type first!");
+                        } else if (!selectedQuantity[product._id]) {
+                          toast.error("Please select a quantity first!");
+                        } else if (isProductInCart(product._id)) {
+                          navigate("/cart");
+                        } else {
+                          handleAddToCart(
+                            product._id,
+                            product.name,
+                            product,
+                            selectedQuantity[product._id]
+                          );
+                        }
+                      }}
                     >
                       {isProductInCart(product._id)
                         ? "Go to Cart"

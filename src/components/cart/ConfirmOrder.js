@@ -130,7 +130,7 @@ function ConfirmOrder() {
                   }}
                 >
                   <img
-                    src={item.productId?.images[0]?.image}
+                    src={item?.productId?.images[0]?.image}
                     alt={item.itemName}
                     style={{
                       height: "45px",

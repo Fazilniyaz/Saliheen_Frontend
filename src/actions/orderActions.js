@@ -32,8 +32,8 @@ export const createOrder = (order) => async (dispatch) => {
     );
     dispatch(createOrderSuccess(data));
   } catch (error) {
-    dispatch(createOrderFail(error.response.data.message));
-    toast(error.response.data.message, {
+    dispatch(createOrderFail(error?.response?.data?.message));
+    toast(error?.response?.data?.message, {
       type: "error",
       position: "bottom-center",
     });

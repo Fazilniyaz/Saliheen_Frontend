@@ -15,6 +15,7 @@ import {
 } from "../../actions/productActions";
 import { clearProductDeleted } from "../../slices/productSlice";
 import { clearError } from "../../slices/productsSlice";
+import "./ProductList.css"; // Import the CSS file for hover effect
 
 export default function ProductList() {
   const {
@@ -177,7 +178,7 @@ export default function ProductList() {
               bordered
               striped
               hover
-              className="px-6"
+              className="px-6 hover-effect" // Add hover-effect class
               style={{
                 backgroundColor: "#000",
                 color: "#fff",

@@ -136,9 +136,7 @@ export default function UserList() {
           );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          font-size: 28px;
-          font-weight: bold;
-          font-family: "Yantramanav", sans-serif;
+         
           animation: MoveBackgroundPosition 6s ease-in-out infinite;
           text-align: center;
         }
@@ -155,6 +153,45 @@ export default function UserList() {
 
         .table-responsive {
           overflow-x: auto;
+        }
+
+        .custom-table tbody tr:hover {
+          background-image: repeating-linear-gradient(
+            to right,
+            #a2682a 0%,
+            #be8c3c 8%,
+            #be8c3c 18%,
+            #d3b15f 27%,
+            #faf0a0 35%,
+            #ffffc2 40%,
+            #faf0a0 50%,
+            #d3b15f 58%,
+            #be8c3c 67%,
+            #b17b32 77%,
+            #bb8332 83%,
+            #d4a245 88%,
+            #e1b453 93%,
+            #a4692a 100%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-size: 20px;
+          font-weight: bold;
+          font-family: "Yantramanav";
+          filter: drop-shadow(0 0 1px rgba(255, 200, 0, 0.3));
+          animation: MoveBackgroundPosition 6s ease-in-out infinite;
+        }
+
+        @keyframes MoveBackgroundPosition {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
 
         @media (max-width: 768px) {

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 // Dynamically import all images from assets folder
 const importAll = (r) => r.keys().map(r);
 const images = importAll(
-  require.context("../../public/jpeg_photos", false, /\.(png|jpe?g|svg)$/)
+  require.context("../../public/jpeg__photos", false, /\.(png|jpe?g|svg)$/)
 );
 
 const staticCategories = ["inspired.jpg", "luxury.jpg", "custom.jpg"];

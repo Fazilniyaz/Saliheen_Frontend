@@ -16,7 +16,7 @@ const images = importAll(
 
 const staticCategories = ["inspired.jpg", "luxury.jpg", "custom.jpg"];
 const imagesCat = importAll(
-  require.context("../../public/categories", false, /\.(png|jpe?g|svg|jpg)$/)
+  require.context("../../public/categories_", false, /\.(png|jpe?g|svg|jpg)$/)
 );
 
 const quotes = [

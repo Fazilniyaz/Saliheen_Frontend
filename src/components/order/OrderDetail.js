@@ -16,14 +16,16 @@ export default function OrderDetail() {
   const [boolean2, setBoolean2] = useState(false);
   const {
     shippingInfo = {},
-    user = {},
+    // user = {},
     orderStatus = "Processing",
     orderItems = [],
     totalPrice = 0,
     paymentInfo = {},
   } = orderDetail;
 
-  const userId = user._id;
+  const { user = {} } = useSelector((state) => state.authState);
+
+  const userId = user?._id;
 
   console.log(orderDetail);
 

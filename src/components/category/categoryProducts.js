@@ -142,7 +142,14 @@ const CategoryProducts = () => {
 
             return (
               <Grid.Column key={product._id}>
-                <Card fluid style={{ backgroundColor: "black", color: "#fff" }}>
+                <Card
+                  fluid
+                  style={{
+                    backgroundColor: "black",
+                    color: "#fff",
+                    width: "max-content",
+                  }}
+                >
                   <img
                     src={product.images[0]?.image || "/placeholder.jpg"}
                     alt={product.name}

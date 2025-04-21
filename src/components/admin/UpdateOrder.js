@@ -17,12 +17,13 @@ export default function UpdateOrder() {
   );
 
   const {
-    user = {},
     orderItems = [],
     shippingInfo = {},
     totalPrice = 0,
     paymentInfo = {},
   } = orderDetail;
+
+  const { user = {} } = useSelector((state) => state.authState);
 
   const isPaid = paymentInfo.status === "succeeded" ? true : false;
   const [orderStatus, setOrderStatus] = useState("Processing");
@@ -97,26 +98,50 @@ export default function UpdateOrder() {
       </div>
       <div className="col-12 col-md-10">
         <Fragment>
-          {/* Printable section (invisible) */}
+          {/* Printable section */}
           <div
             ref={printRef}
             style={{
               position: "absolute",
               top: "-9999px",
               left: "-9999px",
-              backgroundColor: "#ffffff",
-              color: "#000000",
-              padding: "20px",
+              backgroundColor: "#fff",
+              color: "#000",
+              padding: "30px",
               width: "210mm",
-              fontFamily: "Arial",
+              fontFamily: "Arial, sans-serif",
             }}
           >
-            <h2>Order Summary</h2>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+              <img
+                src="/public/images/spimhd.png" // Replace with your actual logo path
+                alt="Company Logo"
+                style={{ width: "120px", marginBottom: "10px" }}
+              />
+              <h2 style={{ marginBottom: "0" }}>
+                <b>Saliheen Perfumes</b>
+              </h2>
+              <small>
+                <b>saliheenperfumes@gmail.com</b>
+              </small>
+            </div>
+
+            <hr />
+
+            <h3>
+              <b>Order Summary</b>
+            </h3>
             <p>
               <b>Order ID:</b> {orderDetail._id}
             </p>
 
-            <h4>Shipping Information</h4>
+            <br></br>
+            <hr></hr>
+            <br></br>
+
+            <h4>
+              <b>Shipping Information</b>
+            </h4>
             <p>
               <b>Name:</b> {user.name}
             </p>
@@ -129,14 +154,126 @@ export default function UpdateOrder() {
               {shippingInfo.country}
             </p>
 
-            <h4>Payment Status</h4>
+            <h4>
+              <b>Payment Status</b>
+            </h4>
             <p>{isPaid ? "PAID" : "NOT PAID"}</p>
+            <br></br>
+            <hr></hr>
+            <br></br>
 
-            <h4>Order Status</h4>
+            <h4>
+              <b>Order Status</b>
+            </h4>
             <p>{orderStatus}</p>
+
+            <br></br>
+            <hr></hr>
+            <br></br>
+
+            <h4>
+              <b>Order Items</b>
+            </h4>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                marginTop: "15px",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      border: "1px solid #000",
+                      padding: "8px",
+                      backgroundColor: "#f0f0f0",
+                    }}
+                  >
+                    Product
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid #000",
+                      padding: "8px",
+                      backgroundColor: "#f0f0f0",
+                    }}
+                  >
+                    Quantity
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid #000",
+                      padding: "8px",
+                      backgroundColor: "#f0f0f0",
+                    }}
+                  >
+                    Price
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderItems.map((item, index) => (
+                  <tr key={index}>
+                    <td
+                      style={{
+                        border: "1px solid #000",
+                        padding: "8px",
+                        textAlign: "left",
+                      }}
+                    >
+                      {item.name}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #000",
+                        padding: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item.quantity}ml
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid #000",
+                        padding: "8px",
+                        textAlign: "right",
+                      }}
+                    >
+                      ₹{item.price}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan="2"
+                    style={{
+                      border: "1px solid #000",
+                      padding: "8px",
+                      textAlign: "right",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Total:
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid #000",
+                      padding: "8px",
+                      textAlign: "right",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ₹{totalPrice}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
 
-          {/* Visible content */}
+          {/* Visible UI */}
           <div
             className="row d-flex justify-content-around"
             style={{
@@ -162,7 +299,7 @@ export default function UpdateOrder() {
                 {shippingInfo.country}
               </p>
               <p>
-                <b>Amount:</b> ${totalPrice}
+                <b>Amount:</b> ₹{totalPrice}
               </p>
 
               <hr />
@@ -204,7 +341,7 @@ export default function UpdateOrder() {
                         </Link>
                       </div>
                       <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                        <p>${item.price}</p>
+                        <p>₹{item.price}</p>
                       </div>
                       <div className="col-4 col-lg-3 mt-4 mt-lg-0">
                         <p>{item.quantity} Piece(s)</p>

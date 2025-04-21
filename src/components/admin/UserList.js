@@ -175,9 +175,6 @@ export default function UserList() {
           );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          font-size: 20px;
-          font-weight: bold;
-          font-family: "Yantramanav";
           filter: drop-shadow(0 0 1px rgba(255, 200, 0, 0.3));
           animation: MoveBackgroundPosition 6s ease-in-out infinite;
         }

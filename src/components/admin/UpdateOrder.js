@@ -114,7 +114,7 @@ export default function UpdateOrder() {
           >
             <div style={{ textAlign: "center", marginBottom: "20px" }}>
               <img
-                src="/public/images/spimhd.png" // Replace with your actual logo path
+                src="./spimhd.png" // Replace with your actual logo path
                 alt="Company Logo"
                 style={{ width: "120px", marginBottom: "10px" }}
               />

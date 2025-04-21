@@ -184,8 +184,10 @@ export const updateProfile = (userData) => async (dispatch) => {
     const { data } = await axios.put(
       `https://api.saliheenperfumes.com/api/v1/update`,
       userData,
-      config,
-      { withCredentials: true }
+      {
+        ...config,
+        withCredentials: true,
+      }
     );
     dispatch(updateProfileSuccess(data));
   } catch (error) {
@@ -303,8 +305,10 @@ export const updateUser = (id, formData) => async (dispatch) => {
     await axios.put(
       `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
       formData,
-      config,
-      { withCredentials: true }
+      {
+        ...config,
+        withCredentials: true,
+      }
     );
     dispatch(updateUserSuccess());
   } catch (error) {

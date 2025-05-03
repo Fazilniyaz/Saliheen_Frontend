@@ -165,7 +165,7 @@ const CategoryProducts = () => {
                     <Card.Header style={{ color: "whitesmoke" }}>
                       {product.name}
                     </Card.Header>
-                    <Card.Description>{product.description}</Card.Description>
+                    {/* <Card.Description>{product.description}</Card.Description> */}
                     <div className="product-options">
                       <div>
                         <label style={{ color: "whitesmoke" }}>Type:</label>

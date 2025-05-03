@@ -149,7 +149,7 @@ function Header() {
                 <span className="ml-1" id="cart_count">
                   <Link to="/cart">
                     <Icon name="shopping cart" />
-                    {cartData.length}
+                    {/* {cartData.length} */}
                   </Link>
                 </span>
               </span>

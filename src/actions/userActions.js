@@ -137,8 +137,10 @@ export const register = (userData) => async (dispatch) => {
     const { data } = await axios.post(
       `https://api.saliheenperfumes.com/api/v1/register`,
       userData,
-      config,
-      { withCredentials: true }
+      {
+        ...config,
+        withCredentials: true,
+      }
     );
     dispatch(registerSuccess(data));
   } catch (error) {

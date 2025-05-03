@@ -96,7 +96,7 @@ function Header() {
                   <Dropdown.Item className="text-dark">
                     <Link to="/cart">Cart</Link>
                     <span className="ml-1" id="cart_count">
-                      {cartData.length}
+                      {cartItems.length}
                     </span>
                   </Dropdown.Item>
                   {/* WishList */}
@@ -149,7 +149,7 @@ function Header() {
                 <span className="ml-1" id="cart_count">
                   <Link to="/cart">
                     <Icon name="shopping cart" />
-                    {/* {cartData.length} */}
+                    {cartItems.length}
                   </Link>
                 </span>
               </span>

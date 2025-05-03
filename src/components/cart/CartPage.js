@@ -22,6 +22,19 @@ const CartPage = () => {
     navigate(`/login?redirect=shipping`);
   };
 
+  // Function to recalculate the summary
+  const recalculateSummary = (cartItems) => {
+    const totalProducts = cartItems.reduce(
+      (acc, item) => acc + item.quantity,
+      0
+    );
+    const totalAmount = cartItems.reduce(
+      (acc, item) => acc + item.finalPrice,
+      0
+    );
+    setSummary({ totalProducts, totalAmount });
+  };
+
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
@@ -48,7 +61,10 @@ const CartPage = () => {
         `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${id}`,
         { withCredentials: true }
       );
-      setCartData(cartData.filter((item) => item._id !== id));
+      const updatedCartData = cartData.filter((item) => item._id !== id);
+      setCartData(updatedCartData); // Update cart data
+      recalculateSummary(updatedCartData); // Recalculate summary
+      dispatch(removeItemFromCart(id)); // Update Redux state
     } catch (error) {
       console.error("Error deleting cart item:", error);
     }
@@ -89,7 +105,6 @@ const CartPage = () => {
                   style={{ ...styles.button, ...styles.deleteButton }}
                   onClick={() => {
                     handleDelete(item._id);
-                    dispatch(removeItemFromCart(item._id));
                   }}
                 >
                   Delete

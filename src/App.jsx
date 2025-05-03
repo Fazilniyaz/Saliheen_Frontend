@@ -68,9 +68,12 @@ import RefundCancellation from "./components/privacypolicy/RefundCancellation";
 import ShippingDelivery from "./components/privacypolicy/ShippingDelivery";
 import TermsConditions from "./components/privacypolicy/TermsConditions";
 import ContactUs from "./components/privacypolicy/ContactUs";
+import { useDispatch } from "react-redux";
+import { fetchCartItemsForUser } from "./actions/cartActions";
 
 function App() {
   const [stripeApiKey, setstripeApiKey] = useState("");
+  const dispatch = useDispatch();
 
   const { user = "" } = useSelector((state) => state.authState);
 
@@ -78,6 +81,13 @@ function App() {
   console.log(userId);
 
   console.log(user);
+
+  useEffect(() => {
+    if (user && user._id) {
+      // Fetch cart items for the logged-in user
+      dispatch(fetchCartItemsForUser(user._id));
+    }
+  }, [dispatch, user]);
 
   useEffect(() => {
     store.dispatch(loadUser);

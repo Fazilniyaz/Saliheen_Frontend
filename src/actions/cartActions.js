@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { addCartItemRequest, addCartItemSuccess } from "../slices/cartSlice";
 import axios from "axios";
+import { setCartItems } from "../slices/cartSlice";
 
 export const addCartItem = (id, quantity) => async (dispatch) => {
   try {
@@ -86,3 +87,17 @@ export const addCartItemInDB =
       });
     }
   };
+
+export const fetchCartItemsForUser = (userId) => async (dispatch) => {
+  try {
+    const { data } = await axios.get(
+      `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+      { withCredentials: true }
+    );
+
+    // Dispatch the action to set the cart items in Redux
+    dispatch(setCartItems(data.cartItems));
+  } catch (error) {
+    console.error("Error fetching cart items:", error);
+  }
+};

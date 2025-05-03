@@ -3,7 +3,10 @@ import { Segment, Header, List, Message, Icon } from "semantic-ui-react";
 
 function TermsConditions() {
   return (
-    <Segment padded="very" style={{ maxWidth: "800px", margin: "0 auto",color:'black' }}>
+    <Segment
+      padded="very"
+      style={{ maxWidth: "800px", margin: "0 auto", color: "black" }}
+    >
       {/* Main Header */}
       <Header as="h2" textAlign="center" style={{ marginBottom: "30px" }}>
         Terms and Conditions
@@ -75,11 +78,12 @@ function TermsConditions() {
       </Header>
       <List bulleted>
         <List.Item>
-          We aim to process and ship orders within <strong>1-2 business days</strong>.
+          We aim to process and ship orders within{" "}
+          <strong>1-2 business days</strong>.
         </List.Item>
         <List.Item>
-          Delivery times may vary depending on your location and the availability
-          of the product.
+          Delivery times may vary depending on your location and the
+          availability of the product.
         </List.Item>
         <List.Item>
           For Cash on Delivery (COD) orders, an additional <strong>₹100</strong>{" "}
@@ -159,8 +163,8 @@ function TermsConditions() {
         </p>
         <p>
           <strong>Email:</strong>{" "}
-          <a href="mailto:support@saliheenperfumes.com">
-            support@saliheenperfumes.com
+          <a href="mailto:saliheenperfumes@gmail.com">
+            saliheenperfumes@gmail.com
           </a>
         </p>
       </Message>

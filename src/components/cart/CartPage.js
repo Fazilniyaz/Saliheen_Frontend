@@ -116,7 +116,7 @@ const CartPage = () => {
         {cartData.length >= 1 && (
           <div style={styles.orderSummary}>
             <h3 className="headings mb-3">Order Summary</h3>
-            <p>Number of Products: {summary.totalProducts}</p>
+            <p>Number of Products: {cartData.length}</p>
             <p>Total Amount: ₹{summary.totalAmount}</p>
             <button
               disabled={cartData.length === 0}

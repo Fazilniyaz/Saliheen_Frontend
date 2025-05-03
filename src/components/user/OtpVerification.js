@@ -101,17 +101,18 @@ export default function OtpVerification() {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-    backgroundColor: "#f0f4f8",
+    backgroundColor: "black",
   };
 
   const cardStyle = {
-    backgroundColor: "#fff",
+    backgroundColor: "#1c1c1c",
     padding: "30px",
     borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 4px 8px rgba(255, 200, 0, 0.2)",
     width: "100%",
     maxWidth: "400px",
     textAlign: "center",
+    color: "#fff",
   };
 
   const inputStyle = {
@@ -119,32 +120,35 @@ export default function OtpVerification() {
     padding: "10px",
     margin: "15px 0",
     borderRadius: "5px",
-    border: "1px solid #ccc",
+    border: "1px solid #d3b15f",
     fontSize: "16px",
+    backgroundColor: "black",
+    color: "#fff",
   };
 
   const buttonStyle = {
     width: "100%",
     padding: "10px",
-    backgroundColor: "#007bff",
-    color: "#fff",
+    backgroundColor: "#d3b15f",
+    color: "#000",
     border: "none",
     borderRadius: "5px",
     fontSize: "16px",
     cursor: "pointer",
+    fontWeight: "bold",
   };
 
   const timerTextStyle = {
     marginTop: "15px",
     fontSize: "14px",
-    color: "#666",
+    color: "#d3b15f",
   };
 
   const resendButtonStyle = {
     marginTop: "15px",
     backgroundColor: "transparent",
     border: "none",
-    color: "#007bff",
+    color: "#d3b15f",
     cursor: "pointer",
     fontSize: "14px",
     textDecoration: "underline",
@@ -153,10 +157,23 @@ export default function OtpVerification() {
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
-        <h1 style={{ marginBottom: "20px", fontSize: "24px", color: "#333" }}>
+        <h1
+          style={{
+            marginBottom: "20px",
+            fontSize: "24px",
+            fontWeight: "bold",
+            backgroundImage:
+              "repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            fontFamily: "Yantramanav",
+            filter: "drop-shadow(0 0 1px rgba(255, 200, 0, .3))",
+            animation: "MoveBackgroundPosition 6s ease-in-out infinite",
+          }}
+        >
           OTP Verification
         </h1>
-        <p style={{ fontSize: "16px", color: "#666" }}>
+        <p style={{ fontSize: "16px", color: "#d3b15f" }}>
           Enter the OTP sent to your email.
         </p>
 

@@ -2,7 +2,10 @@ import React from "react";
 import { Segment, Header, List, Message, Icon } from "semantic-ui-react";
 function PrivacyPolicy() {
   return (
-    <Segment padded="very" style={{ maxWidth: "800px", margin: "0 auto",color:'black' }}>
+    <Segment
+      padded="very"
+      style={{ maxWidth: "800px", margin: "0 auto", color: "black" }}
+    >
       {/* Main Header */}
       <Header as="h2" textAlign="center" style={{ marginBottom: "30px" }}>
         Privacy Policy
@@ -66,7 +69,9 @@ function PrivacyPolicy() {
         <List.Item>To process and fulfill your orders.</List.Item>
         <List.Item>To communicate with you about your orders.</List.Item>
         <List.Item>To improve our website and services.</List.Item>
-        <List.Item>To send promotional offers and updates (if you opt-in).</List.Item>
+        <List.Item>
+          To send promotional offers and updates (if you opt-in).
+        </List.Item>
       </List>
 
       {/* Data Security */}
@@ -136,8 +141,8 @@ function PrivacyPolicy() {
         </p>
         <p>
           <strong>Email:</strong>{" "}
-          <a href="mailto:privacy@saliheenperfumes.com">
-            privacy@saliheenperfumes.com
+          <a href="mailto:saliheenperfumes@gmail.com">
+            saliheenperfumes@gmail.com
           </a>
         </p>
       </Message>

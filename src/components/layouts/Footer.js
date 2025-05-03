@@ -78,7 +78,7 @@ export const Footer = () => {
           <p className="flex items-center mb-2">
             <FaEnvelope className="mr-2" />
             <a
-              href="mailto:fazilniyazdeen@gmail.com"
+              href="mailto:saliheenperfumes@gmail.com"
               className="hover:text-gray-400"
             >
               saliheenperfumes@gmail.com

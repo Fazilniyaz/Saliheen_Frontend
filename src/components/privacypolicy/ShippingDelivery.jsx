@@ -3,7 +3,10 @@ import { Segment, Header, List, Message, Icon } from "semantic-ui-react";
 
 function ShippingDelivery() {
   return (
-    <Segment padded="very" style={{ maxWidth: "800px", margin: "0 auto" ,color:'black'}}>
+    <Segment
+      padded="very"
+      style={{ maxWidth: "800px", margin: "0 auto", color: "black" }}
+    >
       {/* Main Header */}
       <Header as="h2" textAlign="center" style={{ marginBottom: "30px" }}>
         Shipping & Delivery
@@ -76,8 +79,8 @@ function ShippingDelivery() {
         <p>
           For any issues related to shipping or delivery, please contact our
           support team at{" "}
-          <a href="mailto:support@saliheenperfumes.com">
-            support@saliheenperfumes.com
+          <a href="mailto:saliheenperfumes@gmail.com">
+            saliheenperfumes@gmail.com
           </a>
           .
         </p>

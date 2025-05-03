@@ -81,7 +81,7 @@ export const Home = () => {
       {/* Image Carousel */}
       <Carousel
         className="image-carousel"
-        interval={1500}
+        interval={2200}
         autoFocus={false}
         showIndicators={false}
         showStatus={false}

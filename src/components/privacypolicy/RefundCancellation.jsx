@@ -3,7 +3,10 @@ import { Segment, Header, List, Message, Icon } from "semantic-ui-react";
 
 function RefundCancellation() {
   return (
-    <Segment padded="very" style={{ maxWidth: "800px", margin: "0 auto",color:'black' }}>
+    <Segment
+      padded="very"
+      style={{ maxWidth: "800px", margin: "0 auto", color: "black" }}
+    >
       {/* Main Header */}
       <Header as="h2" textAlign="center" style={{ marginBottom: "30px" }}>
         Refund & Cancellation Policy
@@ -15,9 +18,10 @@ function RefundCancellation() {
           <Icon name="info circle" /> Introduction
         </Message.Header>
         <p>
-          At <strong>Saliheen Perfumes</strong>, we strive to ensure your complete
-          satisfaction with every purchase. Please read our Refund & Cancellation
-          Policy carefully to understand your rights and responsibilities.
+          At <strong>Saliheen Perfumes</strong>, we strive to ensure your
+          complete satisfaction with every purchase. Please read our Refund &
+          Cancellation Policy carefully to understand your rights and
+          responsibilities.
         </p>
       </Message>
 
@@ -30,8 +34,8 @@ function RefundCancellation() {
           <Icon name="warning circle" /> Important Note
         </Message.Header>
         <p>
-          Once an order is placed, it <strong>cannot be cancelled</strong>. Please
-          review your order carefully before completing the purchase.
+          Once an order is placed, it <strong>cannot be cancelled</strong>.
+          Please review your order carefully before completing the purchase.
         </p>
       </Message>
 
@@ -70,8 +74,8 @@ function RefundCancellation() {
       <List ordered>
         <List.Item>
           Contact our support team at{" "}
-          <a href="mailto:support@saliheenperfumes.com">
-            support@saliheenperfumes.com
+          <a href="mailto:saliheenperfumes@gmail.com">
+            saliheenperfumes@gmail.com
           </a>{" "}
           within 7 days of receiving the damaged item.
         </List.Item>
@@ -98,13 +102,13 @@ function RefundCancellation() {
           <Icon name="envelope" /> Have Questions?
         </Message.Header>
         <p>
-          If you have any questions about our Refund & Cancellation Policy, please
-          contact us at:
+          If you have any questions about our Refund & Cancellation Policy,
+          please contact us at:
         </p>
         <p>
           <strong>Email:</strong>{" "}
-          <a href="mailto:support@saliheenperfumes.com">
-            support@saliheenperfumes.com
+          <a href="mailto:saliheenperfumes@gmail.com">
+            saliheenperfumes@gmail.com
           </a>
         </p>
       </Message>

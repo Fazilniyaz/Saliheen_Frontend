@@ -178,7 +178,7 @@ function CashOnDelivery() {
             onMouseOver={(e) => (e.target.style.background = "#feb47b")}
             onMouseOut={(e) => (e.target.style.background = "#ff7e5f")}
           >
-            Pay Now
+            Confirm Order
           </button>
         </div>
       </div>

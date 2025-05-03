@@ -162,7 +162,9 @@ const CategoryProducts = () => {
                     }}
                   />
                   <Card.Content>
-                    <Card.Header style={{ color: "whitesmoke" }}>
+                    <Card.Header
+                      style={{ color: "whitesmoke", textAlign: "center" }}
+                    >
                       {product.name}
                     </Card.Header>
                     {/* <Card.Description>{product.description}</Card.Description> */}
@@ -264,9 +266,11 @@ const CategoryProducts = () => {
                         </div>
                       </div>
                       <div>
-                        <label style={{ color: "whitesmoke" }}>Price:</label>
+                        {/* <label style={{ color: "whitesmoke" }}>Price:</label> */}
                         <div style={{ color: "whitesmoke", marginTop: "10px" }}>
-                          ${selectedPrice[product._id] || 0}
+                          {selectedPrice[product._id]
+                            ? `Price : ₹${selectedPrice[product._id]}`
+                            : "Select a type and quantity to see the price"}
                         </div>
                       </div>
                     </div>

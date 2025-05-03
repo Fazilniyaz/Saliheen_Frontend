@@ -147,7 +147,7 @@ const CategoryProducts = () => {
                   style={{
                     backgroundColor: "black",
                     color: "#fff",
-                    width: "200px",
+                    width: "min-content",
                     margin: "10px",
                   }}
                 >

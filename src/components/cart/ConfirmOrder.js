@@ -151,8 +151,8 @@ function ConfirmOrder() {
                     {item.itemName}
                   </Link>
                   <p style={{ margin: 0 }}>
-                    {item.quantity} x ${item.finalPrice} ={" "}
-                    <b>${item.finalPrice}</b>
+                    {/* {item.quantity} x ${item.finalPrice} ={" "} */}
+                    <b>₹{item.finalPrice}</b>
                   </p>
                 </div>
                 <hr style={{ borderColor: "#444" }} />
@@ -181,7 +181,7 @@ function ConfirmOrder() {
               </h4>
               <hr style={{ borderColor: "#444" }} />
               <p style={{ color: "#fff" }}>
-                Subtotal: <span style={{ float: "right" }}>${itemsPrice}</span>
+                Subtotal: <span style={{ float: "right" }}>₹{itemsPrice}</span>
               </p>
               <p style={{ color: "#fff" }}>
                 Shipping:{" "}
@@ -192,7 +192,7 @@ function ConfirmOrder() {
               </p>
               <hr style={{ borderColor: "#444" }} />
               <p style={{ color: "#fff", fontWeight: "bold" }}>
-                Total: <span style={{ float: "right" }}>${totalPrice}</span>
+                Total: <span style={{ float: "right" }}>₹{totalPrice}</span>
               </p>
               <hr style={{ borderColor: "#444" }} />
 

@@ -143,10 +143,10 @@ function CashOnDelivery() {
               <b>Items:</b> ${orderInfo?.itemsPrice}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
-              <b>Shipping:</b> ${orderInfo?.shippingPrice + 100}
+              <b>Shipping:</b> ₹{orderInfo?.shippingPrice + 100}
             </p>
             <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
-              <b>Tax:</b> ${orderInfo?.taxPrice}
+              <b>Tax:</b> ₹{orderInfo?.taxPrice}
             </p>
             <hr />
             <p
@@ -157,7 +157,7 @@ function CashOnDelivery() {
                 marginTop: "10px",
               }}
             >
-              Total: $
+              Total: ₹
               {Number(orderInfo?.itemsPrice) +
                 Number(orderInfo?.shippingPrice + 100) +
                 Number(orderInfo?.taxPrice)}

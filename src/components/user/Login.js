@@ -8,6 +8,9 @@ import { clearAuthError } from "../../actions/userActions";
 import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useContext } from "react";
+import { CartContext } from "../cart/cartContext";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +21,8 @@ export default function Login() {
   const { loading, error, isAuthenticated } = useSelector(
     (state) => state.authState
   );
+
+  const { localCart } = useContext(CartContext);
 
   const redirect = location.search ? "/" + location.search.split("=")[1] : "/";
 
@@ -31,7 +36,7 @@ export default function Login() {
       return;
     }
     try {
-      dispatch(login(email, password));
+      dispatch(login(email, password, localCart));
     } catch (err) {
       console.log(err);
       toast(err.response.data.message, {

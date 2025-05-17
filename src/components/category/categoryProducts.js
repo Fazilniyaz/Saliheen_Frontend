@@ -8,6 +8,10 @@ import { addCartItemInDB } from "../../actions/cartActions";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useContext } from "react";
+import { CartContext } from "../cart/cartContext";
+
+import { CartProvider } from "../cart/cartContext";
 
 const CategoryProducts = () => {
   const { user = "" } = useSelector((state) => state.authState);
@@ -21,11 +25,57 @@ const CategoryProducts = () => {
   const [selectedQuantity, setSelectedQuantity] = useState({});
   const [selectedPrice, setSelectedPrice] = useState({});
 
+  const { addToLocalCart } = useContext(CartContext);
+  const { localCart } = useContext(CartContext);
+
+  console.log(localCart);
+
+  const handleAddToCart = (productId, productName, product, quantity) => {
+    const type = selectedType[productId] || product.type.toLowerCase();
+    const price = selectedPrice[productId];
+
+    const cartItem = {
+      productId,
+      itemName: productName,
+      quantity: parseInt(quantity),
+      finalPrice: price,
+      stock: product.stock,
+      type,
+      createdAt: new Date(),
+    };
+
+    if (!user) {
+      // Save to local cart context instead of redirecting to login
+      addToLocalCart(cartItem);
+      toast.success("Added to local cart. Login to save permanently.");
+    } else {
+      // Add to DB cart
+      dispatch(
+        addCartItemInDB(
+          productId,
+          parseInt(quantity),
+          type,
+          user._id,
+          productName,
+          price
+        )
+      );
+    }
+  };
+
+  const isProductInCart = (productId) => {
+    return (
+      cartItems.some((item) => item?.productId._id === productId) ||
+      localCart.some((item) => item?.productId === productId)
+    );
+  };
+
   // Fetch products based on category
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(
+          // `https://api.saliheenperfumes.com/api/v1/products?category=${category}`,
           `https://api.saliheenperfumes.com/api/v1/products?category=${category}`,
           { withCredentials: true }
         );
@@ -92,36 +142,36 @@ const CategoryProducts = () => {
     return [];
   };
 
-  // Handle adding product to cart
-  const handleAddToCart = (productId, productName, product, quantity) => {
-    const type = selectedType[productId] || product.type.toLowerCase();
-    const price = selectedPrice[productId];
+  // // Handle adding product to cart
+  // const handleAddToCart = (productId, productName, product, quantity) => {
+  //   const type = selectedType[productId] || product.type.toLowerCase();
+  //   const price = selectedPrice[productId];
 
-    if (!user) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Login first to add products to cart!",
-      });
-      navigate("/login");
-    } else {
-      dispatch(
-        addCartItemInDB(
-          productId,
-          parseInt(quantity),
-          type,
-          user._id,
-          productName,
-          price
-        )
-      );
-    }
-  };
+  //   if (!user) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops...",
+  //       text: "Login first to add products to cart!",
+  //     });
+  //     navigate("/login");
+  //   } else {
+  //     dispatch(
+  //       addCartItemInDB(
+  //         productId,
+  //         parseInt(quantity),
+  //         type,
+  //         user._id,
+  //         productName,
+  //         price
+  //       )
+  //     );
+  //   }
+  // };
 
   // Check if a product is already in the cart
-  const isProductInCart = (productId) => {
-    return cartItems.some((item) => item?.productId._id === productId);
-  };
+  // const isProductInCart = (productId) => {
+  //   return cartItems.some((item) => item?.productId._id === productId);
+  // };
 
   return (
     <div

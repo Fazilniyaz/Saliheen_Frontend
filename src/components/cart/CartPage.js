@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 import { removeItemFromCart } from "../../slices/cartSlice";
 import Loader from "../layouts/Loader";
 import { Fragment } from "react";
+import { CartContext } from "./cartContext";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
-  const [loading, setLoading] = useState(true); // State to manage loader
+  const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({ totalAmount: 0, totalProducts: 0 });
-  const { user = "" } = useSelector((state) => state.authState);
 
+  const { user = "" } = useSelector((state) => state.authState);
   const userId = user._id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { localCart, removeFromLocalCart } = useContext(CartContext);
 
   const checkoutHandler = () => {
     navigate(`/login?redirect=shipping`);
   };
 
-  // Function to recalculate the summary
   const recalculateSummary = (cartItems) => {
     const totalProducts = cartItems.reduce(
       (acc, item) => acc + item.quantity,
@@ -38,40 +38,53 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        setLoading(true); // Start loader
-        const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
-          { withCredentials: true }
-        );
-        setCartData(data.cartItems);
-        setSummary(data.summary);
+        if (userId) {
+          setLoading(true);
+          const { data } = await axios.get(
+            `https://api.saliheenperfumes.com:8000/api/v1/CartProductsOfSingleUser/${userId}`,
+            { withCredentials: true }
+          );
+          setCartData(data.cartItems);
+          setSummary(data.summary);
+        } else {
+          setCartData(localCart);
+          recalculateSummary(localCart);
+        }
       } catch (error) {
         console.error("Error fetching cart data:", error);
       } finally {
-        setLoading(false); // Stop loader after fetching data
+        setLoading(false);
       }
     };
 
     fetchCartItems();
-  }, [userId]);
+  }, [userId, localCart]);
 
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(
-        `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${id}`,
-        { withCredentials: true }
-      );
-      const updatedCartData = cartData.filter((item) => item._id !== id);
-      setCartData(updatedCartData); // Update cart data
-      recalculateSummary(updatedCartData); // Recalculate summary
-      dispatch(removeItemFromCart(id)); // Update Redux state
-    } catch (error) {
-      console.error("Error deleting cart item:", error);
+    if (!userId) {
+      // If not logged in, delete from local cart
+      removeFromLocalCart(id);
+      const updatedCartData = cartData.filter((item) => item.productId !== id);
+      setCartData(updatedCartData);
+      recalculateSummary(updatedCartData);
+    } else {
+      try {
+        await axios.delete(
+          `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${id}`,
+          { withCredentials: true }
+        );
+        const updatedCartData = cartData.filter((item) => item._id !== id);
+        setCartData(updatedCartData);
+        recalculateSummary(updatedCartData);
+        dispatch(removeItemFromCart(id));
+      } catch (error) {
+        console.error("Error deleting cart item:", error);
+      }
     }
   };
 
   if (loading) {
-    return <Loader />; // Show loader while fetching cart data
+    return <Loader />;
   }
 
   return (
@@ -84,28 +97,26 @@ const CartPage = () => {
         )}
         <div style={styles.cartItems}>
           {cartData.map((item) => (
-            <div key={item._id} style={styles.cartItem}>
+            <div key={item._id || item.productId} style={styles.cartItem}>
               <img
-                src={item.productId?.images[0]?.image}
+                src={item.productId?.images?.[0]?.image || ""}
                 alt={item.itemName}
                 style={styles.productImage}
               />
               <div style={styles.itemDetails}>
-                <Link to={`/product/${item.productId._id}`}>
+                <Link to={`/product/${item.productId._id || item.productId}`}>
                   {item.itemName}
                 </Link>
                 <p id="card_item_price">Price: ₹{item.finalPrice}</p>
                 <p>Stock: {item.stock > 0 ? "In Stock" : "Out of Stock"}</p>
                 <div style={styles.quantityControls}>
-                  <span>
-                    <span className="mt-2 mb-2 stock">{item.quantity} ML</span>
-                  </span>
+                  <span className="mt-2 mb-2 stock">{item.quantity} ML</span>
                 </div>
                 <button
                   style={{ ...styles.button, ...styles.deleteButton }}
-                  onClick={() => {
-                    handleDelete(item._id);
-                  }}
+                  onClick={() =>
+                    handleDelete(userId ? item._id : item.productId)
+                  }
                 >
                   Delete
                 </button>
@@ -116,7 +127,7 @@ const CartPage = () => {
         {cartData.length >= 1 && (
           <div style={styles.orderSummary}>
             <h3 className="headings mb-3">Order Summary</h3>
-            <p>Number of Products: {cartData.length}</p>
+            <p>Number of Products: {summary.totalProducts}</p>
             <p>Total Amount: ₹{summary.totalAmount}</p>
             <button
               disabled={cartData.length === 0}

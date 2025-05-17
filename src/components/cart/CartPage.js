@@ -60,6 +60,32 @@ const CartPage = () => {
     fetchCartItems();
   }, [userId, localCart]);
 
+  useEffect(() => {
+    console.log("Refreshed");
+    const fetchCartItems = async () => {
+      try {
+        if (userId) {
+          setLoading(true);
+          const { data } = await axios.get(
+            `https://api.saliheenperfumes.com:8000/api/v1/CartProductsOfSingleUser/${userId}`,
+            { withCredentials: true }
+          );
+          setCartData(data.cartItems);
+          setSummary(data.summary);
+        } else {
+          setCartData(localCart);
+          recalculateSummary(localCart);
+        }
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
   const handleDelete = async (id) => {
     if (!userId) {
       // If not logged in, delete from local cart

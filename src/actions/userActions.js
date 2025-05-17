@@ -46,14 +46,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (email, password, localCart) => async (dispatch) => {
   let err;
   if (email && password) {
     try {
       dispatch(loginRequest());
       const { data } = await axios.post(
         `https://api.saliheenperfumes.com/api/v1/login`,
-        { email, password },
+        // `http://localhost:8000/api/v1/login`,
+        { email, password, localCart },
         { withCredentials: true }
       );
       if (data.message == "User is blocked") {

@@ -18,8 +18,9 @@ function ShippingDelivery() {
           <Icon name="shipping fast" /> Fast and Reliable Shipping
         </Message.Header>
         <p>
-          We offer fast and reliable shipping services. Delivery times may vary
-          depending on your location.
+          We offer fast and reliable shipping services with delivery typically
+          taking <strong>3-7 days</strong> from the time of order. Delivery
+          times may vary depending on your location.
         </p>
       </Message>
 
@@ -66,8 +67,9 @@ function ShippingDelivery() {
           when the delivery arrives.
         </List.Item>
         <List.Item>
-          Delivery times may vary depending on your location and availability of
-          the product.
+          Delivery typically takes <strong>3-7 days</strong> from the time of
+          order, but may vary depending on your location and availability of the
+          product.
         </List.Item>
       </List>
 

@@ -51,12 +51,22 @@ export const login = (email, password, localCart) => async (dispatch) => {
   if (email && password) {
     try {
       dispatch(loginRequest());
-      const { data } = await axios.post(
-        `https://api.saliheenperfumes.com/api/v1/login`,
-        // `http://localhost:8000/api/v1/login`,
-        { email, password, localCart },
-        { withCredentials: true }
-      );
+      if (localCart) {
+        var { data } = await axios.post(
+          `https://api.saliheenperfumes.com/api/v1/login`,
+          // `http://localhost:8000/api/v1/login`,
+          { email, password },
+          { withCredentials: true }
+        );
+      } else {
+        const { data } = await axios.post(
+          `https://api.saliheenperfumes.com/api/v1/login`,
+          // `http://localhost:8000/api/v1/login`,
+          { email, password, localCart },
+          { withCredentials: true }
+        );
+      }
+
       if (data.message == "User is blocked") {
         console.log("User blocked");
         toast("You are blocked by admin!", {

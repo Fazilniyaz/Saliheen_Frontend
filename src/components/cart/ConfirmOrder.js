@@ -17,6 +17,7 @@ function ConfirmOrder() {
   const [isLoading, setIsLoading] = useState(true); // Loader state
   const { user } = useSelector((state) => state.authState);
   const navigate = useNavigate();
+  console.log(user);
 
   const products = cartItemsFromDB.map((item) => ({
     _id: item.productId._id,
@@ -185,10 +186,10 @@ function ConfirmOrder() {
               </p>
               <p style={{ color: "#fff" }}>
                 Shipping:{" "}
-                <span style={{ float: "right" }}>${shippingPrice}</span>
+                <span style={{ float: "right" }}>₹{shippingPrice}</span>
               </p>
               <p style={{ color: "#fff" }}>
-                Tax: <span style={{ float: "right" }}>${taxPrice}</span>
+                Tax: <span style={{ float: "right" }}>₹{taxPrice}</span>
               </p>
               <hr style={{ borderColor: "#444" }} />
               <p style={{ color: "#fff", fontWeight: "bold" }}>
@@ -215,7 +216,11 @@ function ConfirmOrder() {
               >
                 Cash On Delivery
               </button>
-              <RazorpayPayment />
+              <RazorpayPayment
+                finalPrice={totalPrice}
+                name={user.name}
+                phone={shippingInfo.phoneNo}
+              />
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
 
-import { CartProvider } from "../cart/cartContext";
+// import { CartProvider } from "../cart/cartContext";
 
 const CategoryProducts = () => {
   const { user = "" } = useSelector((state) => state.authState);

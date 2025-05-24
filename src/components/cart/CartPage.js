@@ -1,28 +1,33 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { removeItemFromCart } from "../../slices/cartSlice";
 import Loader from "../layouts/Loader";
 import { Fragment } from "react";
-import { CartContext } from "./cartContext";
+import { useContext } from "react";
+import { CartContext } from "../cart/cartContext";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({ totalAmount: 0, totalProducts: 0 });
-
   const { user = "" } = useSelector((state) => state.authState);
+
   const userId = user._id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { localCart, removeFromLocalCart } = useContext(CartContext);
 
   const checkoutHandler = () => {
     navigate(`/login?redirect=shipping`);
   };
 
+  const { localCart, addToLocalCart, removeFromLocalCart } =
+    useContext(CartContext);
+
+  // Function to recalculate the summary
   const recalculateSummary = (cartItems) => {
     const totalProducts = cartItems.reduce(
       (acc, item) => acc + item.quantity,
@@ -36,67 +41,36 @@ const CartPage = () => {
   };
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        if (userId) {
+    if (userId) {
+      const fetchCartItems = async () => {
+        try {
           setLoading(true);
           const { data } = await axios.get(
-            `https://api.saliheenperfumes.com:8000/api/v1/CartProductsOfSingleUser/${userId}`,
+            `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
             { withCredentials: true }
           );
           setCartData(data.cartItems);
           setSummary(data.summary);
-        } else {
-          setCartData(localCart);
-          recalculateSummary(localCart);
+        } catch (error) {
+          console.error("Error fetching cart data:", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartItems();
+      };
+      fetchCartItems();
+    } else {
+      // For guest users, use localCart
+      setLoading(false);
+      recalculateSummary(localCart);
+    }
+    // eslint-disable-next-line
   }, [userId, localCart]);
 
-  useEffect(() => {
-    console.log("Refreshed");
-    const fetchCartItems = async () => {
-      try {
-        if (userId) {
-          setLoading(true);
-          const { data } = await axios.get(
-            `https://api.saliheenperfumes.com:8000/api/v1/CartProductsOfSingleUser/${userId}`,
-            { withCredentials: true }
-          );
-          setCartData(data.cartItems);
-          setSummary(data.summary);
-        } else {
-          setCartData(localCart);
-          recalculateSummary(localCart);
-        }
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartItems();
-  }, []);
-
-  const handleDelete = async (id) => {
-    if (!userId) {
-      // If not logged in, delete from local cart
-      removeFromLocalCart(id);
-      const updatedCartData = cartData.filter((item) => item.productId !== id);
-      setCartData(updatedCartData);
-      recalculateSummary(updatedCartData);
-    } else {
+  const handleDelete = async (uId, pId) => {
+    if (userId) {
       try {
         await axios.delete(
-          `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${id}`,
+          `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${uId}`,
           { withCredentials: true }
         );
         const updatedCartData = cartData.filter((item) => item._id !== id);
@@ -106,6 +80,18 @@ const CartPage = () => {
       } catch (error) {
         console.error("Error deleting cart item:", error);
       }
+    } else {
+      // For guest users, remove from localCart
+      const updatedLocalCart = localCart.filter(
+        (item) => item.productId !== pId
+      );
+      const productId = localCart.find((item) => {
+        return item.productId === pId;
+      });
+      console.log(productId.productId);
+      console.log(updatedLocalCart);
+      removeFromLocalCart(productId.productId);
+      recalculateSummary(updatedLocalCart);
     }
   };
 
@@ -113,36 +99,50 @@ const CartPage = () => {
     return <Loader />;
   }
 
+  // Decide which cart to show
+  const displayCart = userId ? cartData : localCart;
+
   return (
     <Fragment>
       <div className="cart-page" style={styles.cartPage}>
-        {cartData.length >= 1 ? (
+        {displayCart.length >= 1 ? (
           <h2 style={styles.heading}>Your Cart</h2>
         ) : (
           <h2 className="mt-5 headings mb-2">Your cart is Empty</h2>
         )}
         <div style={styles.cartItems}>
-          {cartData.map((item) => (
+          {displayCart.map((item) => (
             <div key={item._id || item.productId} style={styles.cartItem}>
               <img
-                src={item.productId?.images?.[0]?.image || ""}
+                src={
+                  userId
+                    ? item.productId?.images?.[0]?.image
+                    : item.image || "/default-image.jpg"
+                }
                 alt={item.itemName}
                 style={styles.productImage}
               />
               <div style={styles.itemDetails}>
-                <Link to={`/product/${item.productId._id || item.productId}`}>
+                <Link
+                  to={`/product/${
+                    userId ? item.productId._id : item.productId
+                  }`}
+                >
                   {item.itemName}
                 </Link>
                 <p id="card_item_price">Price: ₹{item.finalPrice}</p>
                 <p>Stock: {item.stock > 0 ? "In Stock" : "Out of Stock"}</p>
                 <div style={styles.quantityControls}>
-                  <span className="mt-2 mb-2 stock">{item.quantity} ML</span>
+                  <span>
+                    <span className="mt-2 mb-2 stock">{item.quantity} ML</span>
+                  </span>
                 </div>
                 <button
                   style={{ ...styles.button, ...styles.deleteButton }}
-                  onClick={() =>
-                    handleDelete(userId ? item._id : item.productId)
-                  }
+                  onClick={() => {
+                    console.log(userId, item._id, item.productId);
+                    handleDelete(userId, item.productId);
+                  }}
                 >
                   Delete
                 </button>
@@ -150,13 +150,13 @@ const CartPage = () => {
             </div>
           ))}
         </div>
-        {cartData.length >= 1 && (
+        {displayCart.length >= 1 && (
           <div style={styles.orderSummary}>
             <h3 className="headings mb-3">Order Summary</h3>
             <p>Number of Products: {summary.totalProducts}</p>
             <p>Total Amount: ₹{summary.totalAmount}</p>
             <button
-              disabled={cartData.length === 0}
+              disabled={displayCart.length === 0}
               style={styles.checkoutButton}
               onClick={checkoutHandler}
             >
@@ -168,7 +168,6 @@ const CartPage = () => {
     </Fragment>
   );
 };
-
 const styles = {
   cartPage: {
     padding: "20px",

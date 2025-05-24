@@ -3,8 +3,14 @@ import { Button } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const RazorpayPayment = () => {
-  const [amount, setAmount] = useState(500); // Default amount in INR
+const RazorpayPayment = ({ finalPrice, name, phone }) => {
+  console.log(
+    "RazorpayPayment component rendered with finalPrice:",
+    finalPrice,
+    name,
+    phone
+  );
+  const [amount, setAmount] = useState(finalPrice); // Default amount in INR
   const navigate = useNavigate();
   const handlePayment = async (amt) => {
     // Step 1: Create an order on your backend
@@ -20,7 +26,7 @@ const RazorpayPayment = () => {
 
     // Step 2: Initialize Razorpay payment
     const options = {
-      key: "rzp_test_x0DSx4zqJLuGm0", // Your Razorpay Key ID
+      key: "rzp_test_LAKtH9daoK5AKP", // Your Razorpay Key ID
       amount: amt, // Amount in paise
       currency: "INR",
       name: "Your Company Name",
@@ -48,9 +54,9 @@ const RazorpayPayment = () => {
         navigate("/order/success");
       },
       prefill: {
-        name: "Customer Name",
+        name: name,
         email: "customer@example.com",
-        contact: "9999999999",
+        contact: phone,
       },
       theme: {
         color: "#3399cc",
@@ -67,7 +73,7 @@ const RazorpayPayment = () => {
         id="checkout_btn"
         className="btn btn-primary btn-block"
         onClick={() => {
-          handlePayment(500);
+          handlePayment(finalPrice);
         }}
       >
         Pay with RazorPay

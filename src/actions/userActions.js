@@ -51,7 +51,7 @@ export const login = (email, password, localCart) => async (dispatch) => {
   if (email && password) {
     try {
       dispatch(loginRequest());
-      if (localCart) {
+      if (!localCart) {
         var { data } = await axios.post(
           `https://api.saliheenperfumes.com/api/v1/login`,
           // `http://localhost:8000/api/v1/login`,
@@ -59,7 +59,7 @@ export const login = (email, password, localCart) => async (dispatch) => {
           { withCredentials: true }
         );
       } else {
-        const { data } = await axios.post(
+        var { data } = await axios.post(
           `https://api.saliheenperfumes.com/api/v1/login`,
           // `http://localhost:8000/api/v1/login`,
           { email, password, localCart },

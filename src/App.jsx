@@ -119,6 +119,7 @@ function App() {
         console.log(err);
       }
     }
+    // getStripeApiKey();
     getStripeApiKey();
     console.log(stripeApiKey);
   }, [stripeApiKey]);

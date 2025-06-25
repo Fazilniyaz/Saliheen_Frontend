@@ -51,6 +51,7 @@ const CartPage = () => {
           );
           setCartData(data.cartItems);
           setSummary(data.summary);
+          console.log(data.cartItems);
         } catch (error) {
           console.error("Error fetching cart data:", error);
         } finally {
@@ -67,40 +68,25 @@ const CartPage = () => {
   }, [userId, localCart]);
 
   const handleDelete = async (uId, pId) => {
-    if (userId) {
-      try {
-        await axios.delete(
-          `https://api.saliheenperfumes.com/api/v1/deleteCartItem/${uId}`,
-          { withCredentials: true }
-        );
-        const updatedCartData = cartData.filter((item) => item._id !== id);
-        setCartData(updatedCartData);
-        recalculateSummary(updatedCartData);
-        dispatch(removeItemFromCart(id));
-      } catch (error) {
-        console.error("Error deleting cart item:", error);
-      }
-    } else {
-      // For guest users, remove from localCart
-      const updatedLocalCart = localCart.filter(
-        (item) => item.productId !== pId
-      );
-      const productId = localCart.find((item) => {
-        return item.productId === pId;
-      });
-      console.log(productId.productId);
-      console.log(updatedLocalCart);
-      removeFromLocalCart(productId.productId);
-      recalculateSummary(updatedLocalCart);
-    }
+    // For guest users, remove from localCart
+    const updatedLocalCart = localCart.filter((item) => item.productId !== pId);
+    const productId = localCart.find((item) => {
+      return item.productId === pId;
+    });
+    console.log(productId.productId);
+    console.log(updatedLocalCart);
+    removeFromLocalCart(productId.productId);
+    recalculateSummary(updatedLocalCart);
   };
 
   if (loading) {
     return <Loader />;
   }
 
+  let toatlAmount = localCart.reduce((acc, item) => acc + item.finalPrice, 0);
+
   // Decide which cart to show
-  const displayCart = userId ? cartData : localCart;
+  const displayCart = localCart;
 
   return (
     <Fragment>
@@ -153,8 +139,8 @@ const CartPage = () => {
         {displayCart.length >= 1 && (
           <div style={styles.orderSummary}>
             <h3 className="headings mb-3">Order Summary</h3>
-            <p>Number of Products: {summary.totalProducts}</p>
-            <p>Total Amount: ₹{summary.totalAmount}</p>
+            <p>Number of Products: {localCart.length}</p>
+            <p>Total Amount: ₹{toatlAmount}</p>
             <button
               disabled={displayCart.length === 0}
               style={styles.checkoutButton}

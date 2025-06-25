@@ -7,6 +7,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { orderCompleted } from "../../slices/cartSlice";
 import { createOrder } from "../../actions/orderActions";
+import { useContext } from "react";
+import { CartContext } from "../cart/cartContext";
+// import { removeFromLocalCart } from "../cart/cartContext"; // Adjust the import path as necessary
 
 function CashOnDelivery() {
   const navigate = useNavigate();
@@ -16,6 +19,8 @@ function CashOnDelivery() {
   const { user = "" } = useSelector((state) => state.authState);
   const userId = user._id;
   const { shippingInfo } = useSelector((state) => state.cartState);
+  const { localCart } = useContext(CartContext);
+  const { removeFromLocalCart } = useContext(CartContext);
 
   const dispatch = useDispatch();
 
@@ -29,16 +34,15 @@ function CashOnDelivery() {
     return timestamp + randomBytes;
   }
 
-  const validOrderItemsFromDB = cartItemsFromDB.map((item, i) => {
+  const validOrderItemsFromDB = localCart.map((item, i) => {
     let price = item.finalPrice;
-    debugger;
     return {
       name: item.itemName,
       quantity: item.quantity,
       stock: item.stock,
-      image: item?.productId?.images[0]?.image,
+      // image: item?.productId?.images[0]?.image,
       price,
-      product: item.productId._id,
+      product: item.productId,
     };
   });
 
@@ -89,6 +93,9 @@ function CashOnDelivery() {
       toast("Payment Success!", {
         type: "success",
         position: "bottom-center",
+      });
+      localCart.map((item) => {
+        removeFromLocalCart(item.productId); // Remove item from local cart
       });
     } catch (err) {
       toast(err, {

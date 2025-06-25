@@ -44,28 +44,28 @@ const CategoryProducts = () => {
       createdAt: new Date(),
     };
 
-    if (!user) {
-      // Save to local cart context instead of redirecting to login
-      addToLocalCart(cartItem);
-      toast.success("Added to local cart. Login to save permanently.");
-    } else {
-      // Add to DB cart
-      dispatch(
-        addCartItemInDB(
-          productId,
-          parseInt(quantity),
-          type,
-          user._id,
-          productName,
-          price
-        )
-      );
-    }
+    // if (!user) {
+    // Save to local cart context instead of redirecting to login
+    addToLocalCart(cartItem);
+    toast.success("Added to local cart. Login to save permanently.");
+    // } else {
+    //   // Add to DB cart
+    //   dispatch(
+    //     addCartItemInDB(
+    //       productId,
+    //       parseInt(quantity),
+    //       type,
+    //       user._id,
+    //       productName,
+    //       price
+    //     )
+    //   );
+    // }
   };
 
   const isProductInCart = (productId) => {
     return (
-      cartItems.some((item) => item?.productId._id === productId) ||
+      // cartItems.some((item) => item?.productId._id === productId) ||
       localCart.some((item) => item?.productId === productId)
     );
   };

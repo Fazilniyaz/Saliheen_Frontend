@@ -29,9 +29,13 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const clearLocalCart = () => {
+    setLocalCart([]);
+  };
+
   return (
     <CartContext.Provider
-      value={{ localCart, addToLocalCart, removeFromLocalCart }}
+      value={{ localCart, addToLocalCart, removeFromLocalCart, clearLocalCart }}
     >
       {children}
     </CartContext.Provider>

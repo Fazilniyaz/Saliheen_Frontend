@@ -138,7 +138,7 @@ function Header() {
           <span className="ml-3" id="cart_count">
             <Link to="/cart" className="text-white">
               <Icon name="shopping cart" />
-              {!userId ? localCart.length : cartData.length}
+              {localCart.length}
             </Link>
           </span>
         </div>

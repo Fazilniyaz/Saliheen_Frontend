@@ -27,24 +27,24 @@ function Header() {
   const [cartData, setCartData] = useState([]);
   const [boolean, setBoolean] = useState(false);
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      if (user && userId) {
-        try {
-          const { data } = await axios.get(
-            `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
-            { withCredentials: true }
-          );
-          setCartData(data.cartItems);
-          setBoolean(true);
-        } catch (error) {
-          console.error("Error fetching cart data:", error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCartItems = async () => {
+  //     if (user && userId) {
+  //       try {
+  //         const { data } = await axios.get(
+  //           `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+  //           { withCredentials: true }
+  //         );
+  //         setCartData(data.cartItems);
+  //         setBoolean(true);
+  //       } catch (error) {
+  //         console.error("Error fetching cart data:", error);
+  //       }
+  //     }
+  //   };
 
-    fetchCartItems();
-  }, [boolean, user, userId, cartData]);
+  //   fetchCartItems();
+  // }, [boolean, user, userId, cartData]);
 
   return (
     <Fragment>

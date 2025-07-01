@@ -8,8 +8,6 @@ import Loader from "../layouts/Loader";
 import CheckoutSteps from "./CheckoutSteps";
 import axios from "axios";
 import RazorpayPayment from "../razorpay/RazorpayPayment";
-import { useContext } from "react";
-import { CartContext } from "../cart/cartContext";
 
 function ConfirmOrder() {
   const { shippingInfo, items: cartItems } = useSelector(
@@ -19,18 +17,18 @@ function ConfirmOrder() {
   const [isLoading, setIsLoading] = useState(true); // Loader state
   const { user } = useSelector((state) => state.authState);
   const navigate = useNavigate();
-  const { localCart } = useContext(CartContext);
-
   console.log(user);
 
-  const products = localCart.map((item) => ({
-    _id: item.productId,
+  const products = cartItemsFromDB.map((item) => ({
+    _id: item.productId._id,
     quantity: item.quantity,
     stock: item.stock,
   }));
 
-  const itemsPrice = localCart.reduce((acc, item) => acc + item.finalPrice, 0);
-
+  const itemsPrice = cartItemsFromDB.reduce(
+    (acc, item) => acc + item.finalPrice,
+    0
+  );
   const shippingPrice = itemsPrice > 200 ? 0 : 25;
   const taxPrice = Number((0 * itemsPrice).toFixed(2)); // Ensure taxPrice is a number
   const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)); // Ensure totalPrice is calculated correctly
@@ -45,6 +43,17 @@ function ConfirmOrder() {
     };
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
     navigate(`/paymentVia${method}`);
+  };
+
+  const processPaymentRazorPay = () => {
+    const data = {
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+      products,
+    };
+    sessionStorage.setItem("orderInfo", JSON.stringify(data));
   };
 
   const userId = user._id;
@@ -122,7 +131,7 @@ function ConfirmOrder() {
             >
               Your Cart Items:
             </h4>
-            {localCart.map((item) => (
+            {cartItemsFromDB.map((item) => (
               <Fragment key={item._id}>
                 <div
                   style={{
@@ -133,7 +142,7 @@ function ConfirmOrder() {
                   }}
                 >
                   <img
-                    src={item?.productId?.images?.[0]?.image}
+                    src={item?.productId?.images[0]?.image}
                     alt={item.itemName}
                     style={{
                       height: "45px",
@@ -143,7 +152,7 @@ function ConfirmOrder() {
                     }}
                   />
                   <Link
-                    // to={`/product/${item.productId._id}`}
+                    to={`/product/${item.productId._id}`}
                     style={{
                       color: "#a2682a",
                       fontWeight: "bold",
@@ -222,6 +231,12 @@ function ConfirmOrder() {
                 finalPrice={totalPrice}
                 name={user.name}
                 phone={shippingInfo.phoneNo}
+                onClick={() => processPaymentRazorPay()}
+                itemsPrice={itemsPrice}
+                shippingPrice={shippingPrice}
+                taxPrice={taxPrice}
+                totalPrice={totalPrice}
+                products={products}
               />
             </div>
           </div>

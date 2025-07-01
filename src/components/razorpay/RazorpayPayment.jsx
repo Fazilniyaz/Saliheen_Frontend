@@ -2,69 +2,133 @@ import React, { useState } from "react";
 import { Button } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { orderCompleted } from "../../slices/cartSlice";
+import { createOrder } from "../../actions/orderActions";
+import { useContext } from "react";
+import { CartContext } from "../cart/cartContext";
+// console.log("localCart", localCart);
 
-const RazorpayPayment = ({ finalPrice, name, phone }) => {
-  console.log(
-    "RazorpayPayment component rendered with finalPrice:",
-    finalPrice,
-    name,
-    phone
-  );
-  const [amount, setAmount] = useState(finalPrice); // Default amount in INR
+const RazorpayPayment = ({
+  finalPrice,
+  name,
+  phone,
+  itemsPrice,
+  shippingPrice,
+  taxPrice,
+  totalPrice,
+  products,
+}) => {
+  const [amount] = useState(finalPrice);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { localCart, addToLocalCart, removeFromLocalCart } =
+    useContext(CartContext);
+  console.log("localCart", localCart);
+  const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
+  console.log("orderInfo", orderInfo);
+  const { shippingInfo } = useSelector((state) => state.cartState);
+  const { user = "" } = useSelector((state) => state.authState);
+  console.log(products);
+
   const handlePayment = async (amt) => {
-    // Step 1: Create an order on your backend
-    amt = amt * 100;
-    const response = await fetch("http://localhost:8000/create-order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amt }),
-    });
-    const { orderId } = await response.json();
+    try {
+      const amtInPaise = amt * 10;
 
-    // Step 2: Initialize Razorpay payment
-    const options = {
-      key: "rzp_test_LAKtH9daoK5AKP", // Your Razorpay Key ID
-      amount: amt, // Amount in paise
-      currency: "INR",
-      name: "Your Company Name",
-      description: "Test Transaction",
-      order_id: orderId,
-      handler: async function (response) {
-        // const verificationResponse = await fetch('http://localhost:8000/verify-payment', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({
-        //     order_id: response.razorpay_order_id,
-        //     payment_id: response.razorpay_payment_id,
-        //     signature: response.razorpay_signature,
-        //   }),
-        // });
-        // const verificationResult = await verificationResponse.json();
-        // alert(verificationResult.message);
-        toast("Payment Success!", {
-          type: "success",
-          position: "bottom-center",
-        });
+      // Step 1: Create Razorpay Order
+      const { data: razorpayOrder } = await axios.post(
+        "https://api.saliheenperfumes.com/create-order",
+        { amount: amtInPaise },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-        navigate("/order/success");
-      },
-      prefill: {
-        name: name,
-        email: "customer@example.com",
-        contact: phone,
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
+      const options = {
+        key: "rzp_test_x0DSx4zqJLuGm0",
+        amount: amtInPaise,
+        currency: "INR",
+        name: "Saliheen Perfumes",
+        description: "Payment",
+        order_id: razorpayOrder.orderId,
+        handler: async function (response) {
+          try {
+            // Step 2: Verify Payment
+            const { data: verificationResult } = await axios.post(
+              "https://api.saliheenperfumes.com/verify-payment",
+              {
+                order_id: response.razorpay_order_id,
+                payment_id: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              },
+              { headers: { "Content-Type": "application/json" } }
+            );
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+            // Step 3: Get Cart Items from DB
+
+            const validOrderItemsFromLocalCart = localCart.map((item) => {
+              const price = item.finalPrice;
+              return {
+                name: item.itemName,
+                quantity: item.quantity,
+                stock: item.stock,
+                // image: item?.productId?.images[0]?.image,
+                price,
+                product: item.productId,
+              };
+            });
+
+            // Step 4: Build Order Object
+            const order = {
+              orderItems: validOrderItemsFromLocalCart,
+              shippingInfo,
+              itemsPrice,
+              shippingPrice: shippingPrice + 100,
+              taxPrice,
+              totalPrice: totalPrice + 100,
+              paymentInfo: {
+                id: response.razorpay_payment_id,
+                status: "succeeded",
+                type: "RAZORPAY",
+              },
+            };
+
+            // Step 5: Dispatch Redux Actions
+            dispatch(orderCompleted());
+            dispatch(createOrder(order));
+
+            toast("Payment Success!", {
+              type: "success",
+              position: "bottom-center",
+            });
+
+            navigate("/order/success");
+          } catch (err) {
+            console.error("Payment verification or order creation failed", err);
+            toast("Something went wrong while creating the order.", {
+              type: "error",
+              position: "bottom-center",
+            });
+          }
+        },
+        prefill: {
+          name,
+          email: "customer@example.com",
+          contact: phone,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error("Razorpay order creation failed", err);
+      toast("Failed to initiate payment", {
+        type: "error",
+        position: "bottom-center",
+      });
+    }
   };
 
   return (
@@ -72,9 +136,7 @@ const RazorpayPayment = ({ finalPrice, name, phone }) => {
       <Button
         id="checkout_btn"
         className="btn btn-primary btn-block"
-        onClick={() => {
-          handlePayment(finalPrice);
-        }}
+        onClick={() => handlePayment(finalPrice)}
       >
         Pay with RazorPay
       </Button>

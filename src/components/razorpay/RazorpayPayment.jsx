@@ -18,6 +18,7 @@ const RazorpayPayment = ({
   shippingPrice,
   taxPrice,
   totalPrice,
+  shippingInfo,
   products,
 }) => {
   const [amount] = useState(finalPrice);
@@ -28,13 +29,14 @@ const RazorpayPayment = ({
   console.log("localCart", localCart);
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
   console.log("orderInfo", orderInfo);
-  const { shippingInfo } = useSelector((state) => state.cartState);
+  // const { shippingInfo } = useSelector((state) => state.cartState);
+  console.log(shippingInfo);
   const { user = "" } = useSelector((state) => state.authState);
   console.log(products);
 
   const handlePayment = async (amt) => {
     try {
-      const amtInPaise = amt * 10;
+      const amtInPaise = amt;
 
       // Step 1: Create Razorpay Order
       const { data: razorpayOrder } = await axios.post(
@@ -84,13 +86,15 @@ const RazorpayPayment = ({
               itemsPrice,
               shippingPrice: shippingPrice + 100,
               taxPrice,
-              totalPrice: totalPrice + 100,
+              totalPrice: totalPrice,
               paymentInfo: {
                 id: response.razorpay_payment_id,
                 status: "succeeded",
                 type: "RAZORPAY",
               },
             };
+
+            console.log("Order to be created:", order);
 
             // Step 5: Dispatch Redux Actions
             dispatch(orderCompleted());
@@ -100,7 +104,9 @@ const RazorpayPayment = ({
               type: "success",
               position: "bottom-center",
             });
-
+            localCart.map((item) => {
+              removeFromLocalCart(item.productId); // Remove item from local cart
+            });
             navigate("/order/success");
           } catch (err) {
             console.error("Payment verification or order creation failed", err);

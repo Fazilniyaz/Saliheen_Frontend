@@ -14,8 +14,8 @@ import { CartContext } from "../cart/cartContext";
 function CashOnDelivery() {
   const navigate = useNavigate();
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  const [cartItemsFromDB, setCartItemsFromDB] = useState([]);
-  const [boolean, setBoolean] = useState(false);
+  // const [cartItemsFromDB, setCartItemsFromDB] = useState([]);
+  // const [boolean, setBoolean] = useState(false);
   const { user = "" } = useSelector((state) => state.authState);
   const userId = user._id;
   const { shippingInfo } = useSelector((state) => state.cartState);
@@ -68,18 +68,18 @@ function CashOnDelivery() {
 
   console.log(order);
 
-  useEffect(() => {
-    async function getItemsFromDB() {
-      const { data } = await axios.get(
-        `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
-        { withCredentials: true }
-      );
-      console.log(data, "DDDDDDDAAAAAAAAATTTTTTTTTTAAAAAAAAAAA");
-      setCartItemsFromDB(data.cartItems);
-      setBoolean(true);
-    }
-    getItemsFromDB();
-  }, [boolean]);
+  // useEffect(() => {
+  //   async function getItemsFromDB() {
+  //     const { data } = await axios.get(
+  //       `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+  //       { withCredentials: true }
+  //     );
+  //     console.log(data, "DDDDDDDAAAAAAAAATTTTTTTTTTAAAAAAAAAAA");
+  //     setCartItemsFromDB(data.cartItems);
+  //     setBoolean(true);
+  //   }
+  //   getItemsFromDB();
+  // }, [boolean]);
 
   const handlePayment = () => {
     // Logic to handle order confirmation

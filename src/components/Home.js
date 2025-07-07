@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Divider } from "semantic-ui-react";
+import { Divider, Loader } from "semantic-ui-react";
 import AttarOudhHistory from "./AttarOudhHistory/AttarOudhHistory";
 import PerfumeProcess from "./PerfumeProcess/PerfumeProcess";
 import "./Home.css";
@@ -68,6 +68,14 @@ export const Home = () => {
     };
     fetchCategories();
   }, []);
+
+  if (categories.length === 0) {
+    return (
+      <div className="loading">
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="baritems">

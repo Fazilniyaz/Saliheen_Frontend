@@ -135,7 +135,7 @@ export default function Login() {
               }}
             />
             <Link to="/register">
-              <p className="float-right mt-3">New User?</p>
+              <span className="float-right mt-3">New User?</span>
             </Link>
           </form>
         </div>

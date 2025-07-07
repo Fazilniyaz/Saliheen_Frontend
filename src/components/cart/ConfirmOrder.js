@@ -83,6 +83,10 @@ function ConfirmOrder() {
     return <Loader />; // Show loader while data is being fetched
   }
 
+  if (localCart.length === 0 && localCarts.length === 0) {
+    return navigate("/");
+  }
+
   return (
     <Fragment>
       <MetaData title={"Confirm Order"} />
@@ -145,7 +149,7 @@ function ConfirmOrder() {
                     }}
                   >
                     <img
-                      src={item?.productId?.images?.[0]?.image}
+                      src={item?.productImage}
                       alt={item.itemName}
                       style={{
                         height: "45px",
@@ -167,7 +171,10 @@ function ConfirmOrder() {
                     </Link>
                     <p style={{ margin: 0 }}>
                       {/* {item.quantity} x ${item.finalPrice} ={" "} */}
-                      <b>₹{item.finalPrice}</b>
+                      <b>
+                        {item.type} | {item.noOfBottles} Bottles | ₹
+                        {item.finalPrice}{" "}
+                      </b>
                     </p>
                   </div>
                   <hr style={{ borderColor: "#444" }} />
@@ -214,7 +221,7 @@ function ConfirmOrder() {
               <p style={{ color: "#a2682a", textAlign: "center" }}>
                 Proceed to Payment
               </p>
-              <button
+              {/* <button
                 style={{
                   backgroundColor: totalPrice > 500 ? "#444" : "#a2682a",
                   color: "white",
@@ -229,7 +236,7 @@ function ConfirmOrder() {
                 disabled={totalPrice < 500}
               >
                 Cash On Delivery
-              </button>
+              </button> */}
               <RazorpayPayment
                 finalPrice={totalPrice}
                 name={user.name}

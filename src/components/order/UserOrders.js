@@ -8,6 +8,7 @@ import { userOrders as userOrdersAction } from "../../actions/orderActions";
 export default function UserOrders() {
   const { userOrders = [] } = useSelector((state) => state.orderState);
   const dispatch = useDispatch();
+  console.log("userOrders", userOrders);
 
   useEffect(() => {
     dispatch(userOrdersAction);

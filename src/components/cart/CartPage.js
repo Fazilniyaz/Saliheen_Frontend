@@ -27,6 +27,8 @@ const CartPage = () => {
   const { localCart, addToLocalCart, removeFromLocalCart } =
     useContext(CartContext);
 
+  console.log(localCart);
+
   // Function to recalculate the summary
   const recalculateSummary = (cartItems) => {
     const totalProducts = cartItems.reduce(
@@ -100,11 +102,7 @@ const CartPage = () => {
           {displayCart.map((item) => (
             <div key={item._id || item.productId} style={styles.cartItem}>
               <img
-                src={
-                  userId
-                    ? item.productId?.images?.[0]?.image
-                    : item.image || "/default-image.jpg"
-                }
+                src={item?.productImage}
                 alt={item.itemName}
                 style={styles.productImage}
               />
@@ -120,7 +118,9 @@ const CartPage = () => {
                 <p>Stock: {item.stock > 0 ? "In Stock" : "Out of Stock"}</p>
                 <div style={styles.quantityControls}>
                   <span>
-                    <span className="mt-2 mb-2 stock">{item.quantity} ML</span>
+                    <span className="mt-2 mb-2 stock">
+                      {item.quantity} ML | No. of Bottles : {item.noOfBottles}
+                    </span>
                   </span>
                 </div>
                 <button

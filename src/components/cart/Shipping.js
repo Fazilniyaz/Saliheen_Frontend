@@ -178,10 +178,10 @@ export const validateShipping = ({ shippingInfo, navigate }) => {
     !shippingInfo.phoneNo ||
     !shippingInfo.postalCode
   ) {
-    toast.error("Please fill the shipping information", {
+    toast.success("Order Confirmed", {
       position: "bottom-center",
     });
-    navigate("/shipping");
+    navigate("/");
   }
 };
 

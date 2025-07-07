@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, Grid, Header } from "semantic-ui-react";
+import { Card, Button, Grid, Header, Input } from "semantic-ui-react";
 import "./categoryProducts.css";
 import { useSelector } from "react-redux";
 import { addCartItemInDB } from "../../actions/cartActions";
@@ -24,43 +24,41 @@ const CategoryProducts = () => {
   const [selectedType, setSelectedType] = useState({});
   const [selectedQuantity, setSelectedQuantity] = useState({});
   const [selectedPrice, setSelectedPrice] = useState({});
+  const [selectedBottles, setSelectedBottles] = useState({}); // NEW
 
   const { addToLocalCart } = useContext(CartContext);
   const { localCart } = useContext(CartContext);
 
-  console.log(localCart);
+  // console.log(localCart);
+  // console.log("products", products);
 
-  const handleAddToCart = (productId, productName, product, quantity) => {
+  const handleAddToCart = (
+    productId,
+    productName,
+    product,
+    quantity,
+    productImage
+  ) => {
     const type = selectedType[productId] || product.type.toLowerCase();
     const price = selectedPrice[productId];
+    const noOfBottles = selectedBottles[productId] || 1;
+    const finalPrice = price * noOfBottles;
 
     const cartItem = {
       productId,
       itemName: productName,
       quantity: parseInt(quantity),
-      finalPrice: price,
+      noOfBottles: parseInt(noOfBottles),
+      finalPrice,
       stock: product.stock,
       type,
+      productImage,
+      noOfBottles,
       createdAt: new Date(),
     };
 
-    // if (!user) {
-    // Save to local cart context instead of redirecting to login
     addToLocalCart(cartItem);
     toast.success("Added to local cart. Login to save permanently.");
-    // } else {
-    //   // Add to DB cart
-    //   dispatch(
-    //     addCartItemInDB(
-    //       productId,
-    //       parseInt(quantity),
-    //       type,
-    //       user._id,
-    //       productName,
-    //       price
-    //     )
-    //   );
-    // }
   };
 
   const isProductInCart = (productId) => {
@@ -75,7 +73,6 @@ const CategoryProducts = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get(
-          // `https://api.saliheenperfumes.com/api/v1/products?category=${category}`,
           `https://api.saliheenperfumes.com/api/v1/products?category=${category}`,
           { withCredentials: true }
         );
@@ -109,15 +106,28 @@ const CategoryProducts = () => {
   // Handle type selection (attar or perfume)
   const handleTypeChange = (productId, type) => {
     setSelectedType((prev) => ({ ...prev, [productId]: type }));
-    // Reset quantity and price when type changes
+    // Reset quantity, price, and bottles when type changes
     setSelectedQuantity((prev) => ({ ...prev, [productId]: null }));
     setSelectedPrice((prev) => ({ ...prev, [productId]: 0 }));
+    setSelectedBottles((prev) => ({ ...prev, [productId]: 1 }));
   };
 
   // Handle quantity selection
   const handleQuantityChange = (productId, quantity, price) => {
     setSelectedQuantity((prev) => ({ ...prev, [productId]: quantity }));
     setSelectedPrice((prev) => ({ ...prev, [productId]: price }));
+    // Keep bottles as is or default to 1
+    setSelectedBottles((prev) => ({
+      ...prev,
+      [productId]: prev[productId] || 1,
+    }));
+  };
+
+  // Handle bottles selection
+  const handleBottlesChange = (productId, value) => {
+    let bottles = parseInt(value, 10);
+    if (isNaN(bottles) || bottles < 1) bottles = 1;
+    setSelectedBottles((prev) => ({ ...prev, [productId]: bottles }));
   };
 
   // Get available quantities and prices based on product type
@@ -141,37 +151,6 @@ const CategoryProducts = () => {
 
     return [];
   };
-
-  // // Handle adding product to cart
-  // const handleAddToCart = (productId, productName, product, quantity) => {
-  //   const type = selectedType[productId] || product.type.toLowerCase();
-  //   const price = selectedPrice[productId];
-
-  //   if (!user) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Login first to add products to cart!",
-  //     });
-  //     navigate("/login");
-  //   } else {
-  //     dispatch(
-  //       addCartItemInDB(
-  //         productId,
-  //         parseInt(quantity),
-  //         type,
-  //         user._id,
-  //         productName,
-  //         price
-  //       )
-  //     );
-  //   }
-  // };
-
-  // Check if a product is already in the cart
-  // const isProductInCart = (productId) => {
-  //   return cartItems.some((item) => item?.productId._id === productId);
-  // };
 
   return (
     <div
@@ -315,11 +294,41 @@ const CategoryProducts = () => {
                           ))}
                         </div>
                       </div>
+                      <div style={{ marginTop: "10px" }}>
+                        <label style={{ color: "whitesmoke" }}>
+                          No. of Bottles:
+                        </label>
+                        <Input
+                          type="number"
+                          min={1}
+                          value={selectedBottles[product._id] || 1}
+                          onChange={(e) =>
+                            handleBottlesChange(product._id, e.target.value)
+                          }
+                          style={{
+                            width: "80px",
+                            marginLeft: "10px",
+                            background: "#222",
+                            color: "#fff",
+                          }}
+                          input={{
+                            style: {
+                              background: "#222",
+                              color: "#fff",
+                              border: "1px solid #fff",
+                            },
+                          }}
+                        />
+                      </div>
                       <div>
-                        {/* <label style={{ color: "whitesmoke" }}>Price:</label> */}
                         <div style={{ color: "whitesmoke", marginTop: "10px" }}>
                           {selectedPrice[product._id]
-                            ? `Price : ₹${selectedPrice[product._id]}`
+                            ? `Price : ₹${selectedPrice[product._id]} x ${
+                                selectedBottles[product._id] || 1
+                              } = ₹${
+                                selectedPrice[product._id] *
+                                (selectedBottles[product._id] || 1)
+                              }`
                             : "Select a type and quantity to see the price"}
                         </div>
                       </div>
@@ -334,13 +343,22 @@ const CategoryProducts = () => {
                       }}
                       disabled={
                         !selectedType[product._id] ||
-                        !selectedQuantity[product._id]
-                      } // Disable button if type or quantity is not selected
+                        !selectedQuantity[product._id] ||
+                        !selectedPrice[product._id] ||
+                        (selectedBottles[product._id] || 1) < 1
+                      }
                       onClick={() => {
                         if (!selectedType[product._id]) {
                           toast.error("Please select a type first!");
                         } else if (!selectedQuantity[product._id]) {
                           toast.error("Please select a quantity first!");
+                        } else if (
+                          !selectedBottles[product._id] ||
+                          selectedBottles[product._id] < 1
+                        ) {
+                          toast.error(
+                            "Please enter a valid number of bottles!"
+                          );
                         } else if (isProductInCart(product._id)) {
                           navigate("/cart");
                         } else {
@@ -348,7 +366,8 @@ const CategoryProducts = () => {
                             product._id,
                             product.name,
                             product,
-                            selectedQuantity[product._id]
+                            selectedQuantity[product._id],
+                            product?.images[0]?.image || "/placeholder.jpg"
                           );
                         }
                       }}

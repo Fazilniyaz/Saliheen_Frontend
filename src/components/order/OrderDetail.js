@@ -216,7 +216,7 @@ export default function OrderDetail() {
                   {shippingInfo.country}
                 </p>
                 <p>
-                  <b className="mb-4">Amount:</b> ${totalPrice}
+                  <b className="mb-4">Amount:</b> ₹{totalPrice}
                 </p>
 
                 <hr className="mt-4" />
@@ -280,11 +280,14 @@ export default function OrderDetail() {
                         </div>
 
                         <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                          <p>${item.price}</p>
+                          <span>Total : ₹{item.price}</span>
                         </div>
 
                         <div className="col-4 col-lg-3 mt-4 mt-lg-0">
-                          <p>{item.quantity} Piece(s)</p>
+                          <span>
+                            {item.quantity}ml | {item.noOfBottles} Bottles | ₹
+                            {item.pricePerBottle} per Bottle
+                          </span>
                         </div>
                       </div>
                     ))}

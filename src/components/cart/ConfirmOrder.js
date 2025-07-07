@@ -28,6 +28,8 @@ function ConfirmOrder() {
     _id: item.productId,
     quantity: item.quantity,
     stock: item.stock,
+    noOfBottles: item?.noOfBottles,
+    type: item?.type,
   }));
 
   const itemsPrice = localCart.reduce((acc, item) => acc + item.finalPrice, 0);

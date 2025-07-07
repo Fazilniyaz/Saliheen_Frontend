@@ -74,6 +74,8 @@ const RazorpayPayment = ({
                 quantity: item.quantity,
                 stock: item.stock,
                 // image: item?.productId?.images[0]?.image,
+                noOfBottles: item?.noOfBottles,
+                pricePerBottle: price / item?.noOfBottles,
                 price,
                 product: item.productId,
               };
@@ -87,6 +89,7 @@ const RazorpayPayment = ({
               shippingPrice: shippingPrice + 100,
               taxPrice,
               totalPrice: totalPrice,
+
               paymentInfo: {
                 id: response.razorpay_payment_id,
                 status: "succeeded",

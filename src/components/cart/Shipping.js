@@ -434,6 +434,7 @@ export default function Shipping() {
                   padding: "0.5rem",
                   borderRadius: "5px",
                   marginTop: "0.5rem",
+                  color: "black",
                 }}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -456,6 +457,7 @@ export default function Shipping() {
                   padding: "0.5rem",
                   borderRadius: "5px",
                   marginTop: "0.5rem",
+                  color: "black",
                 }}
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
@@ -478,6 +480,7 @@ export default function Shipping() {
                   padding: "0.5rem",
                   borderRadius: "5px",
                   marginTop: "0.5rem",
+                  color: "black",
                 }}
                 value={phoneNo}
                 onChange={(e) => setPhoneNo(e.target.value)}
@@ -500,6 +503,7 @@ export default function Shipping() {
                   padding: "0.5rem",
                   borderRadius: "5px",
                   marginTop: "0.5rem",
+                  color: "black",
                 }}
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
@@ -521,6 +525,7 @@ export default function Shipping() {
                   padding: "0.5rem",
                   borderRadius: "5px",
                   marginTop: "0.5rem",
+                  color: "black",
                 }}
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
@@ -549,6 +554,7 @@ export default function Shipping() {
                   padding: "0.5rem",
                   borderRadius: "5px",
                   marginTop: "0.5rem",
+                  color: "black",
                 }}
                 value={state}
                 onChange={(e) => setState(e.target.value)}

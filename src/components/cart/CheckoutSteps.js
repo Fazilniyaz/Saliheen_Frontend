@@ -161,7 +161,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
       )}
 
       {payment ? (
-        <Link to="/payment" style={{ textDecoration: "none" }}>
+        <Link style={{ textDecoration: "none" }}>
           <div
             style={{
               borderLeft: "15px solid transparent",
@@ -197,7 +197,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
         </Link>
       ) : (
-        <Link to="/payment" style={{ textDecoration: "none" }}>
+        <Link style={{ textDecoration: "none" }}>
           <div
             style={{
               borderLeft: "15px solid transparent",

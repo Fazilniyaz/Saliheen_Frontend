@@ -301,10 +301,31 @@ const CategoryProducts = () => {
                         <Input
                           type="number"
                           min={1}
-                          value={selectedBottles[product._id] || 1}
-                          onChange={(e) =>
-                            handleBottlesChange(product._id, e.target.value)
+                          placeholder="Enter bottles"
+                          value={
+                            selectedBottles[product._id] === undefined
+                              ? ""
+                              : selectedBottles[product._id]
                           }
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            // Allow empty input
+                            if (val === "") {
+                              setSelectedBottles((prev) => ({
+                                ...prev,
+                                [product._id]: undefined,
+                              }));
+                            } else {
+                              const bottles = Math.max(
+                                1,
+                                parseInt(val, 10) || 1
+                              );
+                              setSelectedBottles((prev) => ({
+                                ...prev,
+                                [product._id]: bottles,
+                              }));
+                            }
+                          }}
                           style={{
                             width: "80px",
                             marginLeft: "10px",
@@ -345,7 +366,8 @@ const CategoryProducts = () => {
                         !selectedType[product._id] ||
                         !selectedQuantity[product._id] ||
                         !selectedPrice[product._id] ||
-                        (selectedBottles[product._id] || 1) < 1
+                        !selectedBottles[product._id] ||
+                        selectedBottles[product._id] < 1
                       }
                       onClick={() => {
                         if (!selectedType[product._id]) {

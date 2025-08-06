@@ -46,7 +46,7 @@ const RazorpayPayment = ({
       );
 
       const options = {
-        key: "rzp_test_x0DSx4zqJLuGm0",
+        key: "rzp_live_QNoqNSpHzqg5ox",
         amount: amtInPaise,
         currency: "INR",
         name: "Saliheen Perfumes",

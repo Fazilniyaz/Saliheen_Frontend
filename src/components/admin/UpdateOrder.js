@@ -16,6 +16,8 @@ export default function UpdateOrder() {
     (state) => state.orderState
   );
 
+  console.log(orderDetail);
+
   const {
     orderItems = [],
     shippingInfo = {},
@@ -23,7 +25,10 @@ export default function UpdateOrder() {
     paymentInfo = {},
   } = orderDetail;
 
-  const { user = {} } = useSelector((state) => state.authState);
+  // const { user : loggedInUser = {} } = useSelector((state) => state.authState);
+
+  const { user } = orderDetail;
+  console.log(user);
 
   const isPaid = paymentInfo.status === "succeeded" ? true : false;
   const [orderStatus, setOrderStatus] = useState("Processing");
@@ -324,14 +329,14 @@ export default function UpdateOrder() {
                 {orderItems &&
                   orderItems.map((item, index) => (
                     <div className="row my-3" key={index}>
-                      <div className="col-4 col-lg-2">
+                      {/* <div className="col-4 col-lg-2">
                         <img
                           src={item.image}
                           alt={item.name}
                           height="45"
                           width="65"
                         />
-                      </div>
+                      </div> */}
                       <div className="col-5 col-lg-5">
                         <Link
                           style={{ color: "#FFFFF" }}
@@ -340,12 +345,16 @@ export default function UpdateOrder() {
                           {item.name}
                         </Link>
                       </div>
-                      <div className="col-4 col-lg-2 mt-4 mt-lg-0">
+                      {/* <div className="col-4 col-lg-2 mt-4 mt-lg-0">
                         <p>₹{item.price}</p>
                       </div>
                       <div className="col-4 col-lg-3 mt-4 mt-lg-0">
                         <p>{item.quantity} Piece(s)</p>
-                      </div>
+                      </div> */}
+                      <span>
+                        {item.quantity}ml | {item.noOfBottles} Bottles | ₹
+                        {item.pricePerBottle} per Bottle
+                      </span>
                     </div>
                   ))}
               </div>

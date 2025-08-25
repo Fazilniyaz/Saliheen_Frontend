@@ -27,7 +27,7 @@ export default function UpdateOrder() {
 
   // const { user : loggedInUser = {} } = useSelector((state) => state.authState);
 
-  const { user } = orderDetail;
+  const { user = {} } = orderDetail;
   console.log(user);
 
   const isPaid = paymentInfo.status === "succeeded" ? true : false;

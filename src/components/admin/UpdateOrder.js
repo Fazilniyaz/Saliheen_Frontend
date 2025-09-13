@@ -11,6 +11,20 @@ import { toast } from "react-toastify";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
+// Helper to format date
+const formatDate = (dateString) => {
+  if (!dateString) return "Not Paid Yet";
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date);
+};
+
 export default function UpdateOrder() {
   const { loading, isOrderUpdated, error, orderDetail } = useSelector(
     (state) => state.orderState
@@ -23,14 +37,15 @@ export default function UpdateOrder() {
     shippingInfo = {},
     totalPrice = 0,
     paymentInfo = {},
+    paidAt,
   } = orderDetail;
-
-  // const { user : loggedInUser = {} } = useSelector((state) => state.authState);
 
   const { user = {} } = orderDetail;
   console.log(user);
 
   const isPaid = paymentInfo.status === "succeeded" ? true : false;
+  const formattedPaidAt = formatDate(paidAt); // Format the paidAt date
+
   const [orderStatus, setOrderStatus] = useState("Processing");
 
   const { id: orderId } = useParams();
@@ -119,7 +134,7 @@ export default function UpdateOrder() {
           >
             <div style={{ textAlign: "center", marginBottom: "20px" }}>
               <img
-                src="./spimhd.png" // Replace with your actual logo path
+                src="./spimhd.png"
                 alt="Company Logo"
                 style={{ width: "120px", marginBottom: "10px" }}
               />
@@ -140,9 +155,9 @@ export default function UpdateOrder() {
               <b>Order ID:</b> {orderDetail._id}
             </p>
 
-            <br></br>
-            <hr></hr>
-            <br></br>
+            <br />
+            <hr />
+            <br />
 
             <h4>
               <b>Shipping Information</b>
@@ -163,18 +178,24 @@ export default function UpdateOrder() {
               <b>Payment Status</b>
             </h4>
             <p>{isPaid ? "PAID" : "NOT PAID"}</p>
-            <br></br>
-            <hr></hr>
-            <br></br>
+            {isPaid && (
+              <p>
+                <b>Paid On:</b> {formattedPaidAt}
+              </p>
+            )}
+
+            <br />
+            <hr />
+            <br />
 
             <h4>
               <b>Order Status</b>
             </h4>
             <p>{orderStatus}</p>
 
-            <br></br>
-            <hr></hr>
-            <br></br>
+            <br />
+            <hr />
+            <br />
 
             <h4>
               <b>Order Items</b>
@@ -313,6 +334,11 @@ export default function UpdateOrder() {
               <p className={isPaid ? "greenColor" : "redColor"}>
                 <b>{isPaid ? "PAID" : "NOT PAID"}</b>
               </p>
+              {isPaid && (
+                <p>
+                  <b>Paid On:</b> {formattedPaidAt}
+                </p>
+              )}
 
               <h4 className="my-4">Order Status:</h4>
               <p
@@ -329,14 +355,6 @@ export default function UpdateOrder() {
                 {orderItems &&
                   orderItems.map((item, index) => (
                     <div className="row my-3" key={index}>
-                      {/* <div className="col-4 col-lg-2">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          height="45"
-                          width="65"
-                        />
-                      </div> */}
                       <div className="col-5 col-lg-5">
                         <Link
                           style={{ color: "#FFFFF" }}
@@ -345,12 +363,6 @@ export default function UpdateOrder() {
                           {item.name}
                         </Link>
                       </div>
-                      {/* <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                        <p>₹{item.price}</p>
-                      </div>
-                      <div className="col-4 col-lg-3 mt-4 mt-lg-0">
-                        <p>{item.quantity} Piece(s)</p>
-                      </div> */}
                       <span>
                         {item.quantity}ml | {item.noOfBottles} Bottles | ₹
                         {item.pricePerBottle} per Bottle

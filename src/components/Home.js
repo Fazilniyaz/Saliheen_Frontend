@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Divider, Loader } from "semantic-ui-react";
-import AttarOudhHistory from "./AttarOudhHistory/AttarOudhHistory";
-import PerfumeProcess from "./PerfumeProcess/PerfumeProcess";
+import { Divider } from "semantic-ui-react";
+import { ThreeDots } from "react-loader-spinner"; // Import the spinner
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
@@ -50,8 +49,17 @@ const quotes = [
   "Le parfum est l'art qui fait parler la mémoire. - Perfume is the art that makes memory speak. (French)",
 ];
 
+// Lazy load heavy components for better initial load time (Optional but Recommended)
+const AttarOudhHistory = React.lazy(() =>
+  import("./AttarOudhHistory/AttarOudhHistory")
+);
+const PerfumeProcess = React.lazy(() =>
+  import("./PerfumeProcess/PerfumeProcess")
+);
+
 export const Home = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true); // New state for loading
   const navigate = useNavigate();
 
   const handleCategoryClick = (categoryName) => {
@@ -60,32 +68,51 @@ export const Home = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const { data } = await axios.get(
-        "https://api.saliheenperfumes.com/api/v1/user/category",
-        { withCredentials: true }
-      );
-      setCategories(data.categories);
+      try {
+        const { data } = await axios.get(
+          "https://api.saliheenperfumes.com/api/v1/user/category",
+          { withCredentials: true }
+        );
+        setCategories(data.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        // Optionally set some default categories or show an error message
+      } finally {
+        setLoading(false); // Set loading to false regardless of success or failure
+      }
     };
     fetchCategories();
   }, []);
 
-  if (categories.length === 0) {
+  // Show a beautiful golden loader while fetching data
+  if (loading) {
     return (
-      <div className="loading">
-        <h2>Loading...</h2>
+      <div
+        className="loading-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          width: "100%",
+        }}
+      >
+        <ThreeDots
+          height="80"
+          width="80"
+          radius="9"
+          color="#FFD700" // Golden color
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClassName=""
+          visible={true}
+        />
       </div>
     );
   }
 
   return (
     <div className="baritems">
-      {/* <div className="setFlex">
-        <span>Welcome to </span>
-        <h1 style={{ margin: "8px" }}>
-          Saliheen Perfumes<span className="noise"></span>
-        </h1>
-      </div> */}
-
       {/* Image Carousel */}
       <Carousel
         className="image-carousel"
@@ -107,8 +134,9 @@ export const Home = () => {
             <div key={index}>
               <img
                 src={image}
-                alt={`Image ${index + 1}`}
+                // alt={`Image ${index + 1}`}
                 style={{ objectFit: "cover" }}
+                loading="lazy" // Add lazy loading
               />
               <p className="legend carousel-legend">{fileName}</p>
             </div>
@@ -128,9 +156,10 @@ export const Home = () => {
             className="category-card"
           >
             <img
-              src={imagesCat[index]} // Replace with actual image paths
+              src={imagesCat[index % imagesCat.length]} // Use modulo to avoid out-of-bounds
               alt={category.name}
               className="category-image"
+              loading="lazy" // Add lazy loading
             />
             <div className="category-info">
               <h3>{category.name}</h3>
@@ -178,8 +207,27 @@ export const Home = () => {
       </Carousel>
 
       <Divider />
-      <AttarOudhHistory />
+
+      {/* Wrap lazy-loaded components in Suspense */}
+      <Suspense
+        fallback={
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            <ThreeDots
+              height="40"
+              width="40"
+              radius="9"
+              color="#FFD700"
+              ariaLabel="three-dots-loading"
+              visible={true}
+            />
+          </div>
+        }
+      >
+        <AttarOudhHistory />
+      </Suspense>
+
       <Divider />
+
       <iframe
         width="99%"
         height="50%"
@@ -190,8 +238,25 @@ export const Home = () => {
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen={false}
       ></iframe>
+
       <Divider />
-      <PerfumeProcess />
+
+      <Suspense
+        fallback={
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            <ThreeDots
+              height="40"
+              width="40"
+              radius="9"
+              color="#FFD700"
+              ariaLabel="three-dots-loading"
+              visible={true}
+            />
+          </div>
+        }
+      >
+        <PerfumeProcess />
+      </Suspense>
 
       <style jsx>{`
         .heading {
@@ -233,6 +298,9 @@ export const Home = () => {
         .slick-prev:before,
         .slick-next:before {
           color: #ffd700;
+        }
+        .loading-container {
+          background: #000; /* Optional: Set background to match your theme */
         }
       `}</style>
     </div>

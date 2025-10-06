@@ -22,7 +22,6 @@ export default function Payment() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  console.log("orderInfo was ", orderInfo);
   const { user = "" } = useSelector((state) => state.authState);
   const userId = user._id;
   const { items: cartItems, shippingInfo } = useSelector(
@@ -80,8 +79,6 @@ export default function Payment() {
     getItemsFromDB();
   }, [boolean]);
 
-  console.log(cartItemsFromDB);
-
   useEffect(() => {
     validateShipping({ shippingInfo, navigate });
     if (orderError) {
@@ -95,8 +92,6 @@ export default function Payment() {
       return;
     }
   }, []);
-
-  console.log(order);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -117,10 +112,8 @@ export default function Payment() {
           },
         },
       });
-      console.log(result);
-      console.log(result.paymentIntent.status);
+
       if (result.paymentIntent.status.trim() == "succeeded") {
-        console.log("Yes it was true");
         toast("Payment Succesfully done!", {
           position: "bottom-center",
           type: "success",
@@ -130,9 +123,7 @@ export default function Payment() {
           status: result.paymentIntent.status,
         };
         dispatch(orderCompleted());
-        console.log("order completed");
         dispatch(createOrder(order));
-        console.log("created Order");
 
         navigate("/order/success");
       }

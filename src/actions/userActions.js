@@ -68,7 +68,6 @@ export const login = (email, password, localCart) => async (dispatch) => {
       }
 
       if (data.message == "User is blocked") {
-        console.log("User blocked");
         toast("You are blocked by admin!", {
           type: "error",
           position: "bottom-center",
@@ -88,15 +87,12 @@ export const login = (email, password, localCart) => async (dispatch) => {
       });
       // window.alert(error.response.data.message);
       dispatch(loginFail(error.response.data.message));
-      console.log(error.response.data.message);
       // toast(error.response.data.message, {
       //   type: "error",
       //   position: "bottom-center",
       // });
     }
     if (err?.trim() !== "") {
-      console.log("Helo");
-      toast("Fazil");
     }
   } else {
     console.log("GOogleSignin triggered");
@@ -116,7 +112,6 @@ export const login = (email, password, localCart) => async (dispatch) => {
   }
 };
 export const googleLogin = (email) => async (dispatch) => {
-  console.log(email);
   try {
     dispatch(loginRequest());
     const { data } = await axios.post(
@@ -155,7 +150,6 @@ export const register = (userData) => async (dispatch) => {
     );
     dispatch(registerSuccess(data));
   } catch (error) {
-    console.log(error.response.data.message);
     dispatch(registerFail(error.response.data.message));
   }
 };
@@ -346,7 +340,6 @@ export const blockUser = (id) => async (dispatch) => {
 };
 
 export const verifyOtp = (email) => async (dispatch) => {
-  console.log("Verify OTP called");
   try {
     dispatch(otpRequest());
     const config = {
@@ -361,10 +354,8 @@ export const verifyOtp = (email) => async (dispatch) => {
       { withCredentials: true }
     );
     dispatch(otpSuccess(data));
-    console.log("Verify OTP success");
   } catch (error) {
     dispatch(otpFail(error.response.data.message));
-    console.log("Verify OTP failure");
   }
 };
 

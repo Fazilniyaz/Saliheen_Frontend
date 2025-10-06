@@ -30,8 +30,6 @@ export default function UpdateOrder() {
     (state) => state.orderState
   );
 
-  console.log(orderDetail);
-
   const {
     orderItems = [],
     shippingInfo = {},

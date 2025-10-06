@@ -124,7 +124,6 @@ const authSlice = createSlice({
       };
     },
     otpRequest(state, action) {
-      console.log("Request vanduruchu");
       return {
         ...state,
         loading: true,

@@ -59,9 +59,7 @@ export const getProducts =
       dispatch(productsRequest());
       const { data } = await axios.get(link, { withCredentials: true });
       dispatch(productsSuccess(data));
-      console.log("called");
     } catch (error) {
-      console.log("hii");
       dispatch(productsFail(error.response.data.message));
     }
   };
@@ -73,11 +71,8 @@ export const getProduct = (id) => async (dispatch) => {
       `https://api.saliheenperfumes.com/api/v1/product/${id}`,
       { withCredentials: true }
     ); // The URL is correct
-    console.log(data);
     dispatch(productSuccess(data));
-    console.log("called");
   } catch (error) {
-    console.log("hii");
     dispatch(productFail(error.response.data.message));
   }
 };

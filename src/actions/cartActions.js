@@ -29,9 +29,6 @@ export const addCartItem = (id, quantity) => async (dispatch) => {
 export const addCartItemInDB =
   (productId, quantity, type, userId, itemName, overallPrice) =>
   async (dispatch) => {
-    console.log("Target Triggered");
-
-    console.log(productId, quantity, type, userId, itemName, overallPrice);
     try {
       dispatch(addCartItemRequest());
 
@@ -47,8 +44,6 @@ export const addCartItemInDB =
         },
         { withCredentials: true }
       );
-
-      console.log(data);
 
       dispatch(
         addCartItemSuccess({
@@ -75,7 +70,6 @@ export const addCartItemInDB =
         // Redirect to the cart page after the toast closes
       });
     } catch (error) {
-      console.log(error);
       toast(error?.response?.data?.message + " Try again later" || "", {
         type: "error",
         position: "bottom-center",

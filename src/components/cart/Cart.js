@@ -16,9 +16,6 @@ export default function Cart() {
   const { user = "" } = useSelector((state) => state.authState);
 
   // const [cartItems, setCartItems] = useState([]);
-  console.log(user);
-
-  console.log(products);
 
   const dispatch = useDispatch();
 
@@ -82,7 +79,6 @@ export default function Cart() {
                               const count = inputElement
                                 ? inputElement.value
                                 : 1;
-                              console.log(count);
 
                               if (count > 1) {
                                 dispatch(decreaseCartItemQty(item.product));
@@ -104,19 +100,16 @@ export default function Cart() {
                               // dispatch(increaseCartItemQty(item.product))
                               {
                                 var originalName = `${item.name}`;
-                                console.log(originalName);
                                 var watch = products.map((item, i) => {
                                   if (originalName == item.name) {
                                     return item.name;
                                   }
                                 });
-                                console.log(watch);
                                 const inputElement =
                                   document.getElementsByClassName("count")[k];
                                 const count = inputElement
                                   ? inputElement.value
                                   : 0;
-                                console.log(count);
                                 let originalCount;
                                 for (var i = 0; i < products.length; i++) {
                                   if (products[i].name == `${item.name}`) {

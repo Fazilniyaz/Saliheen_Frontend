@@ -27,8 +27,6 @@ export default function OrderDetail() {
 
   const userId = user?._id;
 
-  console.log(orderDetail);
-
   let payment_method;
   if (order?.paymentInfo?.type == "COD") {
     payment_method = "Cash On Delivery";
@@ -59,7 +57,6 @@ export default function OrderDetail() {
         );
         setOrder(data.order);
         setBoolean(true);
-        console.log("Data in orders", data);
       } catch (error) {
         console.error("Error fetching order details:", error);
       }
@@ -190,7 +187,6 @@ export default function OrderDetail() {
     ReturnOrder();
   };
 
-  console.log(order);
   return (
     <Fragment>
       {loading ? (

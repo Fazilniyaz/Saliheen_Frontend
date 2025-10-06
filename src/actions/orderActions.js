@@ -22,7 +22,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const createOrder = (order) => async (dispatch) => {
-  console.log(order);
   try {
     dispatch(createOrderRequest());
     const { data } = await axios.post(

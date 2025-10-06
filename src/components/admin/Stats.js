@@ -9,10 +9,6 @@ const Stats = () => {
   const [topBrands, setTopBrands] = useState([]);
   const [boolean, setBoolean] = useState(false);
 
-  console.log(topProducts);
-  console.log(topCategories);
-  console.log(topBrands);
-
   useEffect(() => {
     // Fetch data from the backend
     const fetchStats = async () => {
@@ -21,7 +17,6 @@ const Stats = () => {
           `https://api.saliheenperfumes.com/api/v1/admin/getTopSellingStats`,
           { withCredentials: true }
         ); // Replace with your actual endpoint
-        console.log(data.data);
         setTopProducts(data.data.topProducts);
         setTopCategories(data.data.topCategories);
         setTopBrands(data.data.topBrands);

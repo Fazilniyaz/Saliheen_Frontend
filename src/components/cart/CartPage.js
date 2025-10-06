@@ -27,8 +27,6 @@ const CartPage = () => {
   const { localCart, addToLocalCart, removeFromLocalCart } =
     useContext(CartContext);
 
-  console.log(localCart);
-
   // Function to recalculate the summary
   const recalculateSummary = (cartItems) => {
     const totalProducts = cartItems.reduce(
@@ -53,7 +51,6 @@ const CartPage = () => {
           );
           setCartData(data.cartItems);
           setSummary(data.summary);
-          console.log(data.cartItems);
         } catch (error) {
           console.error("Error fetching cart data:", error);
         } finally {
@@ -75,8 +72,7 @@ const CartPage = () => {
     const productId = localCart.find((item) => {
       return item.productId === pId;
     });
-    console.log(productId.productId);
-    console.log(updatedLocalCart);
+
     removeFromLocalCart(productId.productId);
     recalculateSummary(updatedLocalCart);
   };
@@ -126,7 +122,6 @@ const CartPage = () => {
                 <button
                   style={{ ...styles.button, ...styles.deleteButton }}
                   onClick={() => {
-                    console.log(userId, item._id, item.productId);
                     handleDelete(userId, item.productId);
                   }}
                 >

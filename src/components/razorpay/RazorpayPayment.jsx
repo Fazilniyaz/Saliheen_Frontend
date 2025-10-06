@@ -26,13 +26,9 @@ const RazorpayPayment = ({
   const dispatch = useDispatch();
   const { localCart, addToLocalCart, removeFromLocalCart } =
     useContext(CartContext);
-  console.log("localCart", localCart);
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  console.log("orderInfo", orderInfo);
   // const { shippingInfo } = useSelector((state) => state.cartState);
-  console.log(shippingInfo);
   const { user = "" } = useSelector((state) => state.authState);
-  console.log(products);
 
   const handlePayment = async (amt) => {
     try {
@@ -96,8 +92,6 @@ const RazorpayPayment = ({
                 type: "RAZORPAY",
               },
             };
-
-            console.log("Order to be created:", order);
 
             // Step 5: Dispatch Redux Actions
             dispatch(orderCompleted());

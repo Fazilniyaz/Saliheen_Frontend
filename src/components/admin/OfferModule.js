@@ -14,7 +14,6 @@ function OfferModule() {
 
       .then((response) => {
         setCategories(response.data.categories);
-        console.log(response);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -26,7 +25,6 @@ function OfferModule() {
     axios
       .post("/api/v1/admin/applyOffer", { offerPercentage, category })
       .then((response) => {
-        console.log("Offer Applied: ", response.data);
         // Optionally, fetch the updated offers after successful submission
       })
       .catch((error) => console.error("Error applying offer:", error));

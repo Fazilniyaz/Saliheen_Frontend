@@ -129,7 +129,7 @@ export const Home = () => {
         centerMode={true}
       >
         {images.map((image, index) => {
-          const fileName = image.split("/").pop().split(".")[0];
+          // const fileName = image.split("/").pop().split(".")[0];
           return (
             <div key={index}>
               <img
@@ -138,7 +138,7 @@ export const Home = () => {
                 style={{ objectFit: "cover" }}
                 loading="lazy" // Add lazy loading
               />
-              <p className="legend carousel-legend">{fileName}</p>
+              {/* <p className="legend carousel-legend">{fileName}</p> */}
             </div>
           );
         })}

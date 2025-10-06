@@ -165,7 +165,6 @@ export default function Dashboard() {
         `https://api.saliheenperfumes.com/api/v1/admin/getAllOrdersCount`,
         { withCredentials: true }
       );
-      console.log(data);
       setOrdersCount(data.orderCount);
       setBoolean(true);
     }
@@ -176,7 +175,6 @@ export default function Dashboard() {
         `https://api.saliheenperfumes.com/api/v1/admin/GetCountOfUsers`,
         { withCredentials: true }
       );
-      console.log(data);
       setUsersCount(data.userCount);
       setBoolean(true);
     }
@@ -187,7 +185,6 @@ export default function Dashboard() {
         `https://api.saliheenperfumes.com/api/v1/admin/salesReport?filterBy=yearly`,
         { withCredentials: true }
       );
-      console.log(data);
       setTotalSales(data.totalAmount);
       setBoolean(true);
     }

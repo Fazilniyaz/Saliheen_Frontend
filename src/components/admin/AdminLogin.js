@@ -35,7 +35,6 @@ function AdminLogin() {
       }
 
       const data = await response.json();
-      console.log("Success:", data);
     } catch (error) {
       setErrorMessage(error.message);
     }

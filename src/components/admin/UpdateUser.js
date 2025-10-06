@@ -31,11 +31,8 @@ export default function UpdateUser() {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("role", role);
-    console.log(formData);
     dispatch(updateUser(userId, formData));
   };
-  console.log(userId);
-  console.log(loggedUser._id);
 
   useEffect(() => {
     if (isUserUpdated) {

@@ -38,7 +38,6 @@ export default function Login() {
     try {
       dispatch(login(email, password, localCart));
     } catch (err) {
-      console.log(err);
       toast(err.response.data.message, {
         type: "error",
         position: "bottom-center",
@@ -117,8 +116,7 @@ export default function Login() {
                 try {
                   // Decode the Google credential (optional, for debugging or extracting user info)
                   const decoded = jwtDecode(credentialResponse.credential);
-                  console.log("Decoded Google Credential:", decoded);
-                  console.log(decoded.email);
+
                   // googleLogin(decoded.email);
 
                   dispatch(login(decoded.email, null));

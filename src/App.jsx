@@ -78,9 +78,6 @@ function App() {
   const { user = "" } = useSelector((state) => state.authState);
 
   const userId = user._id;
-  console.log(userId);
-
-  console.log(user);
 
   useEffect(() => {
     if (user && user._id) {
@@ -121,7 +118,6 @@ function App() {
     }
     // getStripeApiKey();
     getStripeApiKey();
-    console.log(stripeApiKey);
   }, [stripeApiKey]);
 
   const Layout = ({ children }) => {

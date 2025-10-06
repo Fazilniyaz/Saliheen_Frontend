@@ -21,8 +21,6 @@ function ConfirmOrder() {
   const navigate = useNavigate();
   const { localCart, addToLocalCart, removeFromLocalCart } =
     useContext(CartContext);
-  console.log("localCart", localCart);
-  console.log(user);
 
   const products = localCart.map((item) => ({
     _id: item.productId,

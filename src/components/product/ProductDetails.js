@@ -42,7 +42,6 @@ function ProductDetails() {
   };
 
   const { items } = useSelector((state) => state.cartState);
-  console.log(items);
 
   let disabling = false;
   let btntext = "Add to Cart";
@@ -56,17 +55,12 @@ function ProductDetails() {
     })
   )
     cartItems.map((item, i) => {
-      console.log("map started");
-      console.log(item);
       if (item.productId._id == id) {
         disabling = true;
         btntext = "Already added to Cart!";
-        console.log("map ended");
       }
     });
 
-  console.log(disabling);
-  console.log(btntext);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -89,20 +83,15 @@ function ProductDetails() {
     setQuantity(qty);
   };
 
-  console.log(cartItems);
-
   const {
     loading,
     product = {},
     isReviewSubmitted,
     error,
   } = useSelector((state) => state.productState);
-  console.log(product);
 
   const { user = "" } = useSelector((state) => state.authState);
-  console.log(user);
   const userId = user?._id;
-  console.log(product);
 
   let originalPrice;
   if (correctCoupon && product != {}) {
@@ -131,7 +120,6 @@ function ProductDetails() {
             withCredentials: true,
           }
         );
-        console.log(data, "WishListedItems");
         setProducts(data.products);
         // setLoading(false);
       } catch (err) {
@@ -178,8 +166,6 @@ function ProductDetails() {
 
   let iteminWishList = false;
   for (var i = 0; i < products.length; i++) {
-    console.log("ProductID :", "ID inparams");
-    console.log(products[i]._id, id);
     if (products[i]._id == id) {
       iteminWishList = true;
       break;

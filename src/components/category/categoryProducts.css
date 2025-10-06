@@ -31,13 +31,12 @@
 }
 
 .products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
   width: 100%;
   max-width: 1400px;
   padding: 0 20px;
-}
-
-.product-column {
-  padding: 10px !important;
 }
 
 .product-card {
@@ -46,9 +45,12 @@
   border-radius: 15px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
+  height: 580px; /* Fixed height */
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 340px; /* Fixed max width for consistency */
+  margin: 0 auto;
 }
 
 .product-card:hover {
@@ -58,6 +60,7 @@
 
 .product-image-wrapper {
   height: 220px;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -77,11 +80,12 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-color: #000;
   justify-content: space-between;
 }
 
 .product-title {
-  color: black !important;
+  color: #ffd700 !important;
   text-align: center !important;
   font-size: 1.3rem !important;
   margin-bottom: 15px !important;
@@ -93,6 +97,7 @@
   flex-direction: column;
   gap: 16px;
   margin: 15px 0;
+  flex-grow: 1;
 }
 
 .option-group {
@@ -102,7 +107,7 @@
 }
 
 .option-label {
-  color: black;
+  color: #ffd700;
   font-weight: 500;
   font-size: 0.95rem;
 }
@@ -123,6 +128,9 @@
   padding: 8px 12px !important;
   font-size: 0.9rem !important;
   transition: all 0.2s ease;
+  flex: 1;
+  min-width: 70px;
+  text-align: center;
 }
 
 .type-btn.active,
@@ -137,6 +145,11 @@
   background-color: #333 !important;
 }
 
+.bottle-input {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .bottle-input input {
   background: #222 !important;
   color: #fff !important;
@@ -148,7 +161,7 @@
 }
 
 .price-display {
-  color: black;
+  color: #ffd700;
   font-size: 1rem;
   font-weight: 500;
   margin-top: 10px;
@@ -182,7 +195,7 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .products-grid {
-    max-width: 1000px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
@@ -192,16 +205,14 @@
     margin-bottom: 30px;
   }
 
-  .products-grid {
-    padding: 0 15px;
+  .product-card {
+    height: auto;
+    min-height: 560px;
+    max-width: 100%;
   }
 
   .product-image-wrapper {
     height: 200px;
-  }
-
-  .product-card {
-    min-width: 280px;
   }
 }
 
@@ -227,6 +238,7 @@
   .quantity-btn {
     padding: 6px 10px !important;
     font-size: 0.85rem !important;
+    min-width: 60px;
   }
 
   .cart-button {
@@ -244,4 +256,60 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+.product-card {
+  background-color: #111 !important;
+  color: #ffd700;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  /* Ensure Semantic UI doesn't override */
+  box-shadow: none !important;
+}
+
+/* Override Semantic UI's default white background inside card */
+.product-card .ui.card {
+  background-color: transparent !important;
+}
+
+.product-card .ui.card > .content {
+  background-color: #111 !important;
+}
+
+.card-content {
+  padding: 20px !important;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  background-color: #111 !important; /* Explicitly set */
+  color: #ffd700;
+}
+
+.product-title {
+  color: #ffd700 !important;
+  text-align: center !important;
+  font-size: 1.3rem !important;
+  margin-bottom: 15px !important;
+  font-weight: 600 !important;
+  background-color: transparent !important;
+}
+
+.decorate{
+   background-image: repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%);
+  /* background-size: 100%; */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* font-size: 20px; */
+  /* font-weight: bold; */
+  /* font-family: "Yantramanav"; */
+  filter: drop-shadow(0 0 1px rgba(255, 200, 0, .3));
+  animation: MoveBackgroundPosition 6s ease-in-out infinite;
 }

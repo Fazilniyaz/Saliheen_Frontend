@@ -370,6 +370,7 @@ export default function Shipping() {
                     padding: "0.5rem",
                     borderRadius: "5px",
                     marginTop: "0.5rem",
+                    color: "black",
                   }}
                   value={phoneForExistingAddress}
                   onChange={(e) => setPhoneForExistingAddress(e.target.value)}

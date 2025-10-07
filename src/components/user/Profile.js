@@ -157,7 +157,11 @@ export default function Profile() {
         <h4 className="headings mb-3">My Addresses</h4>
         <ul className="list-group">
           {addresses.map((address) => (
-            <li key={address._id} className="list-group-item">
+            <li
+              key={address._id}
+              className="list-group-item"
+              style={{ color: "black" }}
+            >
               <p>
                 {address.addressLine}, {address.city}, {address.state},{" "}
                 {address.country} - {address.postalCode}

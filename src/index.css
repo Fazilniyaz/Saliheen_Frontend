@@ -620,6 +620,11 @@ footer {
   left: 0;
   top: 0;
   z-index: 10;
+ 
+  /* height: 100vh;
+  overflow-y: auto;
+  background-color: #f8f9fa; */
+
 }
 #sidebar {
   min-width: 100%;

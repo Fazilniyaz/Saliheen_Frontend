@@ -26,7 +26,7 @@ export const Footer = () => {
     async function getAllCategories() {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/admin/category",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category",
           {
             // Fetch categories
             withCredentials: true,

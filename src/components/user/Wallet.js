@@ -12,7 +12,7 @@ const WalletPage = () => {
     const fetchWalletBalance = async () => {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/getWalletBalance",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/getWalletBalance",
           { withCredentials: true }
         ); // Replace with your endpoint
         setWalletBalance(data.wallet);

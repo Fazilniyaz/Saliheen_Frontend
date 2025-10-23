@@ -25,7 +25,7 @@ export const createOrder = (order) => async (dispatch) => {
   try {
     dispatch(createOrderRequest());
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/order/new`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/order/new`,
       order,
       { withCredentials: true }
     );
@@ -42,7 +42,7 @@ export const userOrders = async (dispatch) => {
   try {
     dispatch(userOrdersRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/myorders`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/myorders`,
       { withCredentials: true }
     );
     dispatch(userOrdersSuccess(data));
@@ -54,7 +54,7 @@ export const orderDetail = (id) => async (dispatch) => {
   try {
     dispatch(orderDetailRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/order/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/order/${id}`,
       { withCredentials: true }
     );
     dispatch(orderDetailSuccess(data));
@@ -67,7 +67,7 @@ export const adminOrders = async (dispatch) => {
   try {
     dispatch(adminOrdersRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/admin/orders`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/orders`,
       { withCredentials: true }
     );
     dispatch(adminOrdersSuccess(data));
@@ -80,7 +80,7 @@ export const deleteOrder = (id) => async (dispatch) => {
   try {
     dispatch(deleteOrdersRequest());
     await axios.delete(
-      `https://api.saliheenperfumes.com/api/v1/admin/order/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/order/${id}`,
       { withCredentials: true }
     );
     dispatch(deleteOrdersSuccess());
@@ -93,7 +93,7 @@ export const updateOrder = (id, orderData) => async (dispatch) => {
   try {
     dispatch(updateOrdersRequest());
     const { data } = await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/admin/order/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/order/${id}`,
       orderData,
       { withCredentials: true }
     );

@@ -64,7 +64,7 @@ function Paypal() {
   useEffect(() => {
     async function getItemsFromDB() {
       const { data } = await axios.get(
-        `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
         { withCredentials: true }
       );
       console.log(data, "DDDDDDDAAAAAAAAATTTTTTTTTTAAAAAAAAAAA");
@@ -80,7 +80,7 @@ function Paypal() {
     try {
       async function paypal() {
         const { data } = await axios.post(
-          `https://api.saliheenperfumes.com/api/v1/paymentViaPaypal`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/paymentViaPaypal`,
           {
             amount: order.totalPrice,
             shipping: order.shippingInfo,

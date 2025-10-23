@@ -91,7 +91,7 @@ function App() {
     async function getStripeApiKey() {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/stripeapi",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/stripeapi",
           { withCredentials: true }
         );
         setstripeApiKey(data.stripeApiKey);

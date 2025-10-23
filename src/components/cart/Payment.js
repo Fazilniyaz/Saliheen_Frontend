@@ -70,7 +70,7 @@ export default function Payment() {
   useEffect(() => {
     async function getItemsFromDB() {
       const { data } = await axios.get(
-        `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
         { withCredentials: true }
       );
       setCartItemsFromDB(data.cartItems);
@@ -98,7 +98,7 @@ export default function Payment() {
     document.querySelector("#pay_btn").disabled = true;
     try {
       const { data } = await axios.post(
-        "https://api.saliheenperfumes.com/api/v1/payment/process",
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/payment/process",
         paymentData,
         { withCredentials: true }
       );

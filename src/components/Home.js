@@ -70,7 +70,7 @@ export const Home = () => {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/user/category",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/user/category",
           { withCredentials: true }
         );
         setCategories(data.categories);

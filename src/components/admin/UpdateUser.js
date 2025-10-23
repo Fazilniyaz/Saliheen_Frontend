@@ -104,7 +104,7 @@ export default function UpdateUser() {
   const handleUnBlock = () => {
     async function unblock() {
       const { data } = await axios.put(
-        `https://api.saliheenperfumes.com/api/v1/admin/userUnblock/${user._id}`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/userUnblock/${user._id}`,
         { withCredentials: true }
       );
       if (data.success) {

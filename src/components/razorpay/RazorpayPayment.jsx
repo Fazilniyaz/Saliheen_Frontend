@@ -36,7 +36,7 @@ const RazorpayPayment = ({
 
       // Step 1: Create Razorpay Order
       const { data: razorpayOrder } = await axios.post(
-        "https://api.saliheenperfumes.com/create-order",
+        "https://saliheenperfumes-zd2i.onrender.com/create-order",
         { amount: amtInPaise },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -52,7 +52,7 @@ const RazorpayPayment = ({
           try {
             // Step 2: Verify Payment
             const { data: verificationResult } = await axios.post(
-              "https://api.saliheenperfumes.com/verify-payment",
+              "https://saliheenperfumes-zd2i.onrender.com/verify-payment",
               {
                 order_id: response.razorpay_order_id,
                 payment_id: response.razorpay_payment_id,

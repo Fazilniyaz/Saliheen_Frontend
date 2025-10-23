@@ -19,7 +19,7 @@ export default function Categories() {
   const fetchCategories = async () => {
     try {
       const { data } = await axios.get(
-        "https://api.saliheenperfumes.com/api/v1/user/category",
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/user/category",
         { withCredentials: true }
       );
       setCategories(data.categories);
@@ -35,7 +35,7 @@ export default function Categories() {
         return;
       }
       const { data } = await axios.post(
-        "https://api.saliheenperfumes.com/api/v1/admin/category",
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category",
         {
           name: newCategory.trim(),
         },
@@ -52,7 +52,7 @@ export default function Categories() {
   const saveEditCategory = async () => {
     try {
       const { data } = await axios.put(
-        `https://api.saliheenperfumes.com/api/v1/admin/category/${editingCategory._id}`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category/${editingCategory._id}`,
         { name: editCategoryName.trim() },
         { withCredentials: true }
       );
@@ -68,8 +68,8 @@ export default function Categories() {
   const toggleCategoryStatus = async (id, isActive) => {
     try {
       const endpoint = isActive
-        ? `https://api.saliheenperfumes.com/api/v1/admin/category/disable/${id}`
-        : `https://api.saliheenperfumes.com/api/v1/admin/category/enable/${id}`;
+        ? `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category/disable/${id}`
+        : `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category/enable/${id}`;
       const { data } = await axios.patch(
         endpoint,
         {},

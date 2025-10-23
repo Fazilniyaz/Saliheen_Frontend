@@ -10,7 +10,7 @@ export default function CouponTable() {
     const fetchCoupons = async () => {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/coupons",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/coupons",
           {
             withCredentials: true,
           }
@@ -30,7 +30,7 @@ export default function CouponTable() {
     if (window.confirm("Are you sure you want to delete this coupon?")) {
       try {
         await axios.delete(
-          `https://api.saliheenperfumes.com/api/v1/delete/${couponId}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/delete/${couponId}`,
           { withCredentials: true }
         );
         toast.success("Coupon deleted successfully.");

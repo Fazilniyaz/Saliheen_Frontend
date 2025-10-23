@@ -35,7 +35,7 @@ export default function NewProduct() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/admin/category",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category",
           { withCredentials: true }
         );
         if (data.success) {

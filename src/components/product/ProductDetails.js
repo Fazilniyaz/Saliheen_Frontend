@@ -103,7 +103,7 @@ function ProductDetails() {
     const fetchCartItems = async () => {
       try {
         const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
           { withCredentials: true }
         );
         setCartItems(data.cartItems);
@@ -115,7 +115,7 @@ function ProductDetails() {
     async function getWishlistedProducts() {
       try {
         const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/getUserWishList/${userId}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/getUserWishList/${userId}`,
           {
             withCredentials: true,
           }
@@ -133,7 +133,7 @@ function ProductDetails() {
 
   async function AddToWishList(userId, productId) {
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/addToWishList`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/addToWishList`,
       {
         userId,
         productId,
@@ -149,7 +149,7 @@ function ProductDetails() {
   }
   async function RemoveProductFromWishList(userId, productId) {
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/deleteProductFromWishList`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/deleteProductFromWishList`,
       {
         userId,
         productId,
@@ -213,7 +213,7 @@ function ProductDetails() {
     }
     try {
       const { data } = await axios.post(
-        `https://api.saliheenperfumes.com/api/v1/applyCoupons`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/applyCoupons`,
         {
           code: ids.value,
           userId,

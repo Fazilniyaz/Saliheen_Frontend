@@ -66,7 +66,7 @@ function ConfirmOrder() {
       try {
         setIsLoading(true); // Start loader
         const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
           { withCredentials: true }
         );
         setlocalCarts(data.cartItems);

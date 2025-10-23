@@ -53,14 +53,14 @@ export const login = (email, password, localCart) => async (dispatch) => {
       dispatch(loginRequest());
       if (!localCart) {
         var { data } = await axios.post(
-          `https://api.saliheenperfumes.com/api/v1/login`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/login`,
           // `http://localhost:8000/api/v1/login`,
           { email, password },
           { withCredentials: true }
         );
       } else {
         var { data } = await axios.post(
-          `https://api.saliheenperfumes.com/api/v1/login`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/login`,
           // `http://localhost:8000/api/v1/login`,
           { email, password, localCart },
           { withCredentials: true }
@@ -99,7 +99,7 @@ export const login = (email, password, localCart) => async (dispatch) => {
     try {
       dispatch(loginRequest());
       const { data } = await axios.post(
-        `https://api.saliheenperfumes.com/api/v1/google/signin`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/google/signin`,
         {
           email,
         },
@@ -115,7 +115,7 @@ export const googleLogin = (email) => async (dispatch) => {
   try {
     dispatch(loginRequest());
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/google/signin`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/google/signin`,
       {
         email,
       },
@@ -141,7 +141,7 @@ export const register = (userData) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/register`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/register`,
       userData,
       {
         ...config,
@@ -159,7 +159,7 @@ export const loadUser = async (dispatch) => {
     dispatch(loadUserRequest());
 
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/myprofile`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/myprofile`,
       { withCredentials: true }
     );
     dispatch(loadUserSuccess(data));
@@ -170,9 +170,12 @@ export const loadUser = async (dispatch) => {
 
 export const logout = async (dispatch) => {
   try {
-    await axios.get(`https://api.saliheenperfumes.com/api/v1/logout`, {
-      withCredentials: true,
-    });
+    await axios.get(
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/logout`,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch(logoutSuccess());
   } catch (error) {
     dispatch(logoutFail);
@@ -189,7 +192,7 @@ export const updateProfile = (userData) => async (dispatch) => {
     };
 
     const { data } = await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/update`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/update`,
       userData,
       {
         ...config,
@@ -211,7 +214,7 @@ export const updatePassword = (formData) => async (dispatch) => {
       },
     };
     await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/password/change`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/password/change`,
       formData,
       config,
       { withCredentials: true }
@@ -231,7 +234,7 @@ export const forgotPassword = (formData) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/password/forgot`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/password/forgot`,
       formData,
       config,
       { withCredentials: true }
@@ -251,7 +254,7 @@ export const resetPassword = (formData, token) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/password/reset/${token}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/password/reset/${token}`,
       formData,
       config,
       { withCredentials: true }
@@ -266,7 +269,7 @@ export const getUsers = async (dispatch) => {
   try {
     dispatch(usersRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/admin/users`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/users`,
       { withCredentials: true }
     );
     dispatch(usersSuccess(data));
@@ -279,7 +282,7 @@ export const getUser = (id) => async (dispatch) => {
   try {
     dispatch(userRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/user/${id}`,
       { withCredentials: true }
     );
     dispatch(userSuccess(data));
@@ -292,7 +295,7 @@ export const deleteUser = (id) => async (dispatch) => {
   try {
     dispatch(deleteUserRequest());
     await axios.delete(
-      `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/user/${id}`,
       { withCredentials: true }
     );
     dispatch(deleteUserSuccess());
@@ -310,7 +313,7 @@ export const updateUser = (id, formData) => async (dispatch) => {
       },
     };
     await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/admin/user/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/user/${id}`,
       formData,
       {
         ...config,
@@ -326,7 +329,7 @@ export const updateUser = (id, formData) => async (dispatch) => {
 export const blockUser = (id) => async (dispatch) => {
   try {
     await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/admin/userBlock/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/userBlock/${id}`,
       { withCredentials: true }
     );
 
@@ -348,7 +351,7 @@ export const verifyOtp = (email) => async (dispatch) => {
       },
     };
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/register/otp`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/register/otp`,
       email,
       config,
       { withCredentials: true }

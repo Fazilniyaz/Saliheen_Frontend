@@ -65,7 +65,7 @@ const CategoryProducts = () => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/products?category=${category}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/products?category=${category}`,
           { withCredentials: true }
         );
         setProducts(data.products);
@@ -86,7 +86,7 @@ const CategoryProducts = () => {
       const fetchCartItems = async () => {
         try {
           const { data } = await axios.get(
-            `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+            `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
             { withCredentials: true }
           );
           setCartItems(data.cartItems);

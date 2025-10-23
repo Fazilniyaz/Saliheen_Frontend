@@ -109,7 +109,7 @@ export default function Register() {
     try {
       // Check if the email exists in the database
       const response = await axios.post(
-        "https://api.saliheenperfumes.com/api/v1/checkEmailExistence",
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/checkEmailExistence",
         {
           email,
         },

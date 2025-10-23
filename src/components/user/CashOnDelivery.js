@@ -71,7 +71,7 @@ function CashOnDelivery() {
   // useEffect(() => {
   //   async function getItemsFromDB() {
   //     const { data } = await axios.get(
-  //       `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+  //       `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
   //       { withCredentials: true }
   //     );
   //     console.log(data, "DDDDDDDAAAAAAAAATTTTTTTTTTAAAAAAAAAAA");

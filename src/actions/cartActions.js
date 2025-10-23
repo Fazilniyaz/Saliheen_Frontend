@@ -7,7 +7,7 @@ export const addCartItem = (id, quantity) => async (dispatch) => {
   try {
     dispatch(addCartItemRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/product/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/product/${id}`,
       {
         withCredentials: true,
       }
@@ -33,7 +33,7 @@ export const addCartItemInDB =
       dispatch(addCartItemRequest());
 
       const { data } = await axios.post(
-        `https://api.saliheenperfumes.com/api/v1/createCartItem`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/createCartItem`,
         {
           itemName,
           userId,
@@ -85,7 +85,7 @@ export const addCartItemInDB =
 export const fetchCartItemsForUser = (userId) => async (dispatch) => {
   try {
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
       { withCredentials: true }
     );
 

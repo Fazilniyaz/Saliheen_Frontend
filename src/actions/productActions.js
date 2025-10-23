@@ -40,7 +40,7 @@ export const getProducts =
   async (dispatch) => {
     try {
       dispatch(productsRequest());
-      let link = `https://api.saliheenperfumes.com/api/v1/products?page=${currentPage}`;
+      let link = `https://saliheenperfumes-zd2i.onrender.com/api/v1/products?page=${currentPage}`;
       if (keyword) {
         link += `&keyword=${keyword}`;
       }
@@ -68,7 +68,7 @@ export const getProduct = (id) => async (dispatch) => {
   try {
     dispatch(productRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/product/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/product/${id}`,
       { withCredentials: true }
     ); // The URL is correct
     dispatch(productSuccess(data));
@@ -81,7 +81,7 @@ export const getAdminProducts = async (dispatch) => {
   try {
     dispatch(adminProductsRequest());
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/admin/products`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/products`,
       { withCredentials: true }
     );
     dispatch(adminProductsSuccess(data));
@@ -95,7 +95,7 @@ export const createNewProduct = (productData) => async (dispatch) => {
   try {
     dispatch(newProductRequest());
     const { data } = await axios.post(
-      `https://api.saliheenperfumes.com/api/v1/admin/product/new`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/product/new`,
       productData,
       { withCredentials: true }
     );
@@ -110,7 +110,7 @@ export const deleteProduct = (id) => async (dispatch) => {
   try {
     dispatch(deleteProductRequest());
     await axios.delete(
-      `https://api.saliheenperfumes.com/api/v1/admin/product/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/product/${id}`,
       { withCredentials: true }
     );
     dispatch(deleteProductSuccess());
@@ -127,7 +127,7 @@ export const createReview = (reviewData) => async (dispatch) => {
       headers: { "Content-type": "application/json" },
     };
     const { data } = await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/review`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/review`,
       reviewData,
       config,
       { withCredentials: true }
@@ -143,7 +143,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
   try {
     dispatch(updateProductRequest());
     const { data } = await axios.put(
-      `https://api.saliheenperfumes.com/api/v1/admin/product/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/product/${id}`,
       productData,
       { withCredentials: true }
     );
@@ -158,7 +158,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
 export const enableProduct = (id) => async (dispatch) => {
   try {
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/admin/product/enable/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/product/enable/${id}`,
       { withCredentials: true }
     );
     toast.success(data.message, { position: "bottom-center" });
@@ -172,7 +172,7 @@ export const enableProduct = (id) => async (dispatch) => {
 export const disableProduct = (id) => async (dispatch) => {
   try {
     const { data } = await axios.get(
-      `https://api.saliheenperfumes.com/api/v1/admin/product/disable/${id}`,
+      `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/product/disable/${id}`,
       { withCredentials: true }
     );
     toast.success(data.message, { position: "bottom-center" });

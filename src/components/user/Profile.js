@@ -24,7 +24,7 @@ export default function Profile() {
     const fetchAddresses = async () => {
       try {
         const { data } = await axios.get(
-          "https://api.saliheenperfumes.com/api/v1/getAllAddresses",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/getAllAddresses",
           { withCredentials: true }
         );
         setAddresses(data.addresses);
@@ -46,7 +46,7 @@ export default function Profile() {
     try {
       if (isEditing) {
         await axios.put(
-          `https://api.saliheenperfumes.com/api/v1/updateAddress/${addressForm.id}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/updateAddress/${addressForm.id}`,
           addressForm,
           { withCredentials: true }
         );
@@ -55,7 +55,7 @@ export default function Profile() {
         });
       } else {
         await axios.post(
-          "https://api.saliheenperfumes.com/api/v1/createAddress",
+          "https://saliheenperfumes-zd2i.onrender.com/api/v1/createAddress",
           addressForm,
           { withCredentials: true }
         );
@@ -66,7 +66,7 @@ export default function Profile() {
 
       // Refresh addresses
       const { data } = await axios.get(
-        "https://api.saliheenperfumes.com/api/v1/getAllAddresses",
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/getAllAddresses",
         { withCredentials: true }
       );
       setAddresses(data.addresses);
@@ -90,7 +90,7 @@ export default function Profile() {
   const handleDeleteAddress = async (id) => {
     try {
       await axios.delete(
-        `https://api.saliheenperfumes.com/api/v1/deleteAddress/${id}`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/deleteAddress/${id}`,
         { withCredentials: true }
       );
       setAddresses((prev) => prev.filter((address) => address._id !== id));

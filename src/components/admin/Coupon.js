@@ -18,7 +18,7 @@ export default function CouponForm() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "https://api.saliheenperfumes.com/api/v1/createCoupon",
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/createCoupon",
         couponData,
         { withCredentials: true }
       );

@@ -66,7 +66,7 @@ function WalletPayment() {
   useEffect(() => {
     async function getItemsFromDB() {
       const { data } = await axios.get(
-        `https://api.saliheenperfumes.com/api/v1/CartProductsOfSingleUser/${userId}`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
         { withCredentials: true }
       );
       setCartItemsFromDB(data.cartItems);
@@ -76,7 +76,7 @@ function WalletPayment() {
 
     async function getWalletBalance() {
       const { data } = await axios.get(
-        `https://api.saliheenperfumes.com/api/v1/getWalletBalance`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/getWalletBalance`,
         { withCredentials: true }
       );
       setWalletBalance(data);
@@ -95,7 +95,7 @@ function WalletPayment() {
         Number(orderInfo?.taxPrice);
       console.log(total);
       const { data } = await axios.post(
-        `https://api.saliheenperfumes.com/api/v1/handleWallet`,
+        `https://saliheenperfumes-zd2i.onrender.com/api/v1/handleWallet`,
         {
           reducingAmountFromWallet: total,
         },

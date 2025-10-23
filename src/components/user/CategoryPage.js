@@ -14,7 +14,7 @@ const CategoryPage = () => {
     const fetchCategoryProducts = async () => {
       try {
         const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/products?category=${categoryName}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/products?category=${categoryName}`,
           { withCredentials: true }
         );
         setProducts(data.products);

@@ -16,7 +16,7 @@ export default function WishList() {
     async function getWishlistedProducts() {
       try {
         const { data } = await axios.get(
-          `https://api.saliheenperfumes.com/api/v1/getUserWishList/${userId}`,
+          `https://saliheenperfumes-zd2i.onrender.com/api/v1/getUserWishList/${userId}`,
           { withCredentials: true }
         );
         setProducts(data.products);

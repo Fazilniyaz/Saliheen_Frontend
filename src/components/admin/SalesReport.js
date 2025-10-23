@@ -12,7 +12,7 @@ export default function SalesReport() {
   useEffect(() => {
     async function fetchSalesReport() {
       try {
-        let url = `https://api.saliheenperfumes.com/api/v1/admin/salesReport?filterBy=${filter}`;
+        let url = `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/salesReport?filterBy=${filter}`;
 
         if (filter === "custom" && startDate && endDate) {
           url += `&startDate=${startDate}&endDate=${endDate}`;

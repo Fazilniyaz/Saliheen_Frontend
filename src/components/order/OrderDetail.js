@@ -291,7 +291,7 @@ export default function OrderDetail() {
                 <hr />
 
                 {/* Button Section */}
-                <div className="d-flex justify-content-center mt-4">
+                {/* <div className="d-flex justify-content-center mt-4">
                   {orderStatus.includes("Delivered") ? (
                     <button
                       className="btn btn-primary mx-2"
@@ -326,7 +326,7 @@ export default function OrderDetail() {
                   ) : (
                     ""
                   )}
-                </div>
+                </div> */}
                 <div className="d-flex justify-content-center mt-4">
                   {orderStatus.includes("Delivered") && (
                     <button

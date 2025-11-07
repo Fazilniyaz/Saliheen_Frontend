@@ -27,15 +27,22 @@ export const createOrder = (order) => async (dispatch) => {
     const { data } = await axios.post(
       `https://saliheenperfumes-zd2i.onrender.com/api/v1/order/new`,
       order,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+        timeout: 30000, // 30 second timeout
+      }
     );
     dispatch(createOrderSuccess(data));
+    return data; // Return data for success handling
   } catch (error) {
-    dispatch(createOrderFail(error?.response?.data?.message));
-    toast(error?.response?.data?.message, {
+    const errorMessage =
+      error?.response?.data?.message || "Order creation failed";
+    dispatch(createOrderFail(errorMessage));
+    toast(errorMessage, {
       type: "error",
       position: "bottom-center",
     });
+    throw error; // Re-throw so the caller knows it failed
   }
 };
 export const userOrders = async (dispatch) => {

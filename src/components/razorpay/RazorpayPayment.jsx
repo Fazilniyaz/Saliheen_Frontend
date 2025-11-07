@@ -38,7 +38,10 @@ const RazorpayPayment = ({
       const { data: razorpayOrder } = await axios.post(
         "https://saliheenperfumes-zd2i.onrender.com/create-order",
         { amount: amtInPaise },
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
 
       const options = {
@@ -58,18 +61,19 @@ const RazorpayPayment = ({
                 payment_id: response.razorpay_payment_id,
                 signature: response.razorpay_signature,
               },
-              { headers: { "Content-Type": "application/json" } }
+              {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true,
+              }
             );
 
-            // Step 3: Get Cart Items from DB
-
+            // Step 3: Build order items
             const validOrderItemsFromLocalCart = localCart.map((item) => {
               const price = item.finalPrice;
               return {
                 name: item.itemName,
                 quantity: item.quantity,
                 stock: item.stock,
-                // image: item?.productId?.images[0]?.image,
                 noOfBottles: item?.noOfBottles,
                 pricePerBottle: price / item?.noOfBottles,
                 price,
@@ -85,7 +89,6 @@ const RazorpayPayment = ({
               shippingPrice: shippingPrice + 100,
               taxPrice,
               totalPrice: totalPrice,
-
               paymentInfo: {
                 id: response.razorpay_payment_id,
                 status: "succeeded",
@@ -93,21 +96,44 @@ const RazorpayPayment = ({
               },
             };
 
-            // Step 5: Dispatch Redux Actions
-            dispatch(orderCompleted());
-            dispatch(createOrder(order));
+            // Step 5: CREATE ORDER AND WAIT FOR COMPLETION
+            try {
+              await dispatch(createOrder(order)); // Wait for this to complete!
 
-            toast("Payment Success!", {
-              type: "success",
-              position: "bottom-center",
-            });
-            localCart.map((item) => {
-              removeFromLocalCart(item.productId); // Remove item from local cart
-            });
-            navigate("/order/success");
+              // Only proceed if order creation succeeded
+              dispatch(orderCompleted());
+
+              // Clear cart
+              localCart.forEach((item) => {
+                removeFromLocalCart(item.productId);
+              });
+
+              toast("Payment Success!", {
+                type: "success",
+                position: "bottom-center",
+              });
+
+              navigate("/order/success");
+            } catch (orderError) {
+              // Order creation failed even though payment succeeded
+              console.error(
+                "Order creation failed after successful payment:",
+                orderError
+              );
+              toast(
+                "Payment received but order creation failed. Please contact support with payment ID: " +
+                  response.razorpay_payment_id,
+                {
+                  type: "error",
+                  position: "bottom-center",
+                  autoClose: false,
+                }
+              );
+              // Don't navigate - let user see the error
+            }
           } catch (err) {
-            console.error("Payment verification or order creation failed", err);
-            toast("Something went wrong while creating the order.", {
+            console.error("Payment verification failed", err);
+            toast("Payment verification failed. Please contact support.", {
               type: "error",
               position: "bottom-center",
             });

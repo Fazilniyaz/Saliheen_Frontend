@@ -6,6 +6,7 @@ import { Divider } from "semantic-ui-react";
 import { ThreeDots } from "react-loader-spinner"; // Import the spinner
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
+import { Wrench, Clock, RefreshCcw } from "lucide-react";
 
 // Dynamically import all images from assets folder
 const importAll = (r) => r.keys().map(r);
@@ -59,6 +60,7 @@ const PerfumeProcess = React.lazy(() =>
 
 export const Home = () => {
   const [categories, setCategories] = useState([]);
+  const [underService, setUnderService] = useState(true);
   const [loading, setLoading] = useState(true); // New state for loading
   const navigate = useNavigate();
 
@@ -107,6 +109,40 @@ export const Home = () => {
           wrapperClassName=""
           visible={true}
         />
+      </div>
+    );
+  }
+
+  if (underService) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-950 text-white px-6 text-center">
+        <div className="bg-gray-900 p-10 rounded-2xl shadow-lg max-w-lg border border-gray-800">
+          <div className="flex justify-center mb-6">
+            <Wrench size={70} className="text-yellow-400 animate-spin-slow" />
+          </div>
+          <h1 className="text-3xl font-bold mb-3">We’re Under Service</h1>
+          <p className="text-gray-400 mb-6">
+            Our website is currently undergoing scheduled maintenance to improve
+            your experience. We’ll be back soon. Thank you for your patience!
+          </p>
+          <div className="flex justify-center gap-4 text-gray-300">
+            <Clock className="animate-pulse" />
+            <p>Estimated downtime: Few minutes</p>
+          </div>
+
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-full flex items-center gap-2 transition-all"
+          >
+            <RefreshCcw size={18} />
+            Refresh Page
+          </button>
+        </div>
+
+        <footer className="mt-10 text-sm text-gray-500">
+          &copy; {new Date().getFullYear()} Fazil Niyazdeen TM. All rights
+          reserved.
+        </footer>
       </div>
     );
   }

@@ -781,3 +781,29 @@ Link:hover{
   font-size: 0.8rem;
   color: grey;
 }
+
+/* Prevent body scroll when sidebar is open on mobile */
+body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure full viewport height */
+#root, body, html {
+  height: 100%;
+}
+
+/* Optional: Improve scrollbar on dark background */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+}

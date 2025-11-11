@@ -15,7 +15,7 @@ import {
 } from "../../actions/productActions";
 import { clearProductDeleted } from "../../slices/productSlice";
 import { clearError } from "../../slices/productsSlice";
-import "./ProductList.css"; // Import the CSS file for hover effect
+import "./ProductList.css";
 
 export default function ProductList() {
   const {
@@ -71,31 +71,27 @@ export default function ProductList() {
           <Fragment>
             <Link
               to={`/admin/product/${product._id}`}
-              className="btn btn-primary"
-              style={{ margin: "10px" }}
+              className="btn btn-primary btn-sm me-2 mb-2"
             >
               <i className="fa fa-pencil"></i>
             </Link>
             <Button
               onClick={(e) => deleteHandler(e, product._id)}
-              className="btn btn-danger py-1 px-2 ml-2"
-              style={{ margin: "10px" }}
+              className="btn btn-danger btn-sm me-2 mb-2"
             >
               <i className="fa fa-trash"></i>
             </Button>
             {product.disabled ? (
               <Button
                 onClick={(e) => enableHandler(e, product._id)}
-                className="btn btn-success py-1 px-2 ml-2"
-                style={{ margin: "10px auto" }}
+                className="btn btn-success btn-sm mb-2"
               >
                 Enable
               </Button>
             ) : (
               <Button
                 onClick={(e) => disableHandler(e, product._id)}
-                className="btn btn-warning py-1 px-2 ml-2"
-                style={{ margin: "10px" }}
+                className="btn btn-warning btn-sm mb-2"
               >
                 Disable
               </Button>
@@ -148,46 +144,146 @@ export default function ProductList() {
   }, [dispatch, error, isProductDeleted]);
 
   return (
-    <div className="row">
-      <div className="col-12 col-md-2">
-        <Sidebar />
-      </div>
-      <div className="col-12 col-md-10">
-        <h1
-          className="my-4 headings"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontSize: "2rem",
-            fontWeight: "bold",
-            fontFamily: "Yantramanav",
-            filter: "drop-shadow(0 0 1px rgba(255, 200, 0, .3))",
-            animation: "MoveBackgroundPosition 6s ease-in-out infinite",
-          }}
-        >
-          Product List
-        </h1>
-        <Fragment>
-          {loading ? (
-            <Loader />
-          ) : (
-            <MDBDataTable
-              data={setProducts()}
-              bordered
-              striped
-              hover
-              className="px-6 hover-effect" // Add hover-effect class
-              style={{
-                backgroundColor: "#000",
-                color: "#fff",
-                borderRadius: "10px",
-                padding: "20px",
-              }}
-            />
-          )}
-        </Fragment>
+    <div className="product-list-wrapper">
+      <Sidebar />
+
+      <div className="product-list-content">
+        <div className="container-fluid px-3 px-lg-4 py-4">
+          {/* Header */}
+          <div className="row mb-4">
+            <div className="col-12">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                <h1 className="page-title gold-gradient-text mb-3 mb-md-0">
+                  <i className="fa fa-shopping-basket me-2"></i>
+                  Product List
+                </h1>
+                <Link
+                  to="/admin/products/create"
+                  className="btn btn-gold d-flex align-items-center"
+                >
+                  <i className="fa fa-plus me-2"></i>
+                  Add New Product
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Products Count Badge */}
+          <div className="row mb-3">
+            <div className="col-12">
+              <div className="products-count-badge">
+                <i className="fa fa-boxes me-2"></i>
+                Total Products: <span className="count">{products.length}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="row d-none d-lg-block">
+            <div className="col-12">
+              <div className="table-card">
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <MDBDataTable
+                    data={setProducts()}
+                    bordered
+                    striped
+                    hover
+                    className="product-table"
+                    responsive
+                    entries={10}
+                    entriesOptions={[5, 10, 20, 50]}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="row d-lg-none">
+            <div className="col-12">
+              {loading ? (
+                <Loader />
+              ) : (
+                <div className="mobile-products-container">
+                  {products.map((product) => (
+                    <div key={product._id} className="product-card-mobile">
+                      <div className="card-header-mobile">
+                        <div className="product-info-mobile">
+                          <h5 className="product-name-mobile">
+                            {product.name}
+                          </h5>
+                          <div className="product-meta-mobile">
+                            <span className="badge bg-secondary me-2">
+                              <i className="fa fa-tag me-1"></i>
+                              {product.type}
+                            </span>
+                            <span
+                              className={`badge ${
+                                product.stock > 0 ? "bg-success" : "bg-danger"
+                              }`}
+                            >
+                              <i className="fa fa-cubes me-1"></i>
+                              Stock: {product.stock}
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          className={`status-badge ${
+                            product.disabled ? "disabled" : "active"
+                          }`}
+                        >
+                          {product.disabled ? "Disabled" : "Active"}
+                        </div>
+                      </div>
+
+                      <div className="card-body-mobile">
+                        <div className="product-id-mobile">
+                          <strong>ID:</strong> {product._id}
+                        </div>
+                      </div>
+
+                      <div className="card-actions-mobile">
+                        <Link
+                          to={`/admin/product/${product._id}`}
+                          className="btn btn-primary btn-sm flex-fill"
+                        >
+                          <i className="fa fa-pencil me-1"></i>
+                          Edit
+                        </Link>
+                        <Button
+                          onClick={(e) => deleteHandler(e, product._id)}
+                          className="btn btn-danger btn-sm flex-fill"
+                        >
+                          <i className="fa fa-trash me-1"></i>
+                          Delete
+                        </Button>
+                        {product.disabled ? (
+                          <Button
+                            onClick={(e) => enableHandler(e, product._id)}
+                            className="btn btn-success btn-sm flex-fill"
+                          >
+                            <i className="fa fa-check me-1"></i>
+                            Enable
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={(e) => disableHandler(e, product._id)}
+                            className="btn btn-warning btn-sm flex-fill"
+                          >
+                            <i className="fa fa-ban me-1"></i>
+                            Disable
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

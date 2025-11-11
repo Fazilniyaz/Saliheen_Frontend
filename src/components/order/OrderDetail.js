@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { jsPDF } from "jspdf";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function OrderDetail() {
   const { orderDetail, loading } = useSelector((state) => state.orderState);
@@ -187,6 +188,32 @@ export default function OrderDetail() {
     ReturnOrder();
   };
 
+  if (!boolean2) {
+    return (
+      <div
+        className="loading-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          width: "100%",
+        }}
+      >
+        <ThreeDots
+          height="80"
+          width="80"
+          radius="9"
+          color="#FFD700" // Golden color
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClassName=""
+          visible={true}
+        />
+      </div>
+    );
+  }
+
   return (
     <Fragment>
       {loading ? (
@@ -261,13 +288,13 @@ export default function OrderDetail() {
                   {orderItems &&
                     orderItems.map((item, index) => (
                       <div className="row my-5" key={index}>
-                        <div className="col-4 col-lg-2">
+                        {/* <div className="col-4 col-lg-2">
                           <img
                             src={item.image}
                             alt={item.name}
                             className="img-fluid"
                           />
-                        </div>
+                        </div> */}
 
                         <div className="col-5 col-lg-5">
                           <Link to={`/product/${item.product}`}>

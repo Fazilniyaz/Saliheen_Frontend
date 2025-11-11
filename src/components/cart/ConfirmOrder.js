@@ -31,7 +31,7 @@ function ConfirmOrder() {
   }));
 
   const itemsPrice = localCart.reduce((acc, item) => acc + item.finalPrice, 0);
-  const shippingPrice = itemsPrice > 200 ? 0 : 25;
+  const shippingPrice = itemsPrice > 200 ? 0 : 0;
   const taxPrice = Number((0 * itemsPrice).toFixed(2)); // Ensure taxPrice is a number
   const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)); // Ensure totalPrice is calculated correctly
 
@@ -55,6 +55,7 @@ function ConfirmOrder() {
       totalPrice,
       products,
     };
+    console.log(data);
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
   };
 

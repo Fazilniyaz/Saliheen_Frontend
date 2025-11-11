@@ -1,24 +1,388 @@
-.hover-effect tbody tr:hover {
-    background-image: repeating-linear-gradient(
-      to right,
-      #a2682a 0%,
-      #be8c3c 8%,
-      #be8c3c 18%,
-      #d3b15f 27%,
-      #faf0a0 35%,
-      #ffffc2 40%,
-      #faf0a0 50%,
-      #d3b15f 58%,
-      #be8c3c 67%,
-      #b17b32 77%,
-      #bb8332 83%,
-      #d4a245 88%,
-      #e1b453 93%,
-      #a4692a 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-   
-    filter: drop-shadow(0 0 1px rgba(255, 200, 0, 0.3));
-    animation: MoveBackgroundPosition 6s ease-in-out infinite;
+/* Color Variables */
+:root {
+  --gold-primary: #d4af37;
+  --gold-light: #faf0a0;
+  --gold-dark: #a2682a;
+  --bg-dark: #0c0c0c;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #2d2d2d;
+  --border-dark: #333;
+}
+
+/* Product List Wrapper */
+.product-list-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-card) 50%, var(--bg-dark) 100%);
+  display: flex;
+}
+
+/* Main Content */
+.product-list-content {
+  flex: 1;
+  margin-left: 280px;
+  padding-bottom: 80px;
+}
+
+@media (max-width: 991.98px) {
+  .product-list-content {
+    margin-left: 0;
+    margin-top: 70px;
   }
+}
+
+/* Page Title */
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+}
+
+@media (max-width: 767.98px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Gold Gradient Text */
+.gold-gradient-text {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary), var(--gold-light), var(--gold-primary), var(--gold-dark));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Gold Button */
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+  color: white;
+  border: 1px solid var(--gold-primary);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.5);
+  color: var(--bg-dark);
+}
+
+@media (max-width: 767.98px) {
+  .btn-gold {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Products Count Badge */
+.products-count-badge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card-hover));
+  border: 1px solid var(--gold-primary);
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  color: #ccc;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.products-count-badge .count {
+  color: var(--gold-primary);
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+}
+
+/* Desktop Table Card */
+.table-card {
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
+  border: 1px solid var(--border-dark);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow-x: auto;
+}
+
+/* Table Styling */
+.product-table {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+.product-table table {
+  background-color: transparent !important;
+  color: #fff !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.product-table thead th {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary)) !important;
+  color: white !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  padding: 1rem !important;
+  border: none !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.product-table tbody tr {
+  background-color: rgba(26, 26, 26, 0.5) !important;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.product-table tbody tr:hover {
+  background-color: rgba(212, 175, 55, 0.1) !important;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.product-table tbody td {
+  color: #ccc !important;
+  padding: 1rem !important;
+  vertical-align: middle;
+  border: none !important;
+}
+
+.product-table .dataTables_wrapper .dataTables_filter input {
+  background-color: var(--bg-card);
+  color: #fff;
+  border: 1px solid var(--gold-primary);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+.product-table .dataTables_wrapper .dataTables_length select {
+  background-color: var(--bg-card);
+  color: #fff;
+  border: 1px solid var(--gold-primary);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.product-table .dataTables_wrapper .dataTables_paginate .paginate_button {
+  background: var(--bg-card) !important;
+  color: var(--gold-primary) !important;
+  border: 1px solid var(--border-dark) !important;
+  border-radius: 6px;
+  margin: 0 0.25rem;
+}
+
+.product-table .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: rgba(212, 175, 55, 0.2) !important;
+  color: var(--gold-light) !important;
+  border-color: var(--gold-primary) !important;
+}
+
+.product-table .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary)) !important;
+  color: white !important;
+  border-color: var(--gold-primary) !important;
+}
+
+/* Mobile Card View */
+.mobile-products-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.product-card-mobile {
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
+  border: 1px solid var(--border-dark);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.product-card-mobile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  border-color: var(--gold-primary);
+}
+
+.card-header-mobile {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.product-info-mobile {
+  flex: 1;
+}
+
+.product-name-mobile {
+  color: var(--gold-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.product-meta-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: white;
+}
+
+.status-badge.disabled {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  color: var(--bg-dark);
+}
+
+.card-body-mobile {
+  padding: 1rem;
+}
+
+.product-id-mobile {
+  color: #999;
+  font-size: 0.85rem;
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  border-radius: 6px;
+  word-break: break-all;
+}
+
+.card-actions-mobile {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--border-dark);
+}
+
+.card-actions-mobile .btn {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.card-actions-mobile .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Badge Styling */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  font-weight: 600;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 575.98px) {
+  .product-name-mobile {
+    font-size: 1rem;
+  }
+
+  .card-actions-mobile {
+    flex-wrap: wrap;
+  }
+
+  .card-actions-mobile .btn {
+    flex: 1 1 calc(50% - 0.25rem);
+  }
+
+  .card-actions-mobile .btn:last-child {
+    flex: 1 1 100%;
+  }
+}
+
+/* Button Hover Effects */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #764ba2, #667eea);
+  transform: scale(1.05);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #eb3349, #f45c43);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #f45c43, #eb3349);
+  transform: scale(1.05);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #38ef7d, #11998e);
+  transform: scale(1.05);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #f2994a, #f2c94c);
+  border: none;
+  color: var(--bg-dark);
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, #f2c94c, #f2994a);
+  transform: scale(1.05);
+  color: var(--bg-dark);
+}
+
+/* Loading State */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}

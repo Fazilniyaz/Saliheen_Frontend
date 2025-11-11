@@ -8,7 +8,6 @@ import { orderCompleted } from "../../slices/cartSlice";
 import { createOrder } from "../../actions/orderActions";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
-// console.log("localCart", localCart);
 
 const RazorpayPayment = ({
   finalPrice,
@@ -21,23 +20,47 @@ const RazorpayPayment = ({
   shippingInfo,
   products,
 }) => {
+  console.log("RazorpayPayment finalPrice:", finalPrice);
+  console.log("RazorpayPayment name:", name);
+  console.log("RazorpayPayment phone:", phone);
+  console.log("RazorpayPayment itemsPrice:", itemsPrice);
+  console.log("RazorpayPayment shippingPrice:", shippingPrice);
+  console.log("RazorpayPayment taxPrice:", taxPrice);
+  console.log("RazorpayPayment totalPrice:", totalPrice);
+  console.log("RazorpayPayment shippingInfo:", shippingInfo);
+  console.log("RazorpayPayment products:", products);
+
   const [amount] = useState(finalPrice);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { localCart, addToLocalCart, removeFromLocalCart } =
     useContext(CartContext);
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  // const { shippingInfo } = useSelector((state) => state.cartState);
   const { user = "" } = useSelector((state) => state.authState);
-
+  console.log("User in RazorpayPayment:", user);
   const handlePayment = async (amt) => {
+    if (isProcessing) {
+      toast("Payment is already being processed", {
+        type: "warning",
+        position: "bottom-center",
+      });
+      return;
+    }
+
     try {
+      setIsProcessing(true);
       const amtInPaise = amt;
 
-      // Step 1: Create Razorpay Order
+      // Step 1: Create Razorpay Order with shipping info
       const { data: razorpayOrder } = await axios.post(
         "https://saliheenperfumes-zd2i.onrender.com/create-order",
-        { amount: amtInPaise },
+        {
+          amount: amtInPaise,
+          shippingInfo: shippingInfo, // Include shipping info
+          customerName: name,
+          customerPhone: phone,
+        },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -53,6 +76,8 @@ const RazorpayPayment = ({
         order_id: razorpayOrder.orderId,
         handler: async function (response) {
           try {
+            console.log("Payment successful, starting verification...");
+
             // Step 2: Verify Payment
             const { data: verificationResult } = await axios.post(
               "https://saliheenperfumes-zd2i.onrender.com/verify-payment",
@@ -66,6 +91,12 @@ const RazorpayPayment = ({
                 withCredentials: true,
               }
             );
+
+            if (verificationResult.status !== "success") {
+              throw new Error("Payment verification failed");
+            }
+
+            console.log("Payment verified, creating order...");
 
             // Step 3: Build order items
             const validOrderItemsFromLocalCart = localCart.map((item) => {
@@ -96,52 +127,74 @@ const RazorpayPayment = ({
               },
             };
 
-            // Step 5: CREATE ORDER AND WAIT FOR COMPLETION
-            try {
-              await dispatch(createOrder(order)); // Wait for this to complete!
+            console.log("Order object created:", order);
 
-              // Only proceed if order creation succeeded
-              dispatch(orderCompleted());
+            // Step 5: CREATE ORDER - Use Promise to properly wait
+            const orderResult = await new Promise((resolve, reject) => {
+              dispatch(createOrder(order))
+                .then((result) => {
+                  console.log("Order created successfully:", result);
+                  resolve(result);
+                })
+                .catch((error) => {
+                  console.error("Order creation error:", error);
+                  reject(error);
+                });
+            });
 
-              // Clear cart
-              localCart.forEach((item) => {
-                removeFromLocalCart(item.productId);
-              });
+            // Only proceed if order creation succeeded
+            console.log("Order creation completed, cleaning up...");
+            dispatch(orderCompleted());
 
-              toast("Payment Success!", {
-                type: "success",
-                position: "bottom-center",
-              });
+            // Clear cart
+            localCart.forEach((item) => {
+              removeFromLocalCart(item.productId);
+            });
 
-              navigate("/order/success");
-            } catch (orderError) {
-              // Order creation failed even though payment succeeded
-              console.error(
-                "Order creation failed after successful payment:",
-                orderError
-              );
-              toast(
-                "Payment received but order creation failed. Please contact support with payment ID: " +
-                  response.razorpay_payment_id,
-                {
-                  type: "error",
-                  position: "bottom-center",
-                  autoClose: false,
-                }
-              );
-              // Don't navigate - let user see the error
-            }
+            toast("Payment Success! Your order has been placed.", {
+              type: "success",
+              position: "bottom-center",
+              autoClose: 3000,
+            });
+
+            setIsProcessing(false);
+            navigate("/order/success");
           } catch (err) {
-            console.error("Payment verification failed", err);
-            toast("Payment verification failed. Please contact support.", {
+            console.error("Post-payment processing failed:", err);
+            setIsProcessing(false);
+
+            // Determine error message
+            let errorMessage = "Payment received but order creation failed.";
+            if (err.response?.data?.message) {
+              errorMessage += " Error: " + err.response.data.message;
+            }
+            errorMessage +=
+              " Please contact support with payment ID: " +
+              response.razorpay_payment_id;
+
+            toast(errorMessage, {
               type: "error",
               position: "bottom-center",
+              autoClose: false,
             });
           }
         },
+        modal: {
+          ondismiss: function () {
+            console.log("Payment modal closed");
+            setIsProcessing(false);
+          },
+        },
         prefill: {
-          name,
-          email: "customer@example.com",
+          name: user.name,
+          email:
+            user.email +
+            user.addresses.map((addr) => ({
+              addressLine: addr.addressLine,
+              city: addr.city,
+              state: addr.state,
+              pincode: addr.pincode,
+            })),
           contact: phone,
         },
         theme: {
@@ -150,13 +203,32 @@ const RazorpayPayment = ({
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", function (response) {
+        console.error("Payment failed:", response.error);
+        console.log("Payment failed response:", response);
+        setIsProcessing(false);
+        toast(
+          "Payment failed: " +
+            (response.error.description || "Please try again"),
+          {
+            type: "error",
+            position: "bottom-center",
+          }
+        );
+      });
+
       rzp.open();
     } catch (err) {
       console.error("Razorpay order creation failed", err);
-      toast("Failed to initiate payment", {
-        type: "error",
-        position: "bottom-center",
-      });
+      setIsProcessing(false);
+      toast(
+        "Failed to initiate payment: " +
+          (err.response?.data?.message || err.message),
+        {
+          type: "error",
+          position: "bottom-center",
+        }
+      );
     }
   };
 
@@ -166,8 +238,10 @@ const RazorpayPayment = ({
         id="checkout_btn"
         className="btn btn-primary btn-block"
         onClick={() => handlePayment(finalPrice)}
+        disabled={isProcessing}
+        loading={isProcessing}
       >
-        Pay with RazorPay
+        {isProcessing ? "Processing..." : "Pay with RazorPay"}
       </Button>
     </div>
   );

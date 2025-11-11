@@ -54,14 +54,14 @@ export const login = (email, password, localCart) => async (dispatch) => {
       if (!localCart) {
         var { data } = await axios.post(
           `https://saliheenperfumes-zd2i.onrender.com/api/v1/login`,
-          // `http://localhost:8000/api/v1/login`,
+          // `https://saliheenperfumes-zd2i.onrender.com/api/v1/login`,
           { email, password },
           { withCredentials: true }
         );
       } else {
         var { data } = await axios.post(
           `https://saliheenperfumes-zd2i.onrender.com/api/v1/login`,
-          // `http://localhost:8000/api/v1/login`,
+          // `https://saliheenperfumes-zd2i.onrender.com/api/v1/login`,
           { email, password, localCart },
           { withCredentials: true }
         );

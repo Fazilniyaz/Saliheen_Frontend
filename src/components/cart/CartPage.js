@@ -9,6 +9,7 @@ import Loader from "../layouts/Loader";
 import { Fragment } from "react";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
+import { ThreeDots } from "react-loader-spinner";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
@@ -78,7 +79,29 @@ const CartPage = () => {
   };
 
   if (loading) {
-    return <Loader />;
+    return (
+      <div
+        className="loading-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          width: "100%",
+        }}
+      >
+        <ThreeDots
+          height="80"
+          width="80"
+          radius="9"
+          color="#FFD700" // Golden color
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClassName=""
+          visible={true}
+        />
+      </div>
+    );
   }
 
   let toatlAmount = localCart.reduce((acc, item) => acc + item.finalPrice, 0);

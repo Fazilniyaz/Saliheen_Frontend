@@ -3,8 +3,9 @@ import SideBar from "./SideBar";
 import { useEffect, useState } from "react";
 import { getAdminProducts } from "../../actions/productActions";
 import axios from "axios";
-import Loader from "../layouts/Loader";
 import { Link } from "react-router-dom";
+import { ThreeDots } from "react-loader-spinner";
+import "./Dashboard.css";
 
 export default function Dashboard() {
   const { products = [] } = useSelector((state) => state.productsState);
@@ -15,415 +16,286 @@ export default function Dashboard() {
   const [boolean, setBoolean] = useState(false);
 
   let outOfStock = 0;
-
   if (products.length > 0) {
     products.forEach((product) => {
       if (product.stock === 0) {
-        outOfStock = outOfStock + 1;
+        outOfStock += 1;
       }
     });
   }
 
   useEffect(() => {
     dispatch(getAdminProducts);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    async function getOrdersCount() {
-      const { data } = await axios.get(
-        `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/getAllOrdersCount`,
-        { withCredentials: true }
-      );
-      setOrdersCount(data.orderCount);
-      setBoolean(true);
-    }
-    getOrdersCount();
+    const fetchData = async () => {
+      try {
+        const [ordersRes, usersRes, salesRes] = await Promise.all([
+          axios.get(
+            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/getAllOrdersCount",
+            { withCredentials: true }
+          ),
+          axios.get(
+            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/GetCountOfUsers",
+            { withCredentials: true }
+          ),
+          axios.get(
+            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/salesReport?filterBy=yearly",
+            { withCredentials: true }
+          ),
+        ]);
 
-    async function getUsersCount() {
-      const { data } = await axios.get(
-        `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/GetCountOfUsers`,
-        { withCredentials: true }
-      );
-      setUsersCount(data.userCount);
-      setBoolean(true);
-    }
-    getUsersCount();
+        setOrdersCount(ordersRes.data.orderCount);
+        setUsersCount(usersRes.data.userCount);
+        setTotalSales(salesRes.data.totalAmount);
+        setBoolean(true);
+      } catch (err) {
+        console.error("Dashboard data fetch failed:", err);
+        setBoolean(true);
+      }
+    };
 
-    async function getTotalSales() {
-      const { data } = await axios.get(
-        `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/salesReport?filterBy=yearly`,
-        { withCredentials: true }
-      );
-      setTotalSales(data.totalAmount);
-      setBoolean(true);
-    }
-    getTotalSales();
-  }, [boolean]);
+    fetchData();
+  }, []);
 
   return boolean ? (
-    <div
-      className="container-fluid admin-dashboard"
-      style={{ padding: 0, margin: 0 }}
-    >
-      <div className="row g-0" style={{ margin: 0 }}>
-        {/* Sidebar Column */}
-        <div className="col-12 col-md-3 col-lg-2" style={{ padding: 0 }}>
-          <SideBar />
-        </div>
+    <div className="dashboard-wrapper">
+      <SideBar />
 
-        {/* Main Content Column - Full Width */}
-        <div
-          className="col-12 col-md-9 col-lg-10 dashboard-main"
-          style={{ padding: "20px", minHeight: "100vh" }}
-        >
-          {/* Dashboard Header */}
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="gold-gradient-text mb-0">Dashboard</h1>
-            <div className="dashboard-date">
-              <span className="text-gold">
-                {new Date().toLocaleDateString()}
-              </span>
-              <span className="text-gold ms-3">
-                {new Date().toLocaleTimeString()}
-              </span>
+      <main className="dashboard-content">
+        <div className="container-fluid px-3 px-md-4 py-4">
+          {/* Header Section */}
+          <div className="row mb-4">
+            <div className="col-12">
+              <div className="dashboard-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                <div className="mb-3 mb-md-0">
+                  <h1 className="dashboard-title gold-gradient-text mb-2">
+                    <i className="fas fa-chart-line me-2"></i>
+                    Dashboard Overview
+                  </h1>
+                  <p className="text-muted mb-0 d-none d-md-block">
+                    Welcome back! Here's what's happening with your store today.
+                  </p>
+                </div>
+                <div className="dashboard-date-badge">
+                  <div className="d-flex flex-column align-items-end">
+                    <span className="date-value">
+                      <i className="fas fa-calendar-alt me-2"></i>
+                      {new Date().toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <span className="time-value">
+                      <i className="fas fa-clock me-2"></i>
+                      {new Date().toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Total Sales Card - Full Width */}
+          {/* Total Sales - Featured Card */}
           <div className="row mb-4">
             <div className="col-12">
-              <div className="gold-card h-100">
-                <div className="card-body text-center py-4">
-                  <i className="fas fa-dollar-sign stats-icon-large text-gold mb-3"></i>
-                  <div className="card-title-gold mb-2">Total Amount</div>
-                  <Link
-                    to="/admin/salesReport"
-                    className="gold-amount text-decoration-none"
-                  >
-                    <b>${totalSales?.toLocaleString() || 0}</b>
-                  </Link>
+              <div className="featured-card gold-card position-relative overflow-hidden">
+                <div className="card-body p-4 p-md-5">
+                  <div className="row align-items-center">
+                    <div className="col-md-8">
+                      <div className="d-flex align-items-center mb-3">
+                        <div className="featured-icon-wrapper me-3">
+                          <i className="fas fa-dollar-sign"></i>
+                        </div>
+                        <div>
+                          <h5 className="card-subtitle text-gold-muted mb-1">
+                            Total Revenue
+                          </h5>
+                          <h2 className="card-title gold-gradient-text mb-0 fw-bold">
+                            Yearly Sales Report
+                          </h2>
+                        </div>
+                      </div>
+                      <div className="featured-amount-wrapper">
+                        <Link
+                          to="/admin/salesReport"
+                          className="featured-amount text-decoration-none d-inline-block"
+                        >
+                          $
+                          {(totalSales || 0).toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </Link>
+                      </div>
+                      <p className="text-muted mt-3 mb-0 d-none d-md-block">
+                        <i className="fas fa-info-circle me-2"></i>
+                        Click to view detailed sales report
+                      </p>
+                    </div>
+                    <div className="col-md-4 d-none d-md-flex justify-content-center">
+                      <div className="sales-icon-large">
+                        <i className="fas fa-chart-line"></i>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                <div className="card-glow-effect"></div>
               </div>
             </div>
           </div>
 
           {/* Stats Cards Grid */}
-          <div className="row g-3">
-            {/* Products Card */}
-            <div className="col-12 col-sm-6 col-xl-3">
-              <div className="stats-card products-card h-100">
-                <div className="card-body text-center py-4">
-                  <i className="fas fa-boxes stats-icon text-gold mb-3"></i>
-                  <div className="stats-value gold-gradient-text">
-                    {products.length}
-                  </div>
-                  <div className="stats-label text-light mb-3">Products</div>
-                  <Link
-                    className="card-footer-btn w-100 text-decoration-none d-flex justify-content-between align-items-center py-2 px-3"
-                    to="/admin/products"
-                  >
-                    <span className="text-gold">View Details</span>
-                    <span className="text-gold">
-                      <i className="fas fa-arrow-right"></i>
-                    </span>
-                  </Link>
-                </div>
-              </div>
+          <div className="row g-3 g-md-4">
+            {/* Products */}
+            <div className="col-6 col-lg-3">
+              <StatsCard
+                icon="fas fa-boxes"
+                value={products.length}
+                label="Total Products"
+                link="/admin/products"
+                color="primary"
+              />
             </div>
 
-            {/* Orders Card */}
-            <div className="col-12 col-sm-6 col-xl-3">
-              <div className="stats-card orders-card h-100">
-                <div className="card-body text-center py-4">
-                  <i className="fas fa-shopping-bag stats-icon text-gold mb-3"></i>
-                  <div className="stats-value gold-gradient-text">
-                    {ordersCount}
-                  </div>
-                  <div className="stats-label text-light mb-3">Orders</div>
-                  <Link
-                    className="card-footer-btn w-100 text-decoration-none d-flex justify-content-between align-items-center py-2 px-3"
-                    to="/admin/orders"
-                  >
-                    <span className="text-gold">View Details</span>
-                    <span className="text-gold">
-                      <i className="fas fa-arrow-right"></i>
-                    </span>
-                  </Link>
-                </div>
-              </div>
+            {/* Orders */}
+            <div className="col-6 col-lg-3">
+              <StatsCard
+                icon="fas fa-shopping-bag"
+                value={ordersCount}
+                label="Total Orders"
+                link="/admin/orders"
+                color="success"
+              />
             </div>
 
-            {/* Users Card */}
-            <div className="col-12 col-sm-6 col-xl-3">
-              <div className="stats-card users-card h-100">
-                <div className="card-body text-center py-4">
-                  <i className="fas fa-users stats-icon text-gold mb-3"></i>
-                  <div className="stats-value gold-gradient-text">
-                    {usersCount}
-                  </div>
-                  <div className="stats-label text-light mb-3">Users</div>
-                  <Link
-                    className="card-footer-btn w-100 text-decoration-none d-flex justify-content-between align-items-center py-2 px-3"
-                    to="/admin/users"
-                  >
-                    <span className="text-gold">View Details</span>
-                    <span className="text-gold">
-                      <i className="fas fa-arrow-right"></i>
-                    </span>
-                  </Link>
-                </div>
-              </div>
+            {/* Users */}
+            <div className="col-6 col-lg-3">
+              <StatsCard
+                icon="fas fa-users"
+                value={usersCount}
+                label="Total Users"
+                link="/admin/users"
+                color="info"
+              />
             </div>
 
-            {/* Out of Stock Card */}
-            <div className="col-12 col-sm-6 col-xl-3">
-              <div className="stats-card stock-card h-100">
-                <div className="card-body text-center py-4">
-                  <i className="fas fa-exclamation-triangle stats-icon text-gold mb-3"></i>
-                  <div className="stats-value gold-gradient-text">
-                    {outOfStock}
+            {/* Out of Stock */}
+            <div className="col-6 col-lg-3">
+              <StatsCard
+                icon="fas fa-exclamation-triangle"
+                value={outOfStock}
+                label="Out of Stock"
+                link="/admin/products"
+                color="warning"
+                noLink
+              />
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="row mt-4 d-none d-lg-flex">
+            <div className="col-12">
+              <div className="quick-actions-card">
+                <div className="card-body p-4">
+                  <h5 className="mb-4 gold-gradient-text fw-bold">
+                    <i className="fas fa-bolt me-2"></i>
+                    Quick Actions
+                  </h5>
+                  <div className="row g-3">
+                    <div className="col-md-3">
+                      <Link
+                        to="/admin/products/create"
+                        className="quick-action-btn"
+                      >
+                        <i className="fas fa-plus-circle mb-2"></i>
+                        <span>Add Product</span>
+                      </Link>
+                    </div>
+                    <div className="col-md-3">
+                      <Link to="/admin/orders" className="quick-action-btn">
+                        <i className="fas fa-list-alt mb-2"></i>
+                        <span>View Orders</span>
+                      </Link>
+                    </div>
+                    <div className="col-md-3">
+                      <Link to="/admin/users" className="quick-action-btn">
+                        <i className="fas fa-user-plus mb-2"></i>
+                        <span>Manage Users</span>
+                      </Link>
+                    </div>
+                    <div className="col-md-3">
+                      <Link to="/admin/categories" className="quick-action-btn">
+                        <i className="fas fa-tags mb-2"></i>
+                        <span>Categories</span>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="stats-label text-light">Out of Stock</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Custom Styles */}
-      <style jsx>{`
-        .admin-dashboard {
-          background: linear-gradient(
-            135deg,
-            #0c0c0c 0%,
-            #1a1a1a 50%,
-            #0c0c0c 100%
-          );
-          min-height: 100vh;
-          color: white;
-          font-family: "Yantramanav", sans-serif;
-        }
-
-        .dashboard-main {
-          background: transparent;
-          width: 100%;
-        }
-
-        .gold-gradient-text {
-          background-image: repeating-linear-gradient(
-            to right,
-            #a2682a 0%,
-            #be8c3c 8%,
-            #be8c3c 18%,
-            #d3b15f 27%,
-            #faf0a0 35%,
-            #ffffc2 40%,
-            #faf0a0 50%,
-            #d3b15f 58%,
-            #be8c3c 67%,
-            #b17b32 77%,
-            #bb8332 83%,
-            #d4a245 88%,
-            #e1b453 93%,
-            #a4692a 100%
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-size: 200% auto;
-          font-weight: bold;
-          filter: drop-shadow(0 0 2px rgba(255, 200, 0, 0.5));
-          animation: MoveBackgroundPosition 6s ease-in-out infinite;
-        }
-
-        @keyframes MoveBackgroundPosition {
-          0% {
-            background-position: 0% center;
-          }
-          50% {
-            background-position: 100% center;
-          }
-          100% {
-            background-position: 0% center;
-          }
-        }
-
-        .text-gold {
-          color: #d4af37 !important;
-        }
-
-        .gold-card {
-          background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-          border: 1px solid #d4af37;
-          border-radius: 15px;
-          box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .gold-card::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 4px;
-          background: linear-gradient(
-            90deg,
-            #a2682a,
-            #be8c3c,
-            #d3b15f,
-            #faf0a0,
-            #d3b15f,
-            #be8c3c,
-            #a2682a
-          );
-        }
-
-        .card-title-gold {
-          font-size: 1.5rem;
-          color: #d4af37;
-          font-weight: 600;
-          margin-bottom: 1rem;
-        }
-
-        .gold-amount {
-          font-size: 3rem;
-          background-image: repeating-linear-gradient(
-            to right,
-            #a2682a,
-            #be8c3c,
-            #d3b15f,
-            #faf0a0,
-            #d3b15f,
-            #be8c3c,
-            #a2682a
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          text-decoration: none;
-          font-weight: bold;
-          display: block;
-        }
-
-        .stats-card {
-          background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-          border: 1px solid #333;
-          border-radius: 12px;
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-          height: 100%;
-        }
-
-        .stats-card::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(
-            90deg,
-            #a2682a,
-            #be8c3c,
-            #d3b15f,
-            #faf0a0,
-            #d3b15f,
-            #be8c3c,
-            #a2682a
-          );
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .stats-card:hover {
-          transform: translateY(-5px);
-          border-color: #d4af37;
-          box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-        }
-
-        .stats-card:hover::before {
-          opacity: 1;
-        }
-
-        .stats-icon {
-          font-size: 2.5rem;
-          margin-bottom: 1rem;
-        }
-
-        .stats-icon-large {
-          font-size: 3rem;
-          margin-bottom: 1rem;
-        }
-
-        .stats-value {
-          font-size: 2.5rem;
-          font-weight: bold;
-          margin: 1rem 0;
-          line-height: 1;
-        }
-
-        .stats-label {
-          font-size: 1.1rem;
-          color: #ccc;
-          font-weight: 500;
-          margin-bottom: 1.5rem;
-        }
-
-        .card-footer-btn {
-          background: rgba(212, 175, 55, 0.1);
-          border: 1px solid rgba(212, 175, 55, 0.3);
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          margin-top: auto;
-        }
-
-        .card-footer-btn:hover {
-          background: rgba(212, 175, 55, 0.2);
-          transform: translateY(-2px);
-        }
-
-        .dashboard-date {
-          font-size: 0.9rem;
-          color: #d4af37;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-          .dashboard-main {
-            padding: 15px;
-          }
-
-          .gold-amount {
-            font-size: 2.2rem;
-          }
-
-          .stats-value {
-            font-size: 2rem;
-          }
-
-          .stats-icon {
-            font-size: 2rem;
-          }
-
-          .stats-icon-large {
-            font-size: 2.5rem;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .gold-amount {
-            font-size: 1.8rem;
-          }
-
-          .stats-value {
-            font-size: 1.8rem;
-          }
-        }
-      `}</style>
+      </main>
     </div>
   ) : (
-    <Loader />
+    <div className="loading-wrapper">
+      <div className="loading-content">
+        <ThreeDots
+          height="80"
+          width="80"
+          radius="9"
+          color="#d4af37"
+          ariaLabel="three-dots-loading"
+          visible={true}
+        />
+        <p className="loading-text mt-3">Loading dashboard...</p>
+      </div>
+    </div>
+  );
+}
+
+// Reusable Stats Card Component
+function StatsCard({ icon, value, label, link, color, noLink }) {
+  const colorClasses = {
+    primary: "stats-card-primary",
+    success: "stats-card-success",
+    info: "stats-card-info",
+    warning: "stats-card-warning",
+  };
+
+  return (
+    <div className={`stats-card ${colorClasses[color] || ""} h-100`}>
+      <div className="card-body p-3 p-md-4">
+        <div className="d-flex justify-content-between align-items-start mb-3">
+          <div className={`stats-icon-wrapper icon-${color}`}>
+            <i className={icon}></i>
+          </div>
+          <div className="stats-badge">
+            <i className="fas fa-arrow-up me-1"></i>
+          </div>
+        </div>
+        <div className="stats-value gold-gradient-text mb-2">{value}</div>
+        <div className="stats-label mb-3">{label}</div>
+        {!noLink && (
+          <Link to={link} className="stats-link">
+            View Details
+            <i className="fas fa-arrow-right ms-2"></i>
+          </Link>
+        )}
+        {noLink && (
+          <div className="stats-link disabled">
+            <i className="fas fa-info-circle me-2"></i>
+            Check inventory
+          </div>
+        )}
+      </div>
+      <div className="card-shine-effect"></div>
+    </div>
   );
 }

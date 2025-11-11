@@ -1,9 +1,9 @@
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, memo, useMemo } from "react";
 import axios from "axios";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Divider } from "semantic-ui-react";
-import { ThreeDots } from "react-loader-spinner"; // Import the spinner
+import { ThreeDots } from "react-loader-spinner";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { Wrench, Clock, RefreshCcw } from "lucide-react";
@@ -26,7 +26,7 @@ const quotes = [
   "Das Parfum ist die Sprache, die das Herz spricht. - Perfume is the language spoken by the heart. (German)",
   "العطر هو تعبير عن الحنين ويمتد ليشمل كل ما هو جميل. - Perfume is an expression of nostalgia and extends to include all that is beautiful. (Arabic)",
   "アッタールは平和の香り、時間がゆっくり流れ、自然が咲く香りです。 - Attar is the scent of peace, of time slowing down and nature blooming. (Japanese)",
-  "العطر هو رسالة سرية تُرسل من روح إلى أخرى. - Perfume is a secret message sent from one person’s soul to another. (Arabic)",
+  "العطر هو رسالة سرية تُرسل من روح إلى أخرى. - Perfume is a secret message sent from one person's soul to another. (Arabic)",
   "Attar es una celebración de la naturaleza, pura y sin refinar. - Attar is a celebration of nature, pure and unrefined. (Spanish)",
   "العطر هو لغة الحب، خفية وساحرة. - Perfume is a language of love, subtle and intoxicating. (Arabic)",
   "Attar captura el espíritu de la naturaleza y lo conserva en una botella. - Attar captures the spirit of nature and preserves it in a bottle. (Spanish)",
@@ -37,7 +37,7 @@ const quotes = [
   "العطر كالتوقيع الشخصي، يترك أثراً أينما ذهبت. - Perfume is like a personal signature, leaving a trail wherever you go. (Arabic)",
   "아타르는 꽃과 향신료의 중심으로 향기로운 여행입니다. - Attar is a fragrant journey into the heart of flowers and spices. (Korean)",
   "العطر هو سيمفونية من الروائح تعزف على الحواس. - Perfume is a symphony of aromas that plays on the senses. (Arabic)",
-  "Attar 响应古老的传统，展现了自然本质的美丽。 - Attar speaks of ancient traditions and the beauty of nature’s essence. (Chinese)",
+  "Attar 响应古老的传统，展现了自然本质的美丽。 - Attar speaks of ancient traditions and the beauty of nature's essence. (Chinese)",
   "العطر يضفي لمسة أخيرة على الأناقة—تفصيل غير مرئي يكمل شخصية الرجل أو المرأة. - Perfume puts the finishing touch to elegance—a detail that subtly underscores the look, an invisible extra that completes a man's or woman's personality. (Arabic)",
   "Attar είναι η ποίηση της γης, αποσταγμένη σε μία σταγόνα. - Attar is the poetry of the earth, distilled into a single drop. (Greek)",
   "العطر هو طريقة لإيقاف الزمن. تشم رائحة معينة وتتذكر كل شيء. - Perfume is a way of stopping time. You smell a certain scent and you remember everything. (Arabic)",
@@ -46,11 +46,11 @@ const quotes = [
   "Attar шепчет на языке цветов и природы. - Attar whispers the language of flowers and nature. (Russian)",
   "العطر هو الشكل الأكثر كثافة للذاكرة. - Perfume is the most intense form of memory. (Arabic)",
   "Attar es la fragancia de la tradición, que lleva la esencia de la pureza. - Attar is the fragrance of tradition, carrying the essence of purity. (Spanish)",
-  "عطر المرأة يقول عنها أكثر مما يقوله خط يدها. - A woman’s perfume tells more about her than her handwriting. (Arabic)",
+  "عطر المرأة يقول عنها أكثر مما يقوله خط يدها. - A woman's perfume tells more about her than her handwriting. (Arabic)",
   "Le parfum est l'art qui fait parler la mémoire. - Perfume is the art that makes memory speak. (French)",
 ];
 
-// Lazy load heavy components for better initial load time (Optional but Recommended)
+// Lazy load heavy components
 const AttarOudhHistory = React.lazy(() =>
   import("./AttarOudhHistory/AttarOudhHistory")
 );
@@ -58,15 +58,90 @@ const PerfumeProcess = React.lazy(() =>
   import("./PerfumeProcess/PerfumeProcess")
 );
 
+// Memoized Loader Component
+const Loader = memo(() => (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "50vh",
+      width: "100%",
+      background: "#000",
+    }}
+  >
+    <ThreeDots
+      height="80"
+      width="80"
+      radius="9"
+      color="#FFD700"
+      ariaLabel="three-dots-loading"
+      visible={true}
+    />
+  </div>
+));
+
+// Memoized Small Loader for Suspense
+const SmallLoader = memo(() => (
+  <div style={{ textAlign: "center", padding: "20px" }}>
+    <ThreeDots
+      height="40"
+      width="40"
+      radius="9"
+      color="#FFD700"
+      ariaLabel="three-dots-loading"
+      visible={true}
+    />
+  </div>
+));
+
+// Memoized Category Card
+const CategoryCard = memo(({ category, image, onClick }) => (
+  <div onClick={onClick} className="category-card">
+    <img
+      src={image}
+      alt={category.name}
+      className="category-image"
+      loading="lazy"
+      decoding="async"
+    />
+    <div className="category-info">
+      <h3>{category.name}</h3>
+    </div>
+  </div>
+));
+
+// Memoized Quote Slide
+const QuoteSlide = memo(({ quote }) => {
+  const [otherLang, englishLang] = useMemo(() => quote.split(" - "), [quote]);
+
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        backgroundColor: "black",
+        borderRadius: "10px",
+        padding: "10px",
+      }}
+    >
+      <h1 style={{ fontSize: "20px", fontStyle: "italic" }}>{otherLang}</h1>
+      <h1 style={{ fontSize: "15px", fontStyle: "italic" }}>{englishLang}</h1>
+    </div>
+  );
+});
+
 export const Home = () => {
   const [categories, setCategories] = useState([]);
-  const [underService, setUnderService] = useState(true);
-  const [loading, setLoading] = useState(true); // New state for loading
+  const [underService, setUnderService] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const handleCategoryClick = (categoryName) => {
-    navigate(`/category/${categoryName}`);
-  };
+  const handleCategoryClick = useMemo(
+    () => (categoryName) => {
+      navigate(`/category/${categoryName}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -78,39 +153,15 @@ export const Home = () => {
         setCategories(data.categories);
       } catch (error) {
         console.error("Error fetching categories:", error);
-        // Optionally set some default categories or show an error message
       } finally {
-        setLoading(false); // Set loading to false regardless of success or failure
+        setLoading(false);
       }
     };
     fetchCategories();
   }, []);
 
-  // Show a beautiful golden loader while fetching data
   if (loading) {
-    return (
-      <div
-        className="loading-container"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "50vh",
-          width: "100%",
-        }}
-      >
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#FFD700" // Golden color
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{}}
-          wrapperClassName=""
-          visible={true}
-        />
-      </div>
-    );
+    return <Loader />;
   }
 
   if (underService) {
@@ -120,10 +171,10 @@ export const Home = () => {
           <div className="flex justify-center mb-6">
             <Wrench size={70} className="text-yellow-400 animate-spin-slow" />
           </div>
-          <h1 className="text-3xl font-bold mb-3">We’re Under Service</h1>
+          <h1 className="text-3xl font-bold mb-3">We're Under Service</h1>
           <p className="text-gray-400 mb-6">
             Our website is currently undergoing scheduled maintenance to improve
-            your experience. We’ll be back soon. Thank you for your patience!
+            your experience. We'll be back soon. Thank you for your patience!
           </p>
           <div className="flex justify-center gap-4 text-gray-300">
             <Clock className="animate-pulse" />
@@ -164,20 +215,17 @@ export const Home = () => {
         stopOnHover={false}
         centerMode={true}
       >
-        {images.map((image, index) => {
-          // const fileName = image.split("/").pop().split(".")[0];
-          return (
-            <div key={index}>
-              <img
-                src={image}
-                // alt={`Image ${index + 1}`}
-                style={{ objectFit: "cover" }}
-                loading="lazy" // Add lazy loading
-              />
-              {/* <p className="legend carousel-legend">{fileName}</p> */}
-            </div>
-          );
-        })}
+        {images.map((image, index) => (
+          <div key={index}>
+            <img
+              src={image}
+              alt={`Perfume ${index + 1}`}
+              style={{ objectFit: "cover" }}
+              loading={index < 2 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          </div>
+        ))}
       </Carousel>
 
       <Divider />
@@ -186,21 +234,12 @@ export const Home = () => {
       <h2 className="heading">Shop By Category</h2>
       <div className="categories-container">
         {categories.map((category, index) => (
-          <div
-            onClick={() => handleCategoryClick(category.name)}
+          <CategoryCard
             key={category._id}
-            className="category-card"
-          >
-            <img
-              src={imagesCat[index % imagesCat.length]} // Use modulo to avoid out-of-bounds
-              alt={category.name}
-              className="category-image"
-              loading="lazy" // Add lazy loading
-            />
-            <div className="category-info">
-              <h3>{category.name}</h3>
-            </div>
-          </div>
+            category={category}
+            image={imagesCat[index % imagesCat.length]}
+            onClick={() => handleCategoryClick(category.name)}
+          />
         ))}
       </div>
 
@@ -218,47 +257,14 @@ export const Home = () => {
         autoPlay
         infiniteLoop
       >
-        {quotes.map((quote, index) => {
-          let otherLang = quote.split("-")[0];
-          let englishLang = quote.split("-")[1];
-          return (
-            <div
-              key={index}
-              style={{
-                textAlign: "center",
-                backgroundColor: "black",
-                borderRadius: "10px",
-                padding: "10px",
-              }}
-            >
-              <h1 style={{ fontSize: "20px", fontStyle: "italic" }}>
-                {otherLang}
-              </h1>
-              <h1 style={{ fontSize: "15px", fontStyle: "italic" }}>
-                {englishLang}
-              </h1>
-            </div>
-          );
-        })}
+        {quotes.map((quote, index) => (
+          <QuoteSlide key={index} quote={quote} />
+        ))}
       </Carousel>
 
       <Divider />
 
-      {/* Wrap lazy-loaded components in Suspense */}
-      <Suspense
-        fallback={
-          <div style={{ textAlign: "center", padding: "20px" }}>
-            <ThreeDots
-              height="40"
-              width="40"
-              radius="9"
-              color="#FFD700"
-              ariaLabel="three-dots-loading"
-              visible={true}
-            />
-          </div>
-        }
-      >
+      <Suspense fallback={<SmallLoader />}>
         <AttarOudhHistory />
       </Suspense>
 
@@ -273,24 +279,12 @@ export const Home = () => {
         allow="accelerometer; autoplay; encrypted-media; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen={false}
-      ></iframe>
+        loading="lazy"
+      />
 
       <Divider />
 
-      <Suspense
-        fallback={
-          <div style={{ textAlign: "center", padding: "20px" }}>
-            <ThreeDots
-              height="40"
-              width="40"
-              radius="9"
-              color="#FFD700"
-              ariaLabel="three-dots-loading"
-              visible={true}
-            />
-          </div>
-        }
-      >
+      <Suspense fallback={<SmallLoader />}>
         <PerfumeProcess />
       </Suspense>
 
@@ -334,9 +328,6 @@ export const Home = () => {
         .slick-prev:before,
         .slick-next:before {
           color: #ffd700;
-        }
-        .loading-container {
-          background: #000; /* Optional: Set background to match your theme */
         }
       `}</style>
     </div>

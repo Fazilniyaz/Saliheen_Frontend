@@ -111,19 +111,25 @@ export const login = (email, password, localCart) => async (dispatch) => {
     }
   }
 };
-export const googleLogin = (email) => async (dispatch) => {
+// Update the googleLogin action - the issue is here
+export const googleLogin = (userData) => async (dispatch) => {
   try {
     dispatch(loginRequest());
     const { data } = await axios.post(
       `https://saliheenperfumes-zd2i.onrender.com/api/v1/google/signin`,
       {
-        email,
-      },
+        email: userData.email,
+        name: userData.name,
+        avatar: userData.avatar,
+      }, // Send as a proper object, not nested
       { withCredentials: true }
     );
     dispatch(loginSuccess(data));
   } catch (error) {
-    dispatch(loginFail(error.response.data.message));
+    dispatch(
+      loginFail(error.response?.data?.message || "Authentication failed")
+    );
+    throw error;
   }
 };
 
@@ -160,7 +166,9 @@ export const loadUser = async (dispatch) => {
 
     const { data } = await axios.get(
       `https://saliheenperfumes-zd2i.onrender.com/api/v1/myprofile`,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+      }
     );
     dispatch(loadUserSuccess(data));
   } catch (error) {
@@ -296,7 +304,9 @@ export const deleteUser = (id) => async (dispatch) => {
     dispatch(deleteUserRequest());
     await axios.delete(
       `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/user/${id}`,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+      }
     );
     dispatch(deleteUserSuccess());
   } catch (error) {
@@ -330,7 +340,9 @@ export const blockUser = (id) => async (dispatch) => {
   try {
     await axios.put(
       `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/userBlock/${id}`,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+      }
     );
 
     toast.success("User blocked successfully!", {

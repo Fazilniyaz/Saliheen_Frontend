@@ -1,13 +1,11 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Dropdown, Image } from "react-bootstrap";
 import { logout } from "../../actions/userActions";
-import axios from "axios";
 import { Icon } from "semantic-ui-react";
-// import { CartContext } from "./cartContext";
-
 import { CartContext } from "../cart/cartContext";
+import GoogleAuthModal from "../user/GoogleAuthModel";
 
 function Header() {
   const { isAuthenticated, user = "" } = useSelector(
@@ -18,33 +16,11 @@ function Header() {
   const navigate = useNavigate();
 
   const { localCart } = useContext(CartContext);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const logoutHandler = () => {
     dispatch(logout);
   };
-
-  const userId = user._id;
-  const [cartData, setCartData] = useState([]);
-  const [boolean, setBoolean] = useState(false);
-
-  // useEffect(() => {
-  //   const fetchCartItems = async () => {
-  //     if (user && userId) {
-  //       try {
-  //         const { data } = await axios.get(
-  //           `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
-  //           { withCredentials: true }
-  //         );
-  //         setCartData(data.cartItems);
-  //         setBoolean(true);
-  //       } catch (error) {
-  //         console.error("Error fetching cart data:", error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchCartItems();
-  // }, [boolean, user, userId, cartData]);
 
   return (
     <Fragment>
@@ -64,11 +40,6 @@ function Header() {
             </Link>
           </div>
         </div>
-
-        {/* Optional Search Component */}
-        {/* <div className="col-12 col-md-6 mt-2 mt-md-0">
-          <Search />
-        </div> */}
 
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
           {isAuthenticated ? (
@@ -127,11 +98,13 @@ function Header() {
               </Dropdown>
             </>
           ) : (
-            <Link to="/login">
-              <button className="btn" id="login_btn">
-                Login
-              </button>
-            </Link>
+            <button
+              className="btn"
+              id="login_btn"
+              onClick={() => setShowAuthModal(true)}
+            >
+              Sign In
+            </button>
           )}
 
           {/* Always show cart icon */}
@@ -143,6 +116,12 @@ function Header() {
           </span>
         </div>
       </nav>
+
+      {/* Google Auth Modal */}
+      <GoogleAuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </Fragment>
   );
 }

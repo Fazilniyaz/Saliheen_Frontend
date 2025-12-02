@@ -8,6 +8,7 @@ import { orderCompleted } from "../../slices/cartSlice";
 import { createOrder } from "../../actions/orderActions";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
+import Swal from "sweetalert2";
 
 const RazorpayPayment = ({
   finalPrice,
@@ -28,6 +29,26 @@ const RazorpayPayment = ({
   const { user = "" } = useSelector((state) => state.authState);
 
   const handlePayment = async (amt) => {
+
+     try {
+      await axios.get(
+        "https://saliheenperfumes-zd2i.onrender.com/api/v1/myProfile",
+        {
+          withCredentials: true,
+        }
+      );
+        console.log("Session refreshed successfully");
+      } catch (sessionError) {
+        navigate("/");
+        Swal.fire({
+          icon: "warning",
+          title: "Session Expired",
+          text: "Your session has expired. Please log in again to complete the payment & Place your order.",
+          confirmButtonText: "OK",
+        });
+        console.error("Session refresh failed:", sessionError);
+        // Continue anyway - will be caught by order creation
+      }
     if (isProcessing) {
       toast("Payment is already being processed", {
         type: "warning",
@@ -112,18 +133,7 @@ const RazorpayPayment = ({
             console.log("Payment verified successfully");
 
             // Step 3: REFRESH USER SESSION BEFORE CREATING ORDER
-            try {
-              await axios.get(
-                "https://saliheenperfumes-zd2i.onrender.com/api/v1/myProfile",
-                {
-                  withCredentials: true,
-                }
-              );
-              console.log("Session refreshed successfully");
-            } catch (sessionError) {
-              console.error("Session refresh failed:", sessionError);
-              // Continue anyway - will be caught by order creation
-            }
+           
 
             // Step 4: Retrieve saved order data
             const savedOrderData = JSON.parse(
@@ -200,7 +210,7 @@ const RazorpayPayment = ({
 
               // Redirect to login after 3 seconds
               setTimeout(() => {
-                navigate("/login?redirect=complete-order");
+                navigate("/");
               }, 3000);
             } else {
               let errorMessage = "Payment received but order creation failed.";

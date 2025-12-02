@@ -31,7 +31,7 @@ function ConfirmOrder() {
   }));
 
   const itemsPrice = localCart.reduce((acc, item) => acc + item.finalPrice, 0);
-  const shippingPrice = itemsPrice > 200 ? 0 : 0;
+  const shippingPrice = itemsPrice > 200 ? 0 : 25;
   const taxPrice = Number((0 * itemsPrice).toFixed(2)); // Ensure taxPrice is a number
   const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)); // Ensure totalPrice is calculated correctly
 
@@ -63,6 +63,25 @@ function ConfirmOrder() {
 
   useEffect(() => {
     validateShipping({ shippingInfo, navigate });
+
+    async function RefreshSession(){
+       try {  setIsLoading(true); // Start loader
+              await axios.get(
+                "https://saliheenperfumes-zd2i.onrender.com/api/v1/myProfile",
+                {
+                  withCredentials: true,
+                }
+              );
+              console.log("Session refreshed successfully");
+            } catch (sessionError) {
+              navigate("/");
+              console.error("Session refresh failed:", sessionError);
+              // Continue anyway - will be caught by order creation
+            }finally {
+        setIsLoading(false); // Stop loader after fetching data
+      }
+    }
+
     async function getAllCartItemsOfTheParticularUser() {
       try {
         setIsLoading(true); // Start loader
@@ -78,6 +97,7 @@ function ConfirmOrder() {
       }
     }
     getAllCartItemsOfTheParticularUser();
+    RefreshSession();
   }, [userId, navigate, shippingInfo]);
 
   if (isLoading) {
@@ -85,6 +105,10 @@ function ConfirmOrder() {
   }
 
   if (localCart.length === 0 && localCarts.length === 0) {
+    return navigate("/");
+  }
+
+  if(!user){
     return navigate("/");
   }
 

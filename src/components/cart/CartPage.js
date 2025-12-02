@@ -10,6 +10,7 @@ import { Fragment } from "react";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
 import { ThreeDots } from "react-loader-spinner";
+import Swal from "sweetalert2";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
@@ -22,7 +23,17 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   const checkoutHandler = () => {
-    navigate(`/login?redirect=shipping`);
+    if (!user){
+      Swal.fire({
+        icon: "warning",
+        title: "Login Required",
+        text: "Please log in to proceed to checkout.",
+        confirmButtonText: "OK",
+      });
+    }else{
+      navigate("/shipping");
+    }
+    // navigate(`/login?redirect=shipping`);
   };
 
   const { localCart, addToLocalCart, removeFromLocalCart } =

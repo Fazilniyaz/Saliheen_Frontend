@@ -8,75 +8,83 @@ import { HelmetProvider } from "react-helmet-async";
 import "./App.css";
 import Header from "./components/layouts/Header";
 import { Footer } from "./components/layouts/Footer";
-import { Home } from "./components/Home";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ProductDetails from "./components/product/ProductDetails";
-import { ProductSearch } from "./components/product/ProductSearch";
-import Login from "./components/user/Login";
-import Register from "./components/user/Register";
 import store from "./store";
-import { useEffect } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { loadUser } from "./actions/userActions";
-import Profile from "./components/user/Profile";
 import ProtectedRoutes from "./components/route/ProtectedRoutes";
-import UpdateProfile from "./components/user/UpdateProfile";
-import UpdatePassword from "./components/user/UpdatePassword";
-import ForgotPassword from "./components/user/ForgotPassword";
-import ResetPassword from "./components/user/ResetPassword";
-import AdminLogin from "./components/admin/AdminLogin";
-import AdminDashboard from "./components/admin/AdminDashboard";
-import Cart from "./components/cart/Cart";
-import Shipping from "./components/cart/Shipping";
-import ConfirmOrder from "./components/cart/ConfirmOrder";
 import axios from "axios";
-import Payment from "./components/cart/Payment";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useState } from "react";
-import OrderSuccess from "./components/cart/OrderSuccess";
-import UserOrders from "./components/order/UserOrders";
-import Dashboard from "./components/admin/DashBoard";
-import ProductList from "./components/admin/ProductList";
-import NewProduct from "./components/admin/NewProduct";
-import UserList from "./components/admin/UserList";
-import OrderDetail from "./components/order/OrderDetail";
-import UpdateProduct from "./components/admin/UpdateProduct";
-import OrderList from "./components/admin/OrderList";
-import UpdateOrder from "./components/admin/UpdateOrder";
-import UpdateUser from "./components/admin/UpdateUser";
-import Categories from "./components/admin/Categories";
-import OtpVerification from "./components/user/OtpVerification";
-import { useSelector } from "react-redux";
-import CartPage from "./components/cart/CartPage";
-import CashOnDelivery from "./components/user/CashOnDelivery";
-import WalletPage from "./components/user/Wallet";
-import WishList from "./components/user/WishList";
-import WalletPayment from "./components/user/WalletPayment";
-import CouponForm from "./components/admin/Coupon";
-import Paypal from "./components/user/PayPal";
-import SalesReport from "./components/admin/SalesReport";
-import OfferModule from "./components/admin/OfferModule";
-import { toast } from "react-toastify";
-import Stats from "./components/admin/Stats";
-import CategoryPage from "./components/user/CategoryPage";
-import CategoryPageForBrand from "./components/user/CategoryPageForBrand";
-import CategoryProducts from "./components/category/categoryProducts";
-import About from "./components/privacypolicy/About";
-import PrivacyPolicy from "./components/privacypolicy/PrivacyPolicy";
-import RefundCancellation from "./components/privacypolicy/RefundCancellation";
-import ShippingDelivery from "./components/privacypolicy/ShippingDelivery";
-import TermsConditions from "./components/privacypolicy/TermsConditions";
-import ContactUs from "./components/privacypolicy/ContactUs";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchCartItemsForUser } from "./actions/cartActions";
+import Loader from "./components/layouts/Loader";
+
+// Lazy load components
+const Home = lazy(() => import("./components/Home").then(module => ({ default: module.Home })));
+const ProductDetails = lazy(() => import("./components/product/ProductDetails"));
+const ProductSearch = lazy(() => import("./components/product/ProductSearch").then(module => ({ default: module.ProductSearch })));
+
+// User Components
+const Login = lazy(() => import("./components/user/Login"));
+const Register = lazy(() => import("./components/user/Register"));
+const Profile = lazy(() => import("./components/user/Profile"));
+const UpdateProfile = lazy(() => import("./components/user/UpdateProfile"));
+const UpdatePassword = lazy(() => import("./components/user/UpdatePassword"));
+const ForgotPassword = lazy(() => import("./components/user/ForgotPassword"));
+const ResetPassword = lazy(() => import("./components/user/ResetPassword"));
+const OtpVerification = lazy(() => import("./components/user/OtpVerification"));
+const CashOnDelivery = lazy(() => import("./components/user/CashOnDelivery"));
+const WalletPage = lazy(() => import("./components/user/Wallet"));
+const WishList = lazy(() => import("./components/user/WishList"));
+const WalletPayment = lazy(() => import("./components/user/WalletPayment"));
+const Paypal = lazy(() => import("./components/user/PayPal"));
+
+// Cart Components
+const CartPage = lazy(() => import("./components/cart/CartPage"));
+const Shipping = lazy(() => import("./components/cart/Shipping"));
+const ConfirmOrder = lazy(() => import("./components/cart/ConfirmOrder"));
+const Payment = lazy(() => import("./components/cart/Payment"));
+const OrderSuccess = lazy(() => import("./components/cart/OrderSuccess"));
+
+// Order Components
+const UserOrders = lazy(() => import("./components/order/UserOrders"));
+const OrderDetail = lazy(() => import("./components/order/OrderDetail"));
+
+// Admin Components
+const Dashboard = lazy(() => import("./components/admin/DashBoard")); // Default export
+const ProductList = lazy(() => import("./components/admin/ProductList"));
+const NewProduct = lazy(() => import("./components/admin/NewProduct"));
+const UserList = lazy(() => import("./components/admin/UserList"));
+const UpdateProduct = lazy(() => import("./components/admin/UpdateProduct"));
+const OrderList = lazy(() => import("./components/admin/OrderList"));
+const UpdateOrder = lazy(() => import("./components/admin/UpdateOrder"));
+const UpdateUser = lazy(() => import("./components/admin/UpdateUser"));
+const Categories = lazy(() => import("./components/admin/Categories"));
+const CouponForm = lazy(() => import("./components/admin/Coupon")); // Default export
+const SalesReport = lazy(() => import("./components/admin/SalesReport"));
+const OfferModule = lazy(() => import("./components/admin/OfferModule"));
+const Stats = lazy(() => import("./components/admin/Stats"));
+
+// Category Components
+const CategoryPage = lazy(() => import("./components/user/CategoryPage"));
+const CategoryPageForBrand = lazy(() => import("./components/user/CategoryPageForBrand"));
+const CategoryProducts = lazy(() => import("./components/category/categoryProducts"));
+
+// Privacy Policy & Static Pages
+const About = lazy(() => import("./components/privacypolicy/About"));
+const PrivacyPolicy = lazy(() => import("./components/privacypolicy/PrivacyPolicy"));
+const RefundCancellation = lazy(() => import("./components/privacypolicy/RefundCancellation"));
+const ShippingDelivery = lazy(() => import("./components/privacypolicy/ShippingDelivery"));
+const TermsConditions = lazy(() => import("./components/privacypolicy/TermsConditions"));
+const ContactUs = lazy(() => import("./components/privacypolicy/ContactUs"));
 
 function App() {
   const [stripeApiKey, setstripeApiKey] = useState("");
   const dispatch = useDispatch();
 
   const { user = "" } = useSelector((state) => state.authState);
-
   const userId = user._id;
 
   useEffect(() => {
@@ -116,7 +124,6 @@ function App() {
         console.log(err);
       }
     }
-    // getStripeApiKey();
     getStripeApiKey();
   }, [stripeApiKey]);
 
@@ -143,265 +150,267 @@ function App() {
       <HelmetProvider>
         <Layout>
           <div className="container container-fluid">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/search/:keyword" element={<ProductSearch />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path={`/category/:category`}
-                element={<CategoryProducts />}
-              />
-
-              <Route path="/otp-verification" element={<OtpVerification />} />
-
-              <Route
-                path="/myProfile"
-                element={
-                  <ProtectedRoutes>
-                    <Profile />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/myProfile/update"
-                element={
-                  <ProtectedRoutes>
-                    <UpdateProfile />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/myProfile/update/password"
-                element={
-                  <ProtectedRoutes>
-                    <UpdatePassword />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route path="/password/forgot" element={<ForgotPassword />} />
-              <Route
-                path="/password/reset/:token"
-                element={<ResetPassword />}
-              />
-              {/* <Route path="/cart" element={<Cart />} /> */}
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/WishList" element={<WishList />} />
-              <Route
-                path="/category/:categoryName"
-                element={<CategoryPage />}
-              />
-              <Route
-                path="/category/brand/:brandName"
-                element={<CategoryPageForBrand />}
-              />
-              <Route
-                path="/shipping"
-                element={
-                  <ProtectedRoutes>
-                    <Shipping />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/order/confirm"
-                element={
-                  <ProtectedRoutes>
-                    <ConfirmOrder />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/order/success"
-                element={
-                  <ProtectedRoutes>
-                    <OrderSuccess />
-                  </ProtectedRoutes>
-                }
-              />
-
-              <Route
-                path="/orders"
-                element={
-                  <ProtectedRoutes>
-                    <UserOrders />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/getWalletBalance"
-                element={
-                  <ProtectedRoutes>
-                    <WalletPage />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/order/:id"
-                element={
-                  <ProtectedRoutes>
-                    <OrderDetail />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/paymentViaCOD"
-                element={
-                  <ProtectedRoutes>
-                    <CashOnDelivery />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/paymentViaWallet"
-                element={
-                  <ProtectedRoutes>
-                    <WalletPayment />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/paymentViaPaypal"
-                element={
-                  <ProtectedRoutes>
-                    <Paypal />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route path="/about" element={<About />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/shipping-delivery" element={<ShippingDelivery />} />
-              <Route
-                path="/refund-cancellation"
-                element={<RefundCancellation />}
-              />
-              <Route path="/terms-conditions" element={<TermsConditions />} />
-              <Route path="/contactus" element={<ContactUs />} />
-              {stripeApiKey && (
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/search/:keyword" element={<ProductSearch />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route
-                  path="/payment"
+                  path={`/category/:category`}
+                  element={<CategoryProducts />}
+                />
+
+                <Route path="/otp-verification" element={<OtpVerification />} />
+
+                <Route
+                  path="/myProfile"
                   element={
                     <ProtectedRoutes>
-                      <Elements stripe={loadStripe(stripeApiKey)}>
-                        {" "}
-                        <Payment />
-                      </Elements>
+                      <Profile />
                     </ProtectedRoutes>
                   }
                 />
-              )}
-              <Route path="/admin-loginvvv" element={<AdminLogin />} />
-              <Route path="/admin-dashboardvvv" element={<AdminDashboard />} />
-            </Routes>
+                <Route
+                  path="/myProfile/update"
+                  element={
+                    <ProtectedRoutes>
+                      <UpdateProfile />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/myProfile/update/password"
+                  element={
+                    <ProtectedRoutes>
+                      <UpdatePassword />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route path="/password/forgot" element={<ForgotPassword />} />
+                <Route
+                  path="/password/reset/:token"
+                  element={<ResetPassword />}
+                />
+
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/WishList" element={<WishList />} />
+                <Route
+                  path="/category/:categoryName"
+                  element={<CategoryPage />}
+                />
+                <Route
+                  path="/category/brand/:brandName"
+                  element={<CategoryPageForBrand />}
+                />
+                <Route
+                  path="/shipping"
+                  element={
+                    <ProtectedRoutes>
+                      <Shipping />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/order/confirm"
+                  element={
+                    <ProtectedRoutes>
+                      <ConfirmOrder />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/order/success"
+                  element={
+                    <ProtectedRoutes>
+                      <OrderSuccess />
+                    </ProtectedRoutes>
+                  }
+                />
+
+                <Route
+                  path="/orders"
+                  element={
+                    <ProtectedRoutes>
+                      <UserOrders />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/getWalletBalance"
+                  element={
+                    <ProtectedRoutes>
+                      <WalletPage />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/order/:id"
+                  element={
+                    <ProtectedRoutes>
+                      <OrderDetail />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/paymentViaCOD"
+                  element={
+                    <ProtectedRoutes>
+                      <CashOnDelivery />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/paymentViaWallet"
+                  element={
+                    <ProtectedRoutes>
+                      <WalletPayment />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/paymentViaPaypal"
+                  element={
+                    <ProtectedRoutes>
+                      <Paypal />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/shipping-delivery" element={<ShippingDelivery />} />
+                <Route
+                  path="/refund-cancellation"
+                  element={<RefundCancellation />}
+                />
+                <Route path="/terms-conditions" element={<TermsConditions />} />
+                <Route path="/contactus" element={<ContactUs />} />
+                {stripeApiKey && (
+                  <Route
+                    path="/payment"
+                    element={
+                      <ProtectedRoutes>
+                        <Elements stripe={loadStripe(stripeApiKey)}>
+                          {" "}
+                          <Payment />
+                        </Elements>
+                      </ProtectedRoutes>
+                    }
+                  />
+                )}
+              </Routes>
+            </Suspense>
           </div>
           <div className="container container-fluid">
-            <Routes>
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <Dashboard />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/products"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <ProductList />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/coupon"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <CouponForm />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/products/create"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <NewProduct />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <UserList />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/stats"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <Stats />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/product/:id"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <UpdateProduct />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/order/:id"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <UpdateOrder />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/user/:id"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <UpdateUser />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/orders"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <OrderList />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/salesReport"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <SalesReport />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/OfferModule"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <OfferModule />
-                  </ProtectedRoutes>
-                }
-              />
-              <Route
-                path="/admin/categories"
-                element={
-                  <ProtectedRoutes isAdmin={true}>
-                    <Categories />
-                  </ProtectedRoutes>
-                }
-              />
-            </Routes>
+            <Suspense fallback={<Loader />}>
+              <Routes>
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <Dashboard />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/products"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <ProductList />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/coupon"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <CouponForm />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/products/create"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <NewProduct />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <UserList />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/stats"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <Stats />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/product/:id"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <UpdateProduct />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/order/:id"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <UpdateOrder />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/user/:id"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <UpdateUser />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/orders"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <OrderList />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/salesReport"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <SalesReport />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/OfferModule"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <OfferModule />
+                    </ProtectedRoutes>
+                  }
+                />
+                <Route
+                  path="/admin/categories"
+                  element={
+                    <ProtectedRoutes isAdmin={true}>
+                      <Categories />
+                    </ProtectedRoutes>
+                  }
+                />
+              </Routes>
+            </Suspense>
           </div>
         </Layout>
       </HelmetProvider>

@@ -66,8 +66,8 @@ export default function UserOrders() {
           <Link
             to={`/order/${userOrder._id}`}
             style={{
-              backgroundColor: "#a2682a",
-              color: "white",
+              backgroundColor: "#1a1a1a",
+              color: "#fff",
               fontWeight: "bold",
               padding: "0.4rem 0.8rem",
               borderRadius: "5px",
@@ -90,40 +90,37 @@ export default function UserOrders() {
       <MetaData title={"My Orders"} />
       <div
         style={{
-          margin: "2rem auto",
-          padding: "1rem",
+          margin: "1.5rem auto",
+          padding: "1.25rem",
           maxWidth: "90%",
-          backgroundColor: "black",
-          borderRadius: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          backgroundColor: "#ffffff",
+          borderRadius: "12px",
+          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
+          border: "1px solid #e5e5e5",
         }}
       >
         <h1
           style={{
             textAlign: "center",
-            backgroundImage:
-              "repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontSize: "2.5rem",
-            fontWeight: "bold",
+            fontSize: "2rem",
+            fontWeight: "600",
+            color: "#111111",
             fontFamily: "Yantramanav",
-            filter: "drop-shadow(0 0 1px rgba(255, 200, 0, .3))",
-            animation: "MoveBackgroundPosition 6s ease-in-out infinite",
+            marginBottom: "1rem",
           }}
         >
           My Orders
         </h1>
         <div
           style={{
-            overflowX: "auto", // Ensures horizontal scrolling for smaller screens
+            overflowX: "auto",
           }}
         >
           <MDBDataTable
             style={{
-              color: "#fff",
+              color: "#111111",
               fontFamily: "Yantramanav, sans-serif",
-              backgroundColor: "black",
+              backgroundColor: "#ffffff",
               borderRadius: "10px",
               padding: "1rem",
             }}

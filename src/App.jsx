@@ -29,6 +29,7 @@ const ProductSearch = lazy(() => import("./components/product/ProductSearch").th
 // User Components
 const Login = lazy(() => import("./components/user/Login"));
 const Register = lazy(() => import("./components/user/Register"));
+const AllProducts = lazy(() => import("./components/AllProducts/AllProducts"));
 const Profile = lazy(() => import("./components/user/Profile"));
 const UpdateProfile = lazy(() => import("./components/user/UpdateProfile"));
 const UpdatePassword = lazy(() => import("./components/user/UpdatePassword"));
@@ -51,6 +52,7 @@ const OrderSuccess = lazy(() => import("./components/cart/OrderSuccess"));
 // Order Components
 const UserOrders = lazy(() => import("./components/order/UserOrders"));
 const OrderDetail = lazy(() => import("./components/order/OrderDetail"));
+const TrackOrder = lazy(() => import("./components/order/TrackOrder"));
 
 // Admin Components
 const Dashboard = lazy(() => import("./components/admin/DashBoard")); // Default export
@@ -137,7 +139,7 @@ function App() {
       <>
         {showHeaderFooter && <Header />}
         <div className="container container-fluid">
-          <ToastContainer theme="dark" />
+          <ToastContainer theme="light" />
           {children}
         </div>
         {showHeaderFooter && <Footer />}
@@ -157,6 +159,7 @@ function App() {
                 <Route path="/search/:keyword" element={<ProductSearch />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/allproducts" element={<AllProducts />} />
                 <Route
                   path={`/category/:category`}
                   element={<CategoryProducts />}
@@ -204,30 +207,11 @@ function App() {
                   path="/category/brand/:brandName"
                   element={<CategoryPageForBrand />}
                 />
-                <Route
-                  path="/shipping"
-                  element={
-                    <ProtectedRoutes>
-                      <Shipping />
-                    </ProtectedRoutes>
-                  }
-                />
-                <Route
-                  path="/order/confirm"
-                  element={
-                    <ProtectedRoutes>
-                      <ConfirmOrder />
-                    </ProtectedRoutes>
-                  }
-                />
-                <Route
-                  path="/order/success"
-                  element={
-                    <ProtectedRoutes>
-                      <OrderSuccess />
-                    </ProtectedRoutes>
-                  }
-                />
+                <Route path="/shipping" element={<Shipping />} />
+                <Route path="/order/confirm" element={<ConfirmOrder />} />
+                <Route path="/order/success" element={<OrderSuccess />} />
+                <Route path="/order/track" element={<TrackOrder />} />
+                <Route path="/order/track/:orderId" element={<TrackOrder />} />
 
                 <Route
                   path="/orders"

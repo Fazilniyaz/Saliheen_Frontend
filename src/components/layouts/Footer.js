@@ -49,7 +49,7 @@ export const Footer = () => {
   console.log(categories);
 
   return (
-    <div className="bg-black text-gray-200 py-10 px-6 mt-6">
+    <div className="bg-white border-t border-gray-200 text-gray-700 py-8 px-6 mt-6">
       <Divider />
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Address Section */}
@@ -87,20 +87,20 @@ export const Footer = () => {
           <div className="flex gap-4 mt-4">
             <a
               href="#"
-              className="text-2xl hover:text-red-500 transition duration-300"
+              className="text-2xl hover:text-gray-800 transition duration-300"
             >
               <FaYoutube />
             </a>
             <a
               href="#"
-              className="text-2xl hover:text-pink-500 transition duration-300"
+              className="text-2xl hover:text-gray-800 transition duration-300"
             >
               <FaInstagram />
             </a>
           </div>
         </div>
       </div>
-      <div className="text-center mt-8 border-t border-gray-700 pt-4">
+      <div className="text-center mt-6 border-t border-gray-200 pt-4">
         <p>© 2025 Saliheen Perfumes. All rights reserved.</p>
       </div>
     </div>

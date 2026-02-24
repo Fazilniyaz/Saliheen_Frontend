@@ -24,14 +24,13 @@ function Header() {
 
   return (
     <Fragment>
-      <nav className="navbar row">
-        <div className="col-12 col-md-3">
+      <nav className="navbar navbar-compact">
+        <div className="navbar-brand-wrap">
           <div id="brand-display" className="navbar-brand">
             <img
               src="/images/spimhd.png"
-              height="50px"
-              width="50px"
               alt="Logo"
+              className="navbar-logo-img"
             />
             <Link to="/">
               <h1 id="brand-display" className="text-logo">
@@ -41,21 +40,24 @@ function Header() {
           </div>
         </div>
 
-        <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
+        <div className="navbar-actions">
           {isAuthenticated ? (
             <>
-              <Dropdown className="d-inline">
+              <Dropdown className="d-inline header-profile-dropdown" align="end">
                 <Dropdown.Toggle
-                  variant="default text-white pr-5"
+                  variant="default"
                   id="dropdown-basic"
+                  className="navbar-user-toggle header-profile-toggle"
                 >
-                  <figure className="avatar avatar-nav">
-                    <Image
-                      width="50px"
-                      src={user.avatar ?? "./images/default_avatar.png"}
-                    />
-                  </figure>
-                  <span>{user.name}</span>
+                  <span className="header-profile-wrap">
+                    <figure className="avatar avatar-nav">
+                      <Image
+                        className="avatar-nav-img"
+                        src={user.avatar ?? "/images/default_avatar.png"}
+                      />
+                    </figure>
+                    <span className="header-profile-arrow" aria-hidden="true" />
+                  </span>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
@@ -108,8 +110,8 @@ function Header() {
           )}
 
           {/* Always show cart icon */}
-          <span className="ml-3" id="cart_count">
-            <Link to="/cart" className="text-white">
+          <span id="cart_count">
+            <Link to="/cart" className="cart-icon-link">
               <Icon name="shopping cart" />
               {localCart.length}
             </Link>

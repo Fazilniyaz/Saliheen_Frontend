@@ -204,7 +204,7 @@ export default function OrderDetail() {
           height="80"
           width="80"
           radius="9"
-          color="#FFD700" // Golden color
+          color="#1a1a1a"
           ariaLabel="three-dots-loading"
           wrapperStyle={{}}
           wrapperClassName=""

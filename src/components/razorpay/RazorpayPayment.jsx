@@ -6,9 +6,9 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { orderCompleted } from "../../slices/cartSlice";
 import { createOrder } from "../../actions/orderActions";
+import { logout } from "../../actions/userActions";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
-import Swal from "sweetalert2";
 
 const RazorpayPayment = ({
   finalPrice,
@@ -29,26 +29,6 @@ const RazorpayPayment = ({
   const { user = "" } = useSelector((state) => state.authState);
 
   const handlePayment = async (amt) => {
-
-     try {
-      await axios.get(
-        "https://saliheenperfumes-zd2i.onrender.com/api/v1/myProfile",
-        {
-          withCredentials: true,
-        }
-      );
-        console.log("Session refreshed successfully");
-      } catch (sessionError) {
-        navigate("/");
-        Swal.fire({
-          icon: "warning",
-          title: "Session Expired",
-          text: "Your session has expired. Please log in again to complete the payment & Place your order.",
-          confirmButtonText: "OK",
-        });
-        console.error("Session refresh failed:", sessionError);
-        // Continue anyway - will be caught by order creation
-      }
     if (isProcessing) {
       toast("Payment is already being processed", {
         type: "warning",
@@ -77,8 +57,10 @@ const RazorpayPayment = ({
         shippingPrice: shippingPrice + 100,
         taxPrice,
         totalPrice: totalPrice,
-        userEmail: user.email,
-        userName: user.name,
+        userEmail: (user && user.email) ? user.email : (shippingInfo?.guestEmail || ""),
+        userName: (user && user.name) ? user.name : name,
+        guestEmail: (user && user.email) ? undefined : (shippingInfo?.guestEmail || ""),
+        guestName: (user && user.name) ? undefined : name,
         timestamp: Date.now(),
       };
 
@@ -156,7 +138,7 @@ const RazorpayPayment = ({
             console.log("Creating order with data:", order);
 
             // Step 6: CREATE ORDER
-            await dispatch(createOrder(order));
+            const result = await dispatch(createOrder(order));
 
             console.log("Order created successfully");
 
@@ -177,7 +159,8 @@ const RazorpayPayment = ({
             });
 
             setIsProcessing(false);
-            navigate("/order/success");
+            const orderId = result?.order?._id;
+            navigate("/order/success", { state: orderId ? { orderId } : undefined });
           } catch (err) {
             console.error("Post-payment processing failed:", err);
             setIsProcessing(false);
@@ -193,26 +176,13 @@ const RazorpayPayment = ({
               })
             );
 
-            // Check if it's a session error
-            if (
-              err.response?.status === 401 ||
-              err.response?.data?.message?.includes("Session") ||
-              err.response?.data?.message?.includes("Expired")
-            ) {
-              toast(
-                "Session expired! Payment received. Please login again to complete your order.",
-                {
-                  type: "warning",
-                  position: "bottom-center",
-                  autoClose: false,
-                }
-              );
-
-              // Redirect to login after 3 seconds
-              setTimeout(() => {
-                navigate("/");
-              }, 3000);
-            } else {
+            // On auth error: logout silently and redirect (no message)
+            if (err.response?.status === 401) {
+              dispatch(logout());
+              navigate("/");
+              return;
+            }
+            {
               let errorMessage = "Payment received but order creation failed.";
               if (err.response?.data?.message) {
                 errorMessage += " Error: " + err.response.data.message;
@@ -236,8 +206,8 @@ const RazorpayPayment = ({
           },
         },
         prefill: {
-          name: user.name,
-          email: user.email,
+          name: (user && user.name) ? user.name : name,
+          email: (user && user.email) ? user.email : (shippingInfo?.guestEmail || ""),
           contact: phone,
         },
         notes: {
@@ -246,7 +216,7 @@ const RazorpayPayment = ({
           state: shippingInfo.state,
         },
         theme: {
-          color: "#FFD700",
+          color: "#1a1a1a",
         },
       };
 
@@ -289,9 +259,9 @@ const RazorpayPayment = ({
         disabled={isProcessing}
         loading={isProcessing}
         style={{
-          backgroundColor: "#FFD700",
-          color: "#000",
-          fontWeight: "bold",
+          backgroundColor: "#1a1a1a",
+          color: "#fff",
+          fontWeight: "600",
         }}
       >
         {isProcessing

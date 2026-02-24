@@ -13,7 +13,7 @@ import { CartContext } from "../cart/cartContext";
 
 function ConfirmOrder() {
   const { shippingInfo, items: cartItems } = useSelector(
-    (state) => state.cartState
+    (state) => state.cartState,
   );
   const [localCarts, setlocalCarts] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Loader state
@@ -31,7 +31,7 @@ function ConfirmOrder() {
   }));
 
   const itemsPrice = localCart.reduce((acc, item) => acc + item.finalPrice, 0);
-  const shippingPrice = itemsPrice > 200 ? 0 : 25;
+  const shippingPrice = 0;
   const taxPrice = Number((0 * itemsPrice).toFixed(2)); // Ensure taxPrice is a number
   const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2)); // Ensure totalPrice is calculated correctly
 
@@ -59,57 +59,44 @@ function ConfirmOrder() {
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
   };
 
-  const userId = user._id;
+  const userId = user?._id;
+  const isGuest = !user;
 
   useEffect(() => {
     validateShipping({ shippingInfo, navigate });
-
-    async function RefreshSession(){
-       try {  setIsLoading(true); // Start loader
-              await axios.get(
-                "https://saliheenperfumes-zd2i.onrender.com/api/v1/myProfile",
-                {
-                  withCredentials: true,
-                }
-              );
-              console.log("Session refreshed successfully");
-            } catch (sessionError) {
-              navigate("/");
-              console.error("Session refresh failed:", sessionError);
-              // Continue anyway - will be caught by order creation
-            }finally {
-        setIsLoading(false); // Stop loader after fetching data
-      }
+    if (isGuest && (!shippingInfo?.fullName || !shippingInfo?.guestEmail)) {
+      navigate("/shipping");
+      return;
+    }
+    if (isGuest) {
+      setIsLoading(false);
+      return;
     }
 
     async function getAllCartItemsOfTheParticularUser() {
       try {
-        setIsLoading(true); // Start loader
+        setIsLoading(true);
         const { data } = await axios.get(
           `https://saliheenperfumes-zd2i.onrender.com/api/v1/CartProductsOfSingleUser/${userId}`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
-        setlocalCarts(data.cartItems);
+        setlocalCarts(data.cartItems || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
       } finally {
-        setIsLoading(false); // Stop loader after fetching data
+        setIsLoading(false);
       }
     }
     getAllCartItemsOfTheParticularUser();
-    RefreshSession();
-  }, [userId, navigate, shippingInfo]);
+  }, [userId, navigate, shippingInfo, isGuest]);
 
-  if (isLoading) {
-    return <Loader />; // Show loader while data is being fetched
+  if (isLoading && !isGuest) {
+    return <Loader />;
   }
 
-  if (localCart.length === 0 && localCarts.length === 0) {
-    return navigate("/");
-  }
-
-  if(!user){
-    return navigate("/");
+  if (localCart.length === 0 && (localCarts.length === 0 || isGuest)) {
+    navigate("/");
+    return null;
   }
 
   return (
@@ -121,9 +108,10 @@ function ConfirmOrder() {
           margin: "2rem auto",
           padding: "1rem",
           maxWidth: "90%",
-          backgroundColor: "black",
+          backgroundColor: "#ffffff",
           borderRadius: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+          border: "1px solid #e8e8e8",
         }}
       >
         <div className="row d-flex justify-content-between">
@@ -138,20 +126,20 @@ function ConfirmOrder() {
             >
               Shipping Info
             </h4>
-            <p style={{ color: "#fff" }}>
-              <b>Name: </b> {user.name}
+            <p style={{ color: "#1a1a1a" }}>
+              <b>Name: </b> {user?.name || shippingInfo?.fullName || ""}
             </p>
-            <p style={{ color: "#fff" }}>
+            <p style={{ color: "#1a1a1a" }}>
               <b>Phone: </b>
               {shippingInfo.phoneNo}
             </p>
-            <p style={{ color: "#fff" }}>
+            <p style={{ color: "#1a1a1a" }}>
               <b>Address:</b> {shippingInfo.address}, {shippingInfo.city},{" "}
               {shippingInfo.postalCode}, {shippingInfo.state},{" "}
               {shippingInfo.country}
             </p>
 
-            <hr style={{ borderColor: "#a2682a" }} />
+            <hr style={{ borderColor: "#e0e0e0" }} />
             <h4
               style={{
                 fontSize: "1.8rem",
@@ -170,7 +158,7 @@ function ConfirmOrder() {
                       display: "flex",
                       alignItems: "center",
                       marginBottom: "1rem",
-                      color: "#fff",
+                      color: "#1a1a1a",
                     }}
                   >
                     <img
@@ -194,7 +182,7 @@ function ConfirmOrder() {
                     >
                       {item.itemName}
                     </Link>
-                    <p style={{ margin: 0 }}>
+                    <p style={{ margin: 0, color: "#333" }}>
                       {/* {item.quantity} x ${item.finalPrice} ={" "} */}
                       <b>
                         {item.type} | {item.noOfBottles} Bottles | ₹
@@ -202,7 +190,7 @@ function ConfirmOrder() {
                       </b>
                     </p>
                   </div>
-                  <hr style={{ borderColor: "#444" }} />
+                  <hr style={{ borderColor: "#e0e0e0" }} />
                 </Fragment>
               ))}
           </div>
@@ -210,10 +198,11 @@ function ConfirmOrder() {
           <div className="col-12 col-lg-3 my-4">
             <div
               style={{
-                backgroundColor: "#222",
+                backgroundColor: "#fafafa",
                 padding: "1rem",
                 borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+                border: "1px solid #e8e8e8",
               }}
             >
               <h4
@@ -226,22 +215,22 @@ function ConfirmOrder() {
               >
                 Order Summary
               </h4>
-              <hr style={{ borderColor: "#444" }} />
-              <p style={{ color: "#fff" }}>
+              <hr style={{ borderColor: "#e0e0e0" }} />
+              <p style={{ color: "#1a1a1a" }}>
                 Subtotal: <span style={{ float: "right" }}>₹{itemsPrice}</span>
               </p>
-              <p style={{ color: "#fff" }}>
+              <p style={{ color: "#1a1a1a" }}>
                 Shipping:{" "}
                 <span style={{ float: "right" }}>₹{shippingPrice}</span>
               </p>
-              <p style={{ color: "#fff" }}>
+              <p style={{ color: "#1a1a1a" }}>
                 Tax: <span style={{ float: "right" }}>₹{taxPrice}</span>
               </p>
-              <hr style={{ borderColor: "#444" }} />
-              <p style={{ color: "#fff", fontWeight: "bold" }}>
+              <hr style={{ borderColor: "#e0e0e0" }} />
+              <p style={{ color: "#1a1a1a", fontWeight: "bold" }}>
                 Total: <span style={{ float: "right" }}>₹{totalPrice}</span>
               </p>
-              <hr style={{ borderColor: "#444" }} />
+              <hr style={{ borderColor: "#e0e0e0" }} />
 
               <p style={{ color: "#a2682a", textAlign: "center" }}>
                 Proceed to Payment
@@ -264,8 +253,9 @@ function ConfirmOrder() {
               </button> */}
               <RazorpayPayment
                 finalPrice={totalPrice}
-                name={user.name}
+                name={user?.name || shippingInfo?.fullName || ""}
                 phone={shippingInfo.phoneNo}
+                guestEmail={shippingInfo?.guestEmail}
                 onClick={() => processPaymentRazorPay()}
                 itemsPrice={itemsPrice}
                 shippingPrice={shippingPrice}

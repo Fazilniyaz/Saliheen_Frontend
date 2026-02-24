@@ -8,8 +8,8 @@
   }
   
   .filter-item.active {
-    color: #007bff;
-    font-weight: bold;
+    color: #1a1a1a;
+    font-weight: 600;
   }
   
   .filter-item.active::after {
@@ -19,7 +19,7 @@
     bottom: 0;
     width: 100%;
     height: 2px;
-    background: #007bff;
+    background: #1a1a1a;
     animation: underline 0.3s ease-in-out forwards;
   }
   

@@ -101,54 +101,55 @@ export default function OtpVerification() {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-    backgroundColor: "black",
+    backgroundColor: "#ffffff",
   };
 
   const cardStyle = {
-    backgroundColor: "#1c1c1c",
-    padding: "30px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(255, 200, 0, 0.2)",
+    backgroundColor: "#ffffff",
+    padding: "28px",
+    borderRadius: "12px",
+    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+    border: "1px solid #e5e5e5",
     width: "100%",
     maxWidth: "400px",
     textAlign: "center",
-    color: "#fff",
+    color: "#111111",
   };
 
   const inputStyle = {
     width: "100%",
     padding: "10px",
-    margin: "15px 0",
-    borderRadius: "5px",
-    border: "1px solid #d3b15f",
+    margin: "12px 0",
+    borderRadius: "8px",
+    border: "1px solid #e5e5e5",
     fontSize: "16px",
-    backgroundColor: "black",
-    color: "#fff",
+    backgroundColor: "#fafafa",
+    color: "#111111",
   };
 
   const buttonStyle = {
     width: "100%",
     padding: "10px",
-    backgroundColor: "#d3b15f",
-    color: "#000",
+    backgroundColor: "#1a1a1a",
+    color: "#fff",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "8px",
     fontSize: "16px",
     cursor: "pointer",
-    fontWeight: "bold",
+    fontWeight: "600",
   };
 
   const timerTextStyle = {
-    marginTop: "15px",
+    marginTop: "12px",
     fontSize: "14px",
-    color: "#d3b15f",
+    color: "#555555",
   };
 
   const resendButtonStyle = {
-    marginTop: "15px",
+    marginTop: "12px",
     backgroundColor: "transparent",
     border: "none",
-    color: "#d3b15f",
+    color: "#1a1a1a",
     cursor: "pointer",
     fontSize: "14px",
     textDecoration: "underline",
@@ -161,19 +162,14 @@ export default function OtpVerification() {
           style={{
             marginBottom: "20px",
             fontSize: "24px",
-            fontWeight: "bold",
-            backgroundImage:
-              "repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            fontWeight: "600",
+            color: "#111111",
             fontFamily: "Yantramanav",
-            filter: "drop-shadow(0 0 1px rgba(255, 200, 0, .3))",
-            animation: "MoveBackgroundPosition 6s ease-in-out infinite",
           }}
         >
           OTP Verification
         </h1>
-        <p style={{ fontSize: "16px", color: "#d3b15f" }}>
+        <p style={{ fontSize: "16px", color: "#555555" }}>
           Enter the OTP sent to your email.
         </p>
 

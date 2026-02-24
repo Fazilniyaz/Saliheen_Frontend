@@ -195,6 +195,8 @@ export default function Shipping() {
   const [postalCode, setPostalCode] = useState(shippingInfo.postalCode || "");
   const [country, setCountry] = useState(shippingInfo.country || "");
   const [state, setState] = useState(shippingInfo.state || "");
+  const [fullName, setFullName] = useState(shippingInfo.fullName || (user && user.name) || "");
+  const [guestEmail, setGuestEmail] = useState(shippingInfo.guestEmail || (user && user.email) || "");
   const [useExistingAddress, setUseExistingAddress] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [phoneForExistingAddress, setPhoneForExistingAddress] = useState("");
@@ -247,7 +249,19 @@ export default function Shipping() {
       postalCode,
       country,
       state,
+      fullName: fullName || (user && user.name),
+      guestEmail: guestEmail || (user && user.email),
     };
+
+    if (!user) {
+      if (!fullName.trim() || !guestEmail.trim()) {
+        toast.error("Please enter your name and email", { position: "bottom-center" });
+        return;
+      }
+      dispatch(saveShippingInfo(currentShippingInfo));
+      navigate(`/order/confirm`);
+      return;
+    }
 
     const addressForm = {
       addressLine: address,
@@ -258,8 +272,7 @@ export default function Shipping() {
     };
 
     let userAddedExistingAddress = false;
-
-    user.addresses.map((item) => {
+    (user.addresses || []).map((item) => {
       if (address === item.addressLine) {
         toast("Address Already exists!", {
           type: "error",
@@ -294,39 +307,36 @@ export default function Shipping() {
       <CheckoutSteps shipping />
       <div
         style={{
-          margin: "2rem auto",
-          padding: "1rem",
+          margin: "1.5rem auto",
+          padding: "1.25rem",
           maxWidth: "90%",
-          backgroundColor: "black",
-          borderRadius: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          backgroundColor: "#ffffff",
+          borderRadius: "12px",
+          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
+          border: "1px solid #e5e5e5",
         }}
       >
         <h1
           style={{
             textAlign: "center",
-            backgroundImage:
-              "repeating-linear-gradient(to right, #a2682a 0%, #be8c3c 8%, #be8c3c 18%, #d3b15f 27%, #faf0a0 35%, #ffffc2 40%, #faf0a0 50%, #d3b15f 58%, #be8c3c 67%, #b17b32 77%, #bb8332 83%, #d4a245 88%, #e1b453 93%, #a4692a 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontSize: "2.5rem",
-            fontWeight: "bold",
+            fontSize: "2rem",
+            fontWeight: "600",
+            color: "#111111",
             fontFamily: "Yantramanav",
-            filter: "drop-shadow(0 0 1px rgba(255, 200, 0, .3))",
-            animation: "MoveBackgroundPosition 6s ease-in-out infinite",
+            marginBottom: "1rem",
           }}
         >
           Shipping Info
         </h1>
 
-        {/* Existing Addresses */}
+        {/* Existing Addresses - only for logged-in users */}
         {user && user.addresses && user.addresses.length > 0 && (
           <div style={{ marginBottom: "2rem" }}>
             <h2
               style={{
                 fontSize: "1.5rem",
                 fontWeight: "bold",
-                color: "#a2682a",
+                color: "#111111",
                 marginBottom: "1rem",
               }}
             >
@@ -346,7 +356,7 @@ export default function Shipping() {
                   htmlFor={`address-${i}`}
                   style={{
                     marginLeft: "0.5rem",
-                    color: "#fff",
+                    color: "#333333",
                     fontSize: "1rem",
                   }}
                 >
@@ -358,7 +368,7 @@ export default function Shipping() {
               <div style={{ marginTop: "1rem" }}>
                 <label
                   htmlFor="phone_existing_field"
-                  style={{ color: "#fff", fontSize: "1rem" }}
+                  style={{ color: "#333333", fontSize: "1rem" }}
                 >
                   Phone No (for existing address)
                 </label>
@@ -380,9 +390,9 @@ export default function Shipping() {
             )}
             <button
               style={{
-                backgroundColor: "#a2682a",
-                color: "white",
-                fontWeight: "bold",
+                backgroundColor: "#1a1a1a",
+                color: "#fff",
+                fontWeight: "600",
                 padding: "0.5rem 1rem",
                 borderRadius: "5px",
                 marginTop: "1rem",
@@ -394,8 +404,8 @@ export default function Shipping() {
             </button>
             <button
               style={{
-                backgroundColor: "#444",
-                color: "white",
+                backgroundColor: "#555555",
+                color: "#fff",
                 fontWeight: "bold",
                 padding: "0.5rem 1rem",
                 borderRadius: "5px",
@@ -410,20 +420,63 @@ export default function Shipping() {
         )}
 
         {/* New Address Form */}
-        {!useExistingAddress && (
+        {(!useExistingAddress || !user) && (
           <form
             onSubmit={handleNewAddressSubmit}
             style={{
-              backgroundColor: "#222",
+              backgroundColor: "#fafafa",
               padding: "1rem",
               borderRadius: "10px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              border: "1px solid #e5e5e5",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.06)",
             }}
           >
+            {!user && (
+              <>
+                <div style={{ marginBottom: "1rem" }}>
+                  <label htmlFor="fullName_field" style={{ color: "#333333", fontSize: "1rem" }}>
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName_field"
+                    style={{
+                      width: "100%",
+                      padding: "0.5rem",
+                      borderRadius: "5px",
+                      marginTop: "0.5rem",
+                      color: "black",
+                    }}
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div style={{ marginBottom: "1rem" }}>
+                  <label htmlFor="guestEmail_field" style={{ color: "#333333", fontSize: "1rem" }}>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="guestEmail_field"
+                    style={{
+                      width: "100%",
+                      padding: "0.5rem",
+                      borderRadius: "5px",
+                      marginTop: "0.5rem",
+                      color: "black",
+                    }}
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
             <div style={{ marginBottom: "1rem" }}>
               <label
                 htmlFor="address_field"
-                style={{ color: "#fff", fontSize: "1rem" }}
+                style={{ color: "#333333", fontSize: "1rem" }}
               >
                 Address
               </label>
@@ -446,7 +499,7 @@ export default function Shipping() {
             <div style={{ marginBottom: "1rem" }}>
               <label
                 htmlFor="city_field"
-                style={{ color: "#fff", fontSize: "1rem" }}
+                style={{ color: "#333333", fontSize: "1rem" }}
               >
                 City
               </label>
@@ -469,7 +522,7 @@ export default function Shipping() {
             <div style={{ marginBottom: "1rem" }}>
               <label
                 htmlFor="phone_field"
-                style={{ color: "#fff", fontSize: "1rem" }}
+                style={{ color: "#333333", fontSize: "1rem" }}
               >
                 Phone No
               </label>
@@ -492,7 +545,7 @@ export default function Shipping() {
             <div style={{ marginBottom: "1rem" }}>
               <label
                 htmlFor="postal_code_field"
-                style={{ color: "#fff", fontSize: "1rem" }}
+                style={{ color: "#333333", fontSize: "1rem" }}
               >
                 Postal Code
               </label>
@@ -515,7 +568,7 @@ export default function Shipping() {
             <div style={{ marginBottom: "1rem" }}>
               <label
                 htmlFor="country_field"
-                style={{ color: "#fff", fontSize: "1rem" }}
+                style={{ color: "#333333", fontSize: "1rem" }}
               >
                 Country
               </label>
@@ -543,7 +596,7 @@ export default function Shipping() {
             <div style={{ marginBottom: "1rem" }}>
               <label
                 htmlFor="state_field"
-                style={{ color: "#fff", fontSize: "1rem" }}
+                style={{ color: "#333333", fontSize: "1rem" }}
               >
                 State
               </label>

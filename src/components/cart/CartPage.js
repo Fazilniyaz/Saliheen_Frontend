@@ -10,7 +10,6 @@ import { Fragment } from "react";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
 import { ThreeDots } from "react-loader-spinner";
-import Swal from "sweetalert2";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
@@ -23,17 +22,7 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   const checkoutHandler = () => {
-    if (!user){
-      Swal.fire({
-        icon: "warning",
-        title: "Login Required",
-        text: "Please log in to proceed to checkout.",
-        confirmButtonText: "OK",
-      });
-    }else{
-      navigate("/shipping");
-    }
-    // navigate(`/login?redirect=shipping`);
+    navigate("/shipping");
   };
 
   const { localCart, addToLocalCart, removeFromLocalCart } =
@@ -105,7 +94,7 @@ const CartPage = () => {
           height="80"
           width="80"
           radius="9"
-          color="#FFD700" // Golden color
+          color="#1a1a1a"
           ariaLabel="three-dots-loading"
           wrapperStyle={{}}
           wrapperClassName=""
@@ -149,7 +138,7 @@ const CartPage = () => {
                 <div style={styles.quantityControls}>
                   <span>
                     <span className="mt-2 mb-2 stock">
-                      {item.quantity} ML | No. of Bottles : {item.noOfBottles}
+                      {item.quantity} ML | Bottles : {item.noOfBottles}
                     </span>
                   </span>
                 </div>
@@ -189,12 +178,15 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     maxWidth: "1200px",
     margin: "0 auto",
+    backgroundColor: "#ffffff",
+    color: "#111111",
   },
   heading: {
     textAlign: "center",
     marginBottom: "20px",
     fontSize: "24px",
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: "#111111",
   },
   cartItems: {
     display: "flex",
@@ -205,9 +197,10 @@ const styles = {
     display: "flex",
     alignItems: "center",
     padding: "15px",
-    border: "1px solid #ccc",
+    border: "1px solid #e5e5e5",
     borderRadius: "8px",
-    backgroundColor: "black",
+    backgroundColor: "#ffffff",
+    color: "#111111",
   },
   productImage: {
     width: "100px",
@@ -218,6 +211,7 @@ const styles = {
   },
   itemDetails: {
     flex: 1,
+    color: "#111111",
   },
   quantityControls: {
     display: "flex",
@@ -229,22 +223,24 @@ const styles = {
     padding: "5px 10px",
     fontSize: "16px",
     borderRadius: "5px",
-    border: "1px solid #007bff",
-    backgroundColor: "#007bff",
+    border: "1px solid #1a1a1a",
+    backgroundColor: "#1a1a1a",
     color: "#fff",
     cursor: "pointer",
   },
   deleteButton: {
-    backgroundColor: "#dc3545",
-    borderColor: "#dc3545",
+    backgroundColor: "#c62828",
+    borderColor: "#c62828",
     marginTop: "10px",
+    color: "#fff",
   },
   orderSummary: {
     marginTop: "30px",
     padding: "20px",
-    border: "1px solid #ccc",
+    border: "1px solid #e5e5e5",
     borderRadius: "8px",
-    backgroundColor: "black",
+    backgroundColor: "#fafafa",
+    color: "#111111",
   },
   checkoutButton: {
     marginTop: "20px",
@@ -252,7 +248,7 @@ const styles = {
     fontSize: "16px",
     borderRadius: "5px",
     border: "none",
-    backgroundColor: "#28a745",
+    backgroundColor: "#1a1a1a",
     color: "#fff",
     cursor: "pointer",
   },

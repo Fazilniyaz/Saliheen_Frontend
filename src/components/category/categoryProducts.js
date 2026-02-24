@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, Header, Input } from "semantic-ui-react";
+import { Card, Button, Header, Icon } from "semantic-ui-react";
 import "./categoryProducts.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -114,10 +114,10 @@ const CategoryProducts = () => {
     }));
   };
 
-  const handleBottlesChange = (productId, value) => {
-    let bottles = parseInt(value, 10);
-    if (isNaN(bottles) || bottles < 1) bottles = 1;
-    setSelectedBottles((prev) => ({ ...prev, [productId]: bottles }));
+  const handleBottlesChange = (productId, delta) => {
+    const current = selectedBottles[productId] ?? 1;
+    const next = Math.max(1, current + delta);
+    setSelectedBottles((prev) => ({ ...prev, [productId]: next }));
   };
 
   const getTypeOptions = (product) => {
@@ -160,7 +160,7 @@ const CategoryProducts = () => {
     );
   }
 
-  // Show a beautiful golden loader while fetching data
+  // Loader while fetching data
   if (loading) {
     return (
       <div
@@ -177,7 +177,7 @@ const CategoryProducts = () => {
           height="80"
           width="80"
           radius="9"
-          color="#FFD700" // Golden color
+          color="#1a1a1a"
           ariaLabel="three-dots-loading"
           wrapperStyle={{}}
           wrapperClassName=""
@@ -261,36 +261,28 @@ const CategoryProducts = () => {
                     </div>
                   </div>
 
-                  <div className="option-group">
-                    <label className="option-label decorate">
-                      No. of Bottles:
-                    </label>
-                    <div className="bottle-input">
-                      <Input
-                        type="number"
-                        min={1}
-                        placeholder="1"
-                        value={
-                          selectedBottles[product._id] === undefined
-                            ? ""
-                            : selectedBottles[product._id]
-                        }
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "") {
-                            setSelectedBottles((prev) => ({
-                              ...prev,
-                              [product._id]: undefined,
-                            }));
-                          } else {
-                            const bottles = Math.max(1, parseInt(val, 10) || 1);
-                            setSelectedBottles((prev) => ({
-                              ...prev,
-                              [product._id]: bottles,
-                            }));
-                          }
-                        }}
-                      />
+                  <div className="option-group option-group--bottles">
+                    <label className="option-label">Bottles</label>
+                    <div className="bottle-stepper">
+                      <button
+                        type="button"
+                        className="bottle-stepper-btn bottle-stepper-btn--minus"
+                        aria-label="Decrease bottles"
+                        onClick={() => handleBottlesChange(product._id, -1)}
+                      >
+                        <Icon name="minus" />
+                      </button>
+                      <span className="bottle-stepper-value">
+                        {selectedBottles[product._id] ?? 1}
+                      </span>
+                      <button
+                        type="button"
+                        className="bottle-stepper-btn bottle-stepper-btn--plus"
+                        aria-label="Increase bottles"
+                        onClick={() => handleBottlesChange(product._id, 1)}
+                      >
+                        <Icon name="plus" />
+                      </button>
                     </div>
                   </div>
 
@@ -312,9 +304,7 @@ const CategoryProducts = () => {
                   disabled={
                     !selectedType[product._id] ||
                     !selectedQuantity[product._id] ||
-                    !selectedPrice[product._id] ||
-                    !selectedBottles[product._id] ||
-                    selectedBottles[product._id] < 1
+                    !selectedPrice[product._id]
                   }
                   onClick={() => {
                     if (!selectedType[product._id]) {
@@ -322,10 +312,10 @@ const CategoryProducts = () => {
                     } else if (!selectedQuantity[product._id]) {
                       toast.error("Please select a quantity first!");
                     } else if (
-                      !selectedBottles[product._id] ||
-                      selectedBottles[product._id] < 1
-                    ) {
-                      toast.error("Please enter a valid number of bottles!");
+!(selectedBottles[product._id] ?? 1) ||
+                    (selectedBottles[product._id] ?? 1) < 1
+                  ) {
+                      toast.error("Please select at least 1 bottle.");
                     } else if (isProductInCart(product._id)) {
                       navigate("/cart");
                     } else {

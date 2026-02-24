@@ -175,7 +175,7 @@ function Paypal() {
           <button
             onClick={handlePayment}
             style={{
-              background: "#ff7e5f",
+              background: "#1a1a1a",
               color: "#fff",
               border: "none",
               padding: "10px 20px",
@@ -184,8 +184,8 @@ function Paypal() {
               cursor: "pointer",
               transition: "background 0.3s ease",
             }}
-            onMouseOver={(e) => (e.target.style.background = "#feb47b")}
-            onMouseOut={(e) => (e.target.style.background = "#ff7e5f")}
+            onMouseOver={(e) => (e.target.style.background = "#2d2d2d")}
+            onMouseOut={(e) => (e.target.style.background = "#1a1a1a")}
           >
             Pay Now
           </button>

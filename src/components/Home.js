@@ -351,7 +351,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Divider } from "semantic-ui-react";
 import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
-import { Wrench, Clock, RefreshCcw, Play } from "lucide-react";
+import { Wrench, Clock, RefreshCcw, Play, MapPin, Plus } from "lucide-react";
 import "./Home.css";
 
 // ImageKit URLs - Optimized carousel images with transformations
@@ -364,9 +364,13 @@ const carouselImages = [
   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?updatedAt=null&ik-s=415256a267698b4b7d8e10b870496c89652a9e63",
 ];
 
-// Category image - optimized
-const categoryImage =
-  "https://ik.imagekit.io/thesolocompilers2025/categories/inspired.jpg?updatedAt=null&ik-s=0e8c00d5e1aa124f88fc05f2546f7ff0ab6d7819";
+// Category images from public/categories/ (inspired.jpg, custom.jpg, luxury.jpg, etc.)
+const publicUrl = process.env.PUBLIC_URL || "";
+const getCategoryImageUrl = (categoryName) => {
+  const name = (categoryName || "").toLowerCase().trim();
+  const slug = name || "inspired";
+  return `${publicUrl}/categories/${slug}.jpg`;
+};
 
 // YouTube configuration
 const YOUTUBE_VIDEO_ID = "fNc2gD-GJFI";
@@ -414,12 +418,12 @@ const PerfumeProcess = React.lazy(() =>
 // ============= MEMOIZED COMPONENTS =============
 
 const Loader = memo(() => (
-  <div className="flex justify-center items-center h-screen w-full bg-black">
+  <div className="flex justify-center items-center h-screen w-full bg-white">
     <ThreeDots
       height="80"
       width="80"
       radius="9"
-      color="#FFD700"
+      color="#1a1a1a"
       ariaLabel="three-dots-loading"
       visible={true}
     />
@@ -432,7 +436,7 @@ const SmallLoader = memo(() => (
       height="40"
       width="40"
       radius="9"
-      color="#FFD700"
+      color="#1a1a1a"
       ariaLabel="three-dots-loading"
       visible={true}
     />
@@ -442,6 +446,11 @@ const SmallLoader = memo(() => (
 // Category Card with shimmer loading effect
 const CategoryCard = memo(({ category, onClick }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imgSrc, setImgSrc] = useState(() => getCategoryImageUrl(category.name));
+
+  const handleImageError = () => {
+    setImgSrc(carouselImages[0]);
+  };
 
   return (
     <div onClick={onClick} className="category-card">
@@ -452,12 +461,13 @@ const CategoryCard = memo(({ category, onClick }) => {
           </div>
         )}
         <img
-          src={categoryImage}
+          src={imgSrc}
           alt={category.name}
           className={`category-image ${imageLoaded ? "loaded" : ""}`}
           loading="lazy"
           decoding="async"
           onLoad={() => setImageLoaded(true)}
+          onError={handleImageError}
         />
         <div className="category-overlay">
           <span className="category-overlay-text">Explore</span>
@@ -476,6 +486,7 @@ const QuoteSlide = memo(({ quote }) => {
 
   return (
     <div className="quote-slide">
+      <span className="quote-mark" aria-hidden="true">"</span>
       <div className="quote-content">
         <p className="quote-primary">{otherLang}</p>
         <p className="quote-secondary">{englishLang}</p>
@@ -502,7 +513,7 @@ const YouTubePlayer = memo(() => {
           loading="lazy"
         />
         <button className="youtube-play-button" aria-label="Play video">
-          <Play size={60} fill="#fff" />
+          <Play size={56} fill="#fff" />
         </button>
         <div className="youtube-overlay">
           <p>Click to Play</p>
@@ -642,7 +653,7 @@ export const Home = () => {
   return (
     <div className="home-container">
       {/* Hero Carousel */}
-      <section className="hero-section">
+      <section onClick={() => navigate("/allproducts")} className="hero-section">
         <Carousel
           className="hero-carousel"
           interval={3000}
@@ -651,7 +662,7 @@ export const Home = () => {
           showStatus={false}
           swipeable={true}
           showThumbs={false}
-          showArrows={true}
+          showArrows={false}
           autoPlay
           infiniteLoop
           stopOnHover={true}
@@ -661,10 +672,10 @@ export const Home = () => {
               marginLeft: 10,
               cursor: "pointer",
               display: "inline-block",
-              width: isSelected ? "30px" : "10px",
-              height: "10px",
-              borderRadius: "5px",
-              background: isSelected ? "#FFD700" : "rgba(255, 215, 0, 0.3)",
+              width: isSelected ? "28px" : "10px",
+              height: "8px",
+              borderRadius: "4px",
+              background: isSelected ? "#1a1a1a" : "rgba(0, 0, 0, 0.15)",
               transition: "all 0.3s ease",
             };
             return (
@@ -703,6 +714,14 @@ export const Home = () => {
 
       <Divider className="section-divider" />
 
+      <button
+        type="button"
+        onClick={() => navigate("/allproducts")}
+        className="shop-all-btn"
+      >
+        Shop All
+      </button>
+
       {/* Categories Section */}
       <section className="categories-section">
         <h2 className="section-heading">
@@ -720,10 +739,89 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* Our Branches - Flowchart style */}
+      <section className="branches-section">
+        <h2 className="section-heading">
+          <span className="heading-text">Our Branches</span>
+          <div className="heading-underline"></div>
+        </h2>
+        <div className="branches-flowchart">
+          <div className="branches-hub">
+            <MapPin size={28} className="branches-hub-icon" />
+            <span>Saliheen Perfumes</span>
+          </div>
+          <svg className="branches-connector" viewBox="0 0 800 80" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#a2682a" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#a2682a" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#a2682a" stopOpacity="0.3" />
+              </linearGradient>
+              <marker id="branchArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#a2682a" />
+              </marker>
+            </defs>
+            <path d="M 40 40 Q 200 10, 400 40 T 760 40" fill="none" stroke="url(#branchGradient)" strokeWidth="2" strokeDasharray="6 4" markerEnd="url(#branchArrow)" />
+          </svg>
+          <div className="branches-nodes">
+            <a
+              href="https://www.google.com/maps/place/Saliheen+Perfumes+%231/@10.9916817,76.9620386,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba85900450454a7:0x565fdbefe66e4e7f!8m2!3d10.9916817!4d76.9646135!16s%2Fg%2F11y26psvb3?entry=ttu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="branch-node branch-node-link"
+            >
+              <div className="branch-node-icon-wrap">
+                <MapPin size={22} />
+              </div>
+              <p className="branch-address">Bk Chetty Street</p>
+              <p className="branch-city">Coimbatore</p>
+            </a>
+            <div className="branch-connector-line" aria-hidden="true"></div>
+            <a
+              href="https://www.google.com/maps/place/Saliheen+Perfumes+%232/@10.9914939,76.9628627,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba8590046440a5d:0x8fa6299e9c37a341!8m2!3d10.9914939!4d76.9654376!16s%2Fg%2F11wttjnrh0?entry=ttu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="branch-node branch-node-link"
+            >
+              <div className="branch-node-icon-wrap">
+                <MapPin size={22} />
+              </div>
+              <p className="branch-address">Vincent Road</p>
+              <p className="branch-city">Coimbatore</p>
+            </a>
+            <div className="branch-connector-line" aria-hidden="true"></div>
+            <a
+              href="https://www.google.com/maps/place/Saliheen+Perfumes+%233/@11.1014831,77.3528603,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba907a0a378e37b:0x76d014aef9bd2a43!8m2!3d11.1014831!4d77.3554352!16s%2Fg%2F11yf39cb0x?entry=ttu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="branch-node branch-node-link"
+            >
+              <div className="branch-node-icon-wrap">
+                <MapPin size={22} />
+              </div>
+              <p className="branch-address">Kangeyam Cross Road</p>
+              <p className="branch-city">Tirupur</p>
+            </a>
+            <div className="branch-connector-line branch-connector-dashed" aria-hidden="true"></div>
+            <div className="branch-node branch-node-coming">
+              <div className="branch-node-icon-wrap branch-coming-icon">
+                <Plus size={24} />
+              </div>
+              <p className="branch-address branch-coming-text">More branches</p>
+              <p className="branch-city branch-coming-sub">Coming soon</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Divider className="section-divider" />
 
       {/* Quotes Carousel */}
       <section className="quotes-section">
+        <h2 className="section-heading quotes-section-heading">
+          <span className="heading-text">Words on Fragrance</span>
+          <div className="heading-underline"></div>
+        </h2>
         <Carousel
           className="quotes-carousel"
           autoFocus={false}

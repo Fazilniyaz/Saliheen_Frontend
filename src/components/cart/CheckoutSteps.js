@@ -18,7 +18,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #a2682a",
+              borderBottom: "15px solid #1a1a1a",
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -27,7 +27,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           <div
             style={{
               color: "#fff",
-              backgroundColor: "#a2682a",
+              backgroundColor: "#1a1a1a",
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -41,7 +41,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #a2682a",
+              borderTop: "15px solid #1a1a1a",
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -92,7 +92,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #a2682a",
+              borderBottom: "15px solid #1a1a1a",
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -101,7 +101,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           <div
             style={{
               color: "#fff",
-              backgroundColor: "#a2682a",
+              backgroundColor: "#1a1a1a",
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -115,7 +115,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #a2682a",
+              borderTop: "15px solid #1a1a1a",
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -166,7 +166,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #a2682a",
+              borderBottom: "15px solid #1a1a1a",
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -175,7 +175,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           <div
             style={{
               color: "#fff",
-              backgroundColor: "#a2682a",
+              backgroundColor: "#1a1a1a",
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -189,7 +189,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #a2682a",
+              borderTop: "15px solid #1a1a1a",
               height: "0",
               width: "0",
               margin: "0 auto",

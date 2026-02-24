@@ -6,7 +6,7 @@ function Product({ product }) {
     <div className="col-12 col-sm-6 col-md-6 col-lg-3 my-3 d-flex justify-content-center">
       <div
         className="card p-2 p-sm-3 rounded"
-        style={{ width: "100%", maxWidth: "280px" }}
+        style={{ width: "100%", maxWidth: "280px", border: "1px solid #1a1a1a" }}
       >
         {/* Fixed Image Container */}
         <div
@@ -133,7 +133,7 @@ function Product({ product }) {
           {/* No. of Bottles - Improved for mobile */}
           <div className="mb-3">
             <label className="form-label mb-1" style={{ fontSize: "14px" }}>
-              No. of Bottles:
+              Bottles:
             </label>
             <input
               type="number"

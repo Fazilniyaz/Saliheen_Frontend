@@ -83,7 +83,7 @@ export const ProductSearch = () => {
         }
 
         .filter-item.selected {
-          color: #007bff; /* Highlight color for the selected filter */
+          color: #1a1a1a;
         }
 
         .filter-item::after {
@@ -93,7 +93,7 @@ export const ProductSearch = () => {
           left: 0;
           width: 0%;
           height: 2px;
-          background-color: #007bff;
+          background-color: #1a1a1a;
           transition: width 0.3s ease-in-out;
         }
 

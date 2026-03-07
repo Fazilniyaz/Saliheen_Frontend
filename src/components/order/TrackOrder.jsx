@@ -4,12 +4,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import MetaData from "../layouts/MetaData";
 import { toast } from "react-toastify";
+import { useTheme } from "../../context";
 
 const API_BASE = "https://saliheenperfumes-zd2i.onrender.com/api/v1";
 
 export default function TrackOrder() {
   const { orderId: paramOrderId } = useParams();
   const navigate = useNavigate();
+  const { colors } = useTheme();
   const [orderIdInput, setOrderIdInput] = useState(paramOrderId || "");
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(!!paramOrderId);
@@ -53,7 +55,7 @@ export default function TrackOrder() {
     <>
       <MetaData title="Track Order" />
       <div className="container container-fluid" style={{ maxWidth: 700, margin: "2rem auto" }}>
-        <h1 style={{ textAlign: "center", marginBottom: "1.5rem", color: "#1a1a1a" }}>
+        <h1 style={{ textAlign: "center", marginBottom: "1.5rem", color: colors.textPrimary }}>
           Track your order
         </h1>
 
@@ -61,13 +63,13 @@ export default function TrackOrder() {
           <form
             onSubmit={handleSubmit}
             style={{
-              background: "#fafafa",
+              background: colors.bgSubtle,
               padding: "1.5rem",
               borderRadius: 10,
               marginBottom: "2rem",
             }}
           >
-            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600, color: colors.textPrimary }}>
               Order ID
             </label>
             <input
@@ -79,15 +81,17 @@ export default function TrackOrder() {
                 width: "100%",
                 padding: "0.75rem",
                 borderRadius: 6,
-                border: "1px solid #ddd",
+                border: `1px solid ${colors.borderLight}`,
                 marginBottom: "1rem",
+                background: colors.bgMuted,
+                color: colors.textPrimary,
               }}
             />
             <button
               type="submit"
               style={{
-                background: "#1a1a1a",
-                color: "#fff",
+                background: colors.accent,
+                color: colors.buttonText,
                 padding: "0.6rem 1.2rem",
                 border: "none",
                 borderRadius: 6,
@@ -100,7 +104,7 @@ export default function TrackOrder() {
         )}
 
         {loading && (
-          <p style={{ textAlign: "center", color: "#666" }}>Loading order details...</p>
+          <p style={{ textAlign: "center", color: colors.textMuted }}>Loading order details...</p>
         )}
 
         {error && !loading && paramOrderId && (
@@ -120,17 +124,18 @@ export default function TrackOrder() {
         {order && !loading && (
           <div
             style={{
-              background: "#fff",
-              border: "1px solid #e5e5e5",
+              background: colors.bgPage,
+              border: `1px solid ${colors.borderLight}`,
               borderRadius: 10,
               padding: "1.5rem",
               boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              color: colors.textPrimary,
             }}
           >
-            <p style={{ marginBottom: "0.5rem", color: "#666" }}>
+            <p style={{ marginBottom: "0.5rem", color: colors.textMuted }}>
               <strong>Order ID:</strong> {order._id}
             </p>
-            <p style={{ marginBottom: "0.5rem" }}>
+            <p style={{ marginBottom: "0.5rem", color: colors.textPrimary }}>
               <strong>Status:</strong>{" "}
               <span
                 style={{
@@ -139,24 +144,24 @@ export default function TrackOrder() {
                       ? "#16a34a"
                       : order.orderStatus === "Cancelled" || order.orderStatus === "Returned"
                       ? "#dc2626"
-                      : "#1a1a1a",
+                      : colors.accent,
                   fontWeight: 600,
                 }}
               >
                 {order.orderStatus}
               </span>
             </p>
-            <p style={{ marginBottom: "0.5rem", color: "#666" }}>
+            <p style={{ marginBottom: "0.5rem", color: colors.textMuted }}>
               <strong>Placed on:</strong>{" "}
               {order.createdAt
                 ? new Date(order.createdAt).toLocaleString()
                 : "-"}
             </p>
-            <p style={{ marginBottom: "1rem" }}>
+            <p style={{ marginBottom: "1rem", color: colors.textPrimary }}>
               <strong>Total:</strong> ₹{order.totalPrice}
             </p>
             {order.shippingInfo && (
-              <div style={{ marginBottom: "1rem", color: "#555" }}>
+              <div style={{ marginBottom: "1rem", color: colors.textMuted }}>
                 <strong>Shipping to:</strong>
                 <br />
                 {order.guestName && `${order.guestName}${order.guestEmail ? ` (${order.guestEmail})` : ""}`}
@@ -168,7 +173,7 @@ export default function TrackOrder() {
               </div>
             )}
             {order.orderItems && order.orderItems.length > 0 && (
-              <div>
+              <div style={{ color: colors.textPrimary }}>
                 <strong>Items:</strong>
                 <ul style={{ marginTop: "0.5rem", paddingLeft: "1.25rem" }}>
                   {order.orderItems.map((item, i) => (
@@ -182,13 +187,13 @@ export default function TrackOrder() {
           </div>
         )}
 
-        <p style={{ textAlign: "center", marginTop: "1.5rem" }}>
+        <p style={{ textAlign: "center", marginTop: "1.5rem", color: colors.textPrimary }}>
           {paramOrderId && (
-            <Link to="/order/track" style={{ color: "#a2682a", fontWeight: 600, marginRight: "1rem" }}>
+            <Link to="/order/track" style={{ color: colors.accent, fontWeight: 600, marginRight: "1rem" }}>
               Track another order
             </Link>
           )}
-          <Link to="/" style={{ color: "#a2682a", fontWeight: 600 }}>
+          <Link to="/" style={{ color: colors.accent, fontWeight: 600 }}>
             Continue shopping
           </Link>
         </p>

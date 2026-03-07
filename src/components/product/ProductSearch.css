@@ -31,4 +31,12 @@
       width: 100%;
     }
   }
+
+  [data-theme="dark"] .filter-item.active {
+    color: var(--accent) !important;
+  }
+
+  [data-theme="dark"] .filter-item.active::after {
+    background: var(--accent) !important;
+  }
   

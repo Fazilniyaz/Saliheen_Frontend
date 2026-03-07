@@ -10,12 +10,14 @@ import { Fragment } from "react";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
 import { ThreeDots } from "react-loader-spinner";
+import { useTheme } from "../../context";
 
 const CartPage = () => {
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState({ totalAmount: 0, totalProducts: 0 });
   const { user = "" } = useSelector((state) => state.authState);
+  const { colors } = useTheme();
 
   const userId = user._id;
   const dispatch = useDispatch();
@@ -94,7 +96,7 @@ const CartPage = () => {
           height="80"
           width="80"
           radius="9"
-          color="#1a1a1a"
+          color={colors.accent}
           ariaLabel="three-dots-loading"
           wrapperStyle={{}}
           wrapperClassName=""
@@ -108,6 +110,88 @@ const CartPage = () => {
 
   // Decide which cart to show
   const displayCart = localCart;
+
+  const styles = {
+    cartPage: {
+      padding: "20px",
+      fontFamily: "Arial, sans-serif",
+      maxWidth: "1200px",
+      margin: "0 auto",
+      backgroundColor: colors.bgPage,
+      color: colors.textPrimary,
+    },
+    heading: {
+      textAlign: "center",
+      marginBottom: "20px",
+      fontSize: "24px",
+      fontWeight: "600",
+      color: colors.textPrimary,
+    },
+    cartItems: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+    },
+    cartItem: {
+      display: "flex",
+      alignItems: "center",
+      padding: "15px",
+      border: `1px solid ${colors.borderLight}`,
+      borderRadius: "8px",
+      backgroundColor: colors.bgPage,
+      color: colors.textPrimary,
+    },
+    productImage: {
+      width: "100px",
+      height: "100px",
+      marginRight: "20px",
+      objectFit: "cover",
+      borderRadius: "8px",
+    },
+    itemDetails: {
+      flex: 1,
+      color: colors.textPrimary,
+    },
+    quantityControls: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      marginTop: "10px",
+    },
+    button: {
+      padding: "5px 10px",
+      fontSize: "16px",
+      borderRadius: "5px",
+      border: `1px solid ${colors.accent}`,
+      backgroundColor: colors.accent,
+      color: colors.buttonText,
+      cursor: "pointer",
+    },
+    deleteButton: {
+      backgroundColor: "#c62828",
+      borderColor: "#c62828",
+      marginTop: "10px",
+      color: "#fff",
+    },
+    orderSummary: {
+      marginTop: "30px",
+      padding: "20px",
+      border: `1px solid ${colors.borderLight}`,
+      borderRadius: "8px",
+      backgroundColor: colors.bgSubtle,
+      color: colors.textPrimary,
+    },
+    checkoutButton: {
+      marginTop: "20px",
+      padding: "10px 20px",
+      fontSize: "16px",
+      borderRadius: "5px",
+      border: "none",
+      backgroundColor: colors.accent,
+      color: colors.buttonText,
+      cursor: "pointer",
+    },
+  };
 
   return (
     <Fragment>
@@ -171,87 +255,6 @@ const CartPage = () => {
       </div>
     </Fragment>
   );
-};
-const styles = {
-  cartPage: {
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-    maxWidth: "1200px",
-    margin: "0 auto",
-    backgroundColor: "#ffffff",
-    color: "#111111",
-  },
-  heading: {
-    textAlign: "center",
-    marginBottom: "20px",
-    fontSize: "24px",
-    fontWeight: "600",
-    color: "#111111",
-  },
-  cartItems: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-  cartItem: {
-    display: "flex",
-    alignItems: "center",
-    padding: "15px",
-    border: "1px solid #e5e5e5",
-    borderRadius: "8px",
-    backgroundColor: "#ffffff",
-    color: "#111111",
-  },
-  productImage: {
-    width: "100px",
-    height: "100px",
-    marginRight: "20px",
-    objectFit: "cover",
-    borderRadius: "8px",
-  },
-  itemDetails: {
-    flex: 1,
-    color: "#111111",
-  },
-  quantityControls: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    marginTop: "10px",
-  },
-  button: {
-    padding: "5px 10px",
-    fontSize: "16px",
-    borderRadius: "5px",
-    border: "1px solid #1a1a1a",
-    backgroundColor: "#1a1a1a",
-    color: "#fff",
-    cursor: "pointer",
-  },
-  deleteButton: {
-    backgroundColor: "#c62828",
-    borderColor: "#c62828",
-    marginTop: "10px",
-    color: "#fff",
-  },
-  orderSummary: {
-    marginTop: "30px",
-    padding: "20px",
-    border: "1px solid #e5e5e5",
-    borderRadius: "8px",
-    backgroundColor: "#fafafa",
-    color: "#111111",
-  },
-  checkoutButton: {
-    marginTop: "20px",
-    padding: "10px 20px",
-    fontSize: "16px",
-    borderRadius: "5px",
-    border: "none",
-    backgroundColor: "#1a1a1a",
-    color: "#fff",
-    cursor: "pointer",
-  },
 };
 
 export default CartPage;

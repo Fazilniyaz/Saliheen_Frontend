@@ -195,3 +195,52 @@
     height: 10px;
   }
 }
+
+/* Dark theme */
+[data-theme="dark"] .perfume-process-container {
+  background: var(--bg-page) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .timeline-title {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .timeline-subtitle {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .timeline-dot {
+  background: var(--accent) !important;
+  border-color: var(--bg-page) !important;
+  box-shadow: 0 0 0 1px var(--border-muted);
+}
+
+[data-theme="dark"] .timeline-line {
+  background: linear-gradient(to bottom, var(--border-muted), var(--border-light)) !important;
+}
+
+[data-theme="dark"] .timeline-card {
+  background: var(--bg-subtle) !important;
+  border-color: var(--border-muted) !important;
+}
+
+[data-theme="dark"] .timeline-card:hover {
+  box-shadow: 0 4px 16px var(--shadow-dark);
+}
+
+[data-theme="dark"] .timeline-card-image-wrap {
+  background: var(--bg-muted) !important;
+}
+
+[data-theme="dark"] .timeline-step-num {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .timeline-card-title {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .timeline-card-text {
+  color: var(--text-muted) !important;
+}

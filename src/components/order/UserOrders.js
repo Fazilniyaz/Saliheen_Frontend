@@ -4,10 +4,12 @@ import { MDBDataTable } from "mdbreact";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { userOrders as userOrdersAction } from "../../actions/orderActions";
+import { useTheme } from "../../context";
 
 export default function UserOrders() {
   const { userOrders = [] } = useSelector((state) => state.orderState);
   const dispatch = useDispatch();
+  const { colors } = useTheme();
   console.log("userOrders", userOrders);
 
   useEffect(() => {
@@ -93,10 +95,10 @@ export default function UserOrders() {
           margin: "1.5rem auto",
           padding: "1.25rem",
           maxWidth: "90%",
-          backgroundColor: "#ffffff",
+          backgroundColor: colors.bgPage,
           borderRadius: "12px",
           boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
-          border: "1px solid #e5e5e5",
+          border: `1px solid ${colors.borderLight}`,
         }}
       >
         <h1
@@ -104,7 +106,7 @@ export default function UserOrders() {
             textAlign: "center",
             fontSize: "2rem",
             fontWeight: "600",
-            color: "#111111",
+            color: colors.textPrimary,
             fontFamily: "Yantramanav",
             marginBottom: "1rem",
           }}
@@ -118,9 +120,9 @@ export default function UserOrders() {
         >
           <MDBDataTable
             style={{
-              color: "#111111",
+              color: colors.textPrimary,
               fontFamily: "Yantramanav, sans-serif",
-              backgroundColor: "#ffffff",
+              backgroundColor: colors.bgPage,
               borderRadius: "10px",
               padding: "1rem",
             }}

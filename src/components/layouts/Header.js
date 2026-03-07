@@ -6,6 +6,7 @@ import { logout } from "../../actions/userActions";
 import { Icon } from "semantic-ui-react";
 import { CartContext } from "../cart/cartContext";
 import GoogleAuthModal from "../user/GoogleAuthModel";
+import { useTheme } from "../../context";
 
 function Header() {
   const { isAuthenticated, user = "" } = useSelector(
@@ -14,6 +15,7 @@ function Header() {
   const { items: cartItems } = useSelector((state) => state.cartState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const { localCart } = useContext(CartContext);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -41,6 +43,20 @@ function Header() {
         </div>
 
         <div className="navbar-actions">
+          {/* Theme toggle */}
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            title={theme === "light" ? "Switch to dark (Gold & Black)" : "Switch to light"}
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? (
+              <span className="theme-icon" aria-hidden="true">◆</span>
+            ) : (
+              <span className="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+            )}
+          </button>
           {isAuthenticated ? (
             <>
               <Dropdown className="d-inline header-profile-dropdown" align="end">

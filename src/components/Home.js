@@ -1,340 +1,4 @@
-// import React, { useEffect, useState, Suspense, memo, useMemo } from "react";
-// import axios from "axios";
-// import { Carousel } from "react-responsive-carousel";
-// import "react-responsive-carousel/lib/styles/carousel.min.css";
-// import { Divider } from "semantic-ui-react";
-// import { ThreeDots } from "react-loader-spinner";
-// import "./Home.css";
-// import { useNavigate } from "react-router-dom";
-// import { Wrench, Clock, RefreshCcw } from "lucide-react";
 
-// // Dynamically import all images from assets folder
-// const importAll = (r) => r.keys().map(r);
-// const images = importAll(
-//   require.context("../../public/jpeg__photos", false, /\.(png|jpe?g|svg)$/)
-// );
-
-// const staticCategories = ["inspired.jpg", "luxury.jpg", "custom.jpg"];
-// const imagesCat = importAll(
-//   require.context("../../public/categories_", false, /\.(png|jpe?g|svg|jpg)$/)
-// );
-
-// const quotes = [
-//   "العطر يوقظ الذكريات التي دفنتها السنين. - Perfume awakens memories buried by the years. (Arabic)",
-//   "Le parfum est une expression de l'amour silencieux. - Perfume is an expression of silent love. (French)",
-//   "العود والورد عطر الشرق وعبيره الأزلي. - Oud and rose are the perfumes of the East and its eternal fragrance. (Arabic)",
-//   "Das Parfum ist die Sprache, die das Herz spricht. - Perfume is the language spoken by the heart. (German)",
-//   "العطر هو تعبير عن الحنين ويمتد ليشمل كل ما هو جميل. - Perfume is an expression of nostalgia and extends to include all that is beautiful. (Arabic)",
-//   "アッタールは平和の香り、時間がゆっくり流れ、自然が咲く香りです。 - Attar is the scent of peace, of time slowing down and nature blooming. (Japanese)",
-//   "العطر هو رسالة سرية تُرسل من روح إلى أخرى. - Perfume is a secret message sent from one person's soul to another. (Arabic)",
-//   "Attar es una celebración de la naturaleza, pura y sin refinar. - Attar is a celebration of nature, pure and unrefined. (Spanish)",
-//   "العطر هو لغة الحب، خفية وساحرة. - Perfume is a language of love, subtle and intoxicating. (Arabic)",
-//   "Attar captura el espíritu de la naturaleza y lo conserva en una botella. - Attar captures the spirit of nature and preserves it in a bottle. (Spanish)",
-//   "العطر هو مرآة لمشاعرنا، يكشف ما يكمن تحت السطح. - Perfume is the mirror of our emotions, it reveals what lies beneath the surface. (Arabic)",
-//   "アッタールはシンプルさの香りでありながら、深みのある世界を持っています。 - Attar is the fragrance of simplicity, yet it carries a world of depth. (Japanese)",
-//   "العطر هو تعبير عن الفردية، همس عن من تكون. - Perfume is an expression of individuality, a whisper of who you are. (Arabic)",
-//   "Attar рассказывает истории пустынь и роз, аромат, созданный природой. - Attar tells the stories of deserts and roses, a fragrance crafted by nature. (Russian)",
-//   "العطر كالتوقيع الشخصي، يترك أثراً أينما ذهبت. - Perfume is like a personal signature, leaving a trail wherever you go. (Arabic)",
-//   "아타르는 꽃과 향신료의 중심으로 향기로운 여행입니다. - Attar is a fragrant journey into the heart of flowers and spices. (Korean)",
-//   "العطر هو سيمفونية من الروائح تعزف على الحواس. - Perfume is a symphony of aromas that plays on the senses. (Arabic)",
-//   "Attar 响应古老的传统，展现了自然本质的美丽。 - Attar speaks of ancient traditions and the beauty of nature's essence. (Chinese)",
-//   "العطر يضفي لمسة أخيرة على الأناقة—تفصيل غير مرئي يكمل شخصية الرجل أو المرأة. - Perfume puts the finishing touch to elegance—a detail that subtly underscores the look, an invisible extra that completes a man's or woman's personality. (Arabic)",
-//   "Attar είναι η ποίηση της γης, αποσταγμένη σε μία σταγόνα. - Attar is the poetry of the earth, distilled into a single drop. (Greek)",
-//   "العطر هو طريقة لإيقاف الزمن. تشم رائحة معينة وتتذكر كل شيء. - Perfume is a way of stopping time. You smell a certain scent and you remember everything. (Arabic)",
-//   "Attar è un legame senza χρόνο με τη γη, που περιλαμβάνει την ουσία της φύσης σε κάθε σταγόνα. - Attar is a timeless connection to the earth, embodying the essence of nature in every drop. (Italian)",
-//   "العطر هو المفتاح لذكرياتنا، لمحة من العطر يمكن أن تأخذك سنوات إلى الوراء. - Perfume is the key to our memories, a hint of scent can take you back years. (Arabic)",
-//   "Attar шепчет на языке цветов и природы. - Attar whispers the language of flowers and nature. (Russian)",
-//   "العطر هو الشكل الأكثر كثافة للذاكرة. - Perfume is the most intense form of memory. (Arabic)",
-//   "Attar es la fragancia de la tradición, que lleva la esencia de la pureza. - Attar is the fragrance of tradition, carrying the essence of purity. (Spanish)",
-//   "عطر المرأة يقول عنها أكثر مما يقوله خط يدها. - A woman's perfume tells more about her than her handwriting. (Arabic)",
-//   "Le parfum est l'art qui fait parler la mémoire. - Perfume is the art that makes memory speak. (French)",
-// ];
-
-// // Lazy load heavy components
-// const AttarOudhHistory = React.lazy(() =>
-//   import("./AttarOudhHistory/AttarOudhHistory")
-// );
-// const PerfumeProcess = React.lazy(() =>
-//   import("./PerfumeProcess/PerfumeProcess")
-// );
-
-// // Memoized Loader Component
-// const Loader = memo(() => (
-//   <div
-//     style={{
-//       display: "flex",
-//       justifyContent: "center",
-//       alignItems: "center",
-//       height: "50vh",
-//       width: "100%",
-//       background: "#000",
-//     }}
-//   >
-//     <ThreeDots
-//       height="80"
-//       width="80"
-//       radius="9"
-//       color="#FFD700"
-//       ariaLabel="three-dots-loading"
-//       visible={true}
-//     />
-//   </div>
-// ));
-
-// // Memoized Small Loader for Suspense
-// const SmallLoader = memo(() => (
-//   <div style={{ textAlign: "center", padding: "20px" }}>
-//     <ThreeDots
-//       height="40"
-//       width="40"
-//       radius="9"
-//       color="#FFD700"
-//       ariaLabel="three-dots-loading"
-//       visible={true}
-//     />
-//   </div>
-// ));
-
-// // Memoized Category Card
-// const CategoryCard = memo(({ category, image, onClick }) => (
-//   <div onClick={onClick} className="category-card">
-//     <img
-//       src={image}
-//       alt={category.name}
-//       className="category-image"
-//       loading="lazy"
-//       decoding="async"
-//     />
-//     <div className="category-info">
-//       <h3>{category.name}</h3>
-//     </div>
-//   </div>
-// ));
-
-// // Memoized Quote Slide
-// const QuoteSlide = memo(({ quote }) => {
-//   const [otherLang, englishLang] = useMemo(() => quote.split(" - "), [quote]);
-
-//   return (
-//     <div
-//       style={{
-//         textAlign: "center",
-//         backgroundColor: "black",
-//         borderRadius: "10px",
-//         padding: "10px",
-//       }}
-//     >
-//       <h1 style={{ fontSize: "20px", fontStyle: "italic" }}>{otherLang}</h1>
-//       <h1 style={{ fontSize: "15px", fontStyle: "italic" }}>{englishLang}</h1>
-//     </div>
-//   );
-// });
-
-// export const Home = () => {
-//   const [categories, setCategories] = useState([]);
-//   const [underService, setUnderService] = useState(false);
-//   const [loading, setLoading] = useState(true);
-//   const navigate = useNavigate();
-
-//   const handleCategoryClick = useMemo(
-//     () => (categoryName) => {
-//       navigate(`/category/${categoryName}`);
-//     },
-//     [navigate]
-//   );
-
-//   useEffect(() => {
-//     const fetchCategories = async () => {
-//       try {
-//         const { data } = await axios.get(
-//           "https://saliheenperfumes-zd2i.onrender.com/api/v1/user/category",
-//           { withCredentials: true }
-//         );
-//         setCategories(data.categories);
-//       } catch (error) {
-//         console.error("Error fetching categories:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchCategories();
-//   }, []);
-
-//   if (loading) {
-//     return <Loader />;
-//   }
-
-//   if (underService) {
-//     return (
-//       <div className="flex flex-col items-center justify-center h-screen bg-gray-950 text-white px-6 text-center">
-//         <div className="bg-gray-900 p-10 rounded-2xl shadow-lg max-w-lg border border-gray-800">
-//           <div className="flex justify-center mb-6">
-//             <Wrench size={70} className="text-yellow-400 animate-spin-slow" />
-//           </div>
-//           <h1 className="text-3xl font-bold mb-3">We're Under Service</h1>
-//           <p className="text-gray-400 mb-6">
-//             Our website is currently undergoing scheduled maintenance to improve
-//             your experience. We'll be back soon. Thank you for your patience!
-//           </p>
-//           <div className="flex justify-center gap-4 text-gray-300">
-//             <Clock className="animate-pulse" />
-//             <p>Estimated downtime: Few minutes</p>
-//           </div>
-
-//           <button
-//             onClick={() => window.location.reload()}
-//             className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-full flex items-center gap-2 transition-all"
-//           >
-//             <RefreshCcw size={18} />
-//             Refresh Page
-//           </button>
-//         </div>
-
-//         <footer className="mt-10 text-sm text-gray-500">
-//           &copy; {new Date().getFullYear()} Fazil Niyazdeen TM. All rights
-//           reserved.
-//         </footer>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="baritems">
-//       {/* Image Carousel */}
-//       <Carousel
-//         className="image-carousel"
-//         interval={2200}
-//         autoFocus={false}
-//         showIndicators={false}
-//         showStatus={false}
-//         swipeable={false}
-//         showThumbs={false}
-//         showArrows={false}
-//         autoPlay
-//         infiniteLoop
-//         stopOnHover={false}
-//         centerMode={true}
-//       >
-//         {images.map((image, index) => (
-//           <div key={index}>
-//             <img
-//               src={image}
-//               alt={`Perfume ${index + 1}`}
-//               style={{ objectFit: "cover" }}
-//               loading={index < 2 ? "eager" : "lazy"}
-//               decoding="async"
-//             />
-//           </div>
-//         ))}
-//       </Carousel>
-
-//       <Divider />
-
-//       {/* Categories Section */}
-//       <h2 className="heading">Shop By Category</h2>
-//       <div className="categories-container">
-//         {categories.map((category, index) => (
-//           <CategoryCard
-//             key={category._id}
-//             category={category}
-//             image={imagesCat[index % imagesCat.length]}
-//             onClick={() => handleCategoryClick(category.name)}
-//           />
-//         ))}
-//       </div>
-
-//       <Divider />
-
-//       {/* Quotes Carousel */}
-//       <Carousel
-//         className="quote-carousel"
-//         autoFocus={false}
-//         showIndicators={false}
-//         showStatus={false}
-//         swipeable={false}
-//         showThumbs={false}
-//         showArrows={false}
-//         autoPlay
-//         infiniteLoop
-//       >
-//         {quotes.map((quote, index) => (
-//           <QuoteSlide key={index} quote={quote} />
-//         ))}
-//       </Carousel>
-
-//       <Divider />
-
-//       <Suspense fallback={<SmallLoader />}>
-//         <AttarOudhHistory />
-//       </Suspense>
-
-//       <Divider />
-
-//       <iframe
-//         width="99%"
-//         height="50%"
-//         src="https://www.youtube.com/embed/fNc2gD-GJFI?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1"
-//         title="Saliheen Offline"
-//         frameBorder="0"
-//         allow="accelerometer; autoplay; encrypted-media; picture-in-picture; web-share"
-//         referrerPolicy="strict-origin-when-cross-origin"
-//         allowFullScreen={false}
-//         loading="lazy"
-//       />
-
-//       <Divider />
-
-//       <Suspense fallback={<SmallLoader />}>
-//         <PerfumeProcess />
-//       </Suspense>
-
-//       <style jsx>{`
-//         .heading {
-//           font-size: 2rem;
-//           font-weight: bold;
-//           text-align: center;
-//           margin-top: 20px;
-//           color: #ffd700;
-//         }
-//         .categories-container {
-//           display: flex;
-//           justify-content: center;
-//           flex-wrap: wrap;
-//           gap: 20px;
-//           margin: 20px 0;
-//         }
-//         .category-card {
-//           background-color: #000;
-//           color: #e1b453;
-//           border: 1px solid #e1b453;
-//           border-radius: 10px;
-//           overflow: hidden;
-//           width: 200px;
-//           text-align: center;
-//           transition: transform 0.3s;
-//           cursor: pointer;
-//         }
-//         .category-card:hover {
-//           transform: scale(1.05);
-//         }
-//         .category-image {
-//           width: 100%;
-//           height: 150px;
-//           object-fit: cover;
-//         }
-//         .category-info {
-//           padding: 10px;
-//         }
-//         .slick-prev:before,
-//         .slick-next:before {
-//           color: #ffd700;
-//         }
-//       `}</style>
-//     </div>
-//   );
-// };
-
-// export default Home;
 
 import React, {
   useEffect,
@@ -353,6 +17,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Wrench, Clock, RefreshCcw, Play, MapPin, Plus } from "lucide-react";
 import "./Home.css";
+import { useTheme } from "../context/ThemeContext";
 
 // ImageKit URLs - Optimized carousel images with transformations
 const carouselImages = [
@@ -362,6 +27,34 @@ const carouselImages = [
   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg?updatedAt=null&ik-s=372f71a5622665a5a652d1dbb98bf7d0c33c3b98",
   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg?updatedAt=null&ik-s=7ae45f927879243c68a7547334cd1c2cf954d129",
   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?updatedAt=null&ik-s=415256a267698b4b7d8e10b870496c89652a9e63",
+];
+
+// Unique title and subtitle for each carousel slide
+const carouselSlides = [
+  {
+    title: "Discover Luxury Fragrances",
+    subtitle: "Timeless scents, unforgettable moments. Crafted for those who appreciate the finest.",
+  },
+  {
+    title: "Pure Attars & Oud",
+    subtitle: "Traditional oils distilled with care. Long-lasting, natural, and deeply personal.",
+  },
+  {
+    title: "Elegance in Every Drop",
+    subtitle: "From inspired blends to signature collections—find the scent that speaks to you.",
+  },
+  {
+    title: "The Art of Perfume",
+    subtitle: "Where heritage meets modernity. Premium ingredients, exceptional craftsmanship.",
+  },
+  {
+    title: "Your Scent, Your Story",
+    subtitle: "Explore our range of attars, perfumes, and custom fragrances for every occasion.",
+  },
+  {
+    title: "Shop Saliheen Perfumes",
+    subtitle: "Authentic fragrances delivered to your door. Experience the difference today.",
+  },
 ];
 
 // Category images from public/categories/ (inspired.jpg, custom.jpg, luxury.jpg, etc.)
@@ -418,7 +111,7 @@ const PerfumeProcess = React.lazy(() =>
 // ============= MEMOIZED COMPONENTS =============
 
 const Loader = memo(() => (
-  <div className="flex justify-center items-center h-screen w-full bg-white">
+  <div className="flex justify-center items-center h-screen w-full theme-bg-page">
     <ThreeDots
       height="80"
       width="80"
@@ -589,6 +282,7 @@ export const Home = () => {
   const [underService, setUnderService] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { colors, isDark } = useTheme();
 
   const handleCategoryClick = useCallback(
     (categoryName) => {
@@ -668,6 +362,8 @@ export const Home = () => {
           stopOnHover={true}
           transitionTime={600}
           renderIndicator={(onClickHandler, isSelected, index, label) => {
+            const accentColor = isDark ? colors.accent : "#1a1a1a";
+            const unselectedColor = isDark ? "rgba(212, 175, 55, 0.35)" : "rgba(0, 0, 0, 0.15)";
             const defStyle = {
               marginLeft: 10,
               cursor: "pointer",
@@ -675,7 +371,7 @@ export const Home = () => {
               width: isSelected ? "28px" : "10px",
               height: "8px",
               borderRadius: "4px",
-              background: isSelected ? "#1a1a1a" : "rgba(0, 0, 0, 0.15)",
+              background: isSelected ? accentColor : unselectedColor,
               transition: "all 0.3s ease",
             };
             return (
@@ -692,23 +388,24 @@ export const Home = () => {
             );
           }}
         >
-          {carouselImages.map((image, index) => (
-            <div key={index} className="carousel-slide">
-              <img
-                src={image}
-                alt={`Perfume Collection ${index + 1}`}
-                className="carousel-image"
-                loading={index < 2 ? "eager" : "lazy"}
-                decoding="async"
-              />
-              <div className="carousel-overlay">
-                <h2 className="carousel-title">Discover Luxury Fragrances</h2>
-                <p className="carousel-subtitle">
-                  Timeless Scents, Unforgettable Moments
-                </p>
+          {carouselImages.map((image, index) => {
+            const slide = carouselSlides[index] || carouselSlides[0];
+            return (
+              <div key={index} className="carousel-slide">
+                <img
+                  src={image}
+                  alt={`Perfume Collection ${index + 1}`}
+                  className="carousel-image"
+                  loading={index < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+                <div className="carousel-overlay">
+                  <h2 className="carousel-title">{slide.title}</h2>
+                  <p className="carousel-subtitle">{slide.subtitle}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </Carousel>
       </section>
 

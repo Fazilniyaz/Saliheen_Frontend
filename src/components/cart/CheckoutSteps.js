@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
+import { useTheme } from "../../context";
 
 export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
+  const { colors, isDark } = useTheme();
+  const activeBg = colors.accent;
+  const activeBorder = colors.accent;
+  const activeColor = colors.buttonText;
+  const inactiveBg = isDark ? colors.bgMuted : "#444";
+  const inactiveBorder = isDark ? colors.borderLight : "#444";
+  const inactiveColor = isDark ? colors.textPrimary : "#fff";
   return (
     <div
       className="checkout-progress d-flex justify-content-center mt-5"
@@ -18,7 +26,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #1a1a1a",
+              borderBottom: `15px solid ${activeBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -26,8 +34,8 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
           <div
             style={{
-              color: "#fff",
-              backgroundColor: "#1a1a1a",
+              color: activeColor,
+              backgroundColor: activeBg,
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -41,7 +49,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #1a1a1a",
+              borderTop: `15px solid ${activeBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -54,7 +62,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #444",
+              borderBottom: `15px solid ${inactiveBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -62,8 +70,8 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
           <div
             style={{
-              color: "#fff",
-              backgroundColor: "#444",
+              color: inactiveColor,
+              backgroundColor: inactiveBg,
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -77,7 +85,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #444",
+              borderTop: `15px solid ${inactiveBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -92,7 +100,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #1a1a1a",
+              borderBottom: `15px solid ${activeBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -100,8 +108,8 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
           <div
             style={{
-              color: "#fff",
-              backgroundColor: "#1a1a1a",
+              color: activeColor,
+              backgroundColor: activeBg,
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -115,7 +123,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #1a1a1a",
+              borderTop: `15px solid ${activeBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -128,7 +136,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #444",
+              borderBottom: `15px solid ${inactiveBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -136,8 +144,8 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
           <div
             style={{
-              color: "#fff",
-              backgroundColor: "#444",
+              color: inactiveColor,
+              backgroundColor: inactiveBg,
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -151,7 +159,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #444",
+              borderTop: `15px solid ${inactiveBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -166,7 +174,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #1a1a1a",
+              borderBottom: `15px solid ${activeBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -174,8 +182,8 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
           <div
             style={{
-              color: "#fff",
-              backgroundColor: "#1a1a1a",
+              color: activeColor,
+              backgroundColor: activeBg,
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -189,7 +197,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #1a1a1a",
+              borderTop: `15px solid ${activeBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -202,7 +210,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderBottom: "15px solid #444",
+              borderBottom: `15px solid ${inactiveBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",
@@ -210,8 +218,8 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
           ></div>
           <div
             style={{
-              color: "#fff",
-              backgroundColor: "#444",
+              color: inactiveColor,
+              backgroundColor: inactiveBg,
               padding: "0.5rem 1rem",
               borderRadius: "5px",
               fontWeight: "bold",
@@ -225,7 +233,7 @@ export default function CheckoutSteps({ shipping, confirmOrder, payment }) {
             style={{
               borderLeft: "15px solid transparent",
               borderRight: "15px solid transparent",
-              borderTop: "15px solid #444",
+              borderTop: `15px solid ${inactiveBorder}`,
               height: "0",
               width: "0",
               margin: "0 auto",

@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { register, verifyOtp } from "../../actions/userActions";
+import { useTheme } from "../../context";
 
 export default function OtpVerification() {
   const [otp, setOtp] = useState("");
+  const { colors } = useTheme();
   const [timeLeft, setTimeLeft] = useState(() => {
     const savedTime = localStorage.getItem("otpTimeLeft");
     const savedTimestamp = localStorage.getItem("otpTimestamp");
@@ -101,19 +103,19 @@ export default function OtpVerification() {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.bgPage,
   };
 
   const cardStyle = {
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.bgPage,
     padding: "28px",
     borderRadius: "12px",
     boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
-    border: "1px solid #e5e5e5",
+    border: `1px solid ${colors.borderLight}`,
     width: "100%",
     maxWidth: "400px",
     textAlign: "center",
-    color: "#111111",
+    color: colors.textPrimary,
   };
 
   const inputStyle = {
@@ -121,17 +123,17 @@ export default function OtpVerification() {
     padding: "10px",
     margin: "12px 0",
     borderRadius: "8px",
-    border: "1px solid #e5e5e5",
+    border: `1px solid ${colors.borderLight}`,
     fontSize: "16px",
-    backgroundColor: "#fafafa",
-    color: "#111111",
+    backgroundColor: colors.bgSubtle,
+    color: colors.textPrimary,
   };
 
   const buttonStyle = {
     width: "100%",
     padding: "10px",
-    backgroundColor: "#1a1a1a",
-    color: "#fff",
+    backgroundColor: colors.accent,
+    color: colors.buttonText,
     border: "none",
     borderRadius: "8px",
     fontSize: "16px",
@@ -142,14 +144,14 @@ export default function OtpVerification() {
   const timerTextStyle = {
     marginTop: "12px",
     fontSize: "14px",
-    color: "#555555",
+    color: colors.textMuted,
   };
 
   const resendButtonStyle = {
     marginTop: "12px",
     backgroundColor: "transparent",
     border: "none",
-    color: "#1a1a1a",
+    color: colors.accent,
     cursor: "pointer",
     fontSize: "14px",
     textDecoration: "underline",
@@ -163,13 +165,13 @@ export default function OtpVerification() {
             marginBottom: "20px",
             fontSize: "24px",
             fontWeight: "600",
-            color: "#111111",
+            color: colors.textPrimary,
             fontFamily: "Yantramanav",
           }}
         >
           OTP Verification
         </h1>
-        <p style={{ fontSize: "16px", color: "#555555" }}>
+        <p style={{ fontSize: "16px", color: colors.textMuted }}>
           Enter the OTP sent to your email.
         </p>
 

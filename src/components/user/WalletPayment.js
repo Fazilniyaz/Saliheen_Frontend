@@ -7,9 +7,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { orderCompleted } from "../../slices/cartSlice";
 import { createOrder } from "../../actions/orderActions";
+import { useTheme } from "../../context";
 
 function WalletPayment() {
   const navigate = useNavigate();
+  const { colors } = useTheme();
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
   const [cartItemsFromDB, setCartItemsFromDB] = useState([]);
   const [walletbalance, setWalletBalance] = useState(0);
@@ -162,7 +164,7 @@ function WalletPayment() {
       >
         <div
           style={{
-            background: "#fff",
+            background: colors.bgPage,
             padding: "20px",
             borderRadius: "10px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -171,7 +173,7 @@ function WalletPayment() {
           }}
         >
           <h2
-            style={{ fontSize: "1.5rem", color: "#333", marginBottom: "20px" }}
+            style={{ fontSize: "1.5rem", color: colors.textSecondary, marginBottom: "20px" }}
           >
             Wallet
           </h2>
@@ -179,26 +181,26 @@ function WalletPayment() {
             <h4
               style={{
                 fontSize: "1.2rem",
-                color: "#444",
+                color: colors.textSecondary,
                 marginBottom: "10px",
               }}
             >
               Order Summary
             </h4>
-            <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
+            <p style={{ margin: "5px 0", fontSize: "1rem", color: colors.textMuted }}>
               <b>Items:</b> ${orderInfo?.itemsPrice}
             </p>
-            <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
+            <p style={{ margin: "5px 0", fontSize: "1rem", color: colors.textMuted }}>
               <b>Shipping:</b> ${orderInfo?.shippingPrice}
             </p>
-            <p style={{ margin: "5px 0", fontSize: "1rem", color: "#555" }}>
+            <p style={{ margin: "5px 0", fontSize: "1rem", color: colors.textMuted }}>
               <b>Tax:</b> ${orderInfo?.taxPrice}
             </p>
             <hr />
             <p
               style={{
                 fontSize: "1.2rem",
-                color: "#000",
+                color: colors.textPrimary,
                 fontWeight: "bold",
                 marginTop: "10px",
               }}
@@ -212,8 +214,8 @@ function WalletPayment() {
           <button
             onClick={handlePayment}
             style={{
-              background: "#1a1a1a",
-              color: "#fff",
+              background: colors.accent,
+              color: colors.buttonText,
               border: "none",
               padding: "10px 20px",
               fontSize: "1.2rem",
@@ -221,8 +223,8 @@ function WalletPayment() {
               cursor: "pointer",
               transition: "background 0.3s ease",
             }}
-            onMouseOver={(e) => (e.target.style.background = "#2d2d2d")}
-            onMouseOut={(e) => (e.target.style.background = "#1a1a1a")}
+            onMouseOver={(e) => (e.target.style.background = colors.accentHover)}
+            onMouseOut={(e) => (e.target.style.background = colors.accent)}
           >
             Pay Now
           </button>

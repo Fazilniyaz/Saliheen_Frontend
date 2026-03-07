@@ -167,6 +167,7 @@ import CheckoutSteps from "./CheckoutSteps";
 import { toast } from "react-toastify";
 import { countries } from "countries-list";
 import axios from "axios";
+import { useTheme } from "../../context";
 
 export const validateShipping = ({ shippingInfo, navigate }) => {
   console.log(shippingInfo);
@@ -188,6 +189,7 @@ export const validateShipping = ({ shippingInfo, navigate }) => {
 export default function Shipping() {
   const { shippingInfo = {} } = useSelector((state) => state.cartState);
   const { user = "" } = useSelector((state) => state.authState);
+  const { colors } = useTheme();
 
   const [address, setAddress] = useState(shippingInfo.address || "");
   const [city, setCity] = useState(shippingInfo.city || "");
@@ -310,10 +312,10 @@ export default function Shipping() {
           margin: "1.5rem auto",
           padding: "1.25rem",
           maxWidth: "90%",
-          backgroundColor: "#ffffff",
+          backgroundColor: colors.bgPage,
           borderRadius: "12px",
           boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
-          border: "1px solid #e5e5e5",
+          border: `1px solid ${colors.borderLight}`,
         }}
       >
         <h1
@@ -321,7 +323,7 @@ export default function Shipping() {
             textAlign: "center",
             fontSize: "2rem",
             fontWeight: "600",
-            color: "#111111",
+            color: colors.textPrimary,
             fontFamily: "Yantramanav",
             marginBottom: "1rem",
           }}
@@ -336,7 +338,7 @@ export default function Shipping() {
               style={{
                 fontSize: "1.5rem",
                 fontWeight: "bold",
-                color: "#111111",
+                color: colors.textPrimary,
                 marginBottom: "1rem",
               }}
             >

@@ -335,3 +335,88 @@
     font-size: 0.85rem !important;
   }
 }
+
+/* Dark theme overrides */
+[data-theme="dark"] .category-products-container {
+  background-color: var(--bg-page) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] .category-heading {
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .card-content,
+[data-theme="dark"] .product-image-wrapper {
+  background-color: var(--bg-subtle) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-muted) !important;
+}
+[data-theme="dark"] .product-title {
+  color: var(--text-primary) !important;
+}
+
+/* Dark: active/selected = gold */
+[data-theme="dark"] .type-btn.active,
+[data-theme="dark"] .quantity-btn.active {
+  background: linear-gradient(135deg, #b8860b 0%, var(--accent) 50%, #e8c547 100%) !important;
+  color: #0c0a06 !important;
+  border-color: var(--accent) !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px var(--gold-glow);
+}
+
+[data-theme="dark"] .type-btn:hover:not(.active),
+[data-theme="dark"] .quantity-btn:hover:not(.active) {
+  background-color: var(--bg-muted) !important;
+  border-color: var(--border-muted) !important;
+}
+
+[data-theme="dark"] .bottle-stepper {
+  background: var(--bg-subtle) !important;
+  border-color: var(--border-muted) !important;
+}
+
+[data-theme="dark"] .bottle-stepper-btn {
+  background: var(--bg-muted) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .bottle-stepper-btn--minus {
+  border-right-color: var(--border-muted) !important;
+}
+
+[data-theme="dark"] .bottle-stepper-btn--plus {
+  border-left-color: var(--border-muted) !important;
+}
+
+[data-theme="dark"] .bottle-stepper-btn:hover {
+  background: linear-gradient(135deg, #b8860b 0%, var(--accent) 100%) !important;
+  color: #0c0a06 !important;
+}
+
+[data-theme="dark"] .bottle-stepper-btn:active {
+  background: var(--accent-hover) !important;
+  color: #0c0a06 !important;
+}
+
+[data-theme="dark"] .bottle-stepper-value {
+  background: var(--bg-subtle) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .price-display {
+  color: var(--text-primary) !important;
+  background: var(--bg-muted) !important;
+  border-color: var(--border-muted) !important;
+}
+
+[data-theme="dark"] .cart-button {
+  background: linear-gradient(135deg, #b8860b 0%, var(--accent) 50%, #e8c547 100%) !important;
+  color: #0c0a06 !important;
+  box-shadow: 0 2px 8px var(--gold-glow);
+}
+
+[data-theme="dark"] .cart-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%) !important;
+  box-shadow: 0 4px 12px var(--gold-glow);
+}

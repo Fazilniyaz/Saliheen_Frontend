@@ -10,6 +10,7 @@ import axios from "axios";
 import RazorpayPayment from "../razorpay/RazorpayPayment";
 import { useContext } from "react";
 import { CartContext } from "../cart/cartContext";
+import { useTheme } from "../../context";
 
 function ConfirmOrder() {
   const { shippingInfo, items: cartItems } = useSelector(
@@ -19,6 +20,7 @@ function ConfirmOrder() {
   const [isLoading, setIsLoading] = useState(true); // Loader state
   const { user } = useSelector((state) => state.authState);
   const navigate = useNavigate();
+  const { colors } = useTheme();
   const { localCart, addToLocalCart, removeFromLocalCart } =
     useContext(CartContext);
 
@@ -108,10 +110,10 @@ function ConfirmOrder() {
           margin: "2rem auto",
           padding: "1rem",
           maxWidth: "90%",
-          backgroundColor: "#ffffff",
+          backgroundColor: colors.bgPage,
           borderRadius: "10px",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-          border: "1px solid #e8e8e8",
+          border: `1px solid ${colors.borderLight}`,
         }}
       >
         <div className="row d-flex justify-content-between">
@@ -120,31 +122,31 @@ function ConfirmOrder() {
               style={{
                 fontSize: "1.8rem",
                 fontWeight: "bold",
-                color: "#a2682a",
+                color: colors.accent,
                 marginBottom: "1rem",
               }}
             >
               Shipping Info
             </h4>
-            <p style={{ color: "#1a1a1a" }}>
+            <p style={{ color: colors.textPrimary }}>
               <b>Name: </b> {user?.name || shippingInfo?.fullName || ""}
             </p>
-            <p style={{ color: "#1a1a1a" }}>
+            <p style={{ color: colors.textPrimary }}>
               <b>Phone: </b>
               {shippingInfo.phoneNo}
             </p>
-            <p style={{ color: "#1a1a1a" }}>
+            <p style={{ color: colors.textPrimary }}>
               <b>Address:</b> {shippingInfo.address}, {shippingInfo.city},{" "}
               {shippingInfo.postalCode}, {shippingInfo.state},{" "}
               {shippingInfo.country}
             </p>
 
-            <hr style={{ borderColor: "#e0e0e0" }} />
+            <hr style={{ borderColor: colors.borderLight }} />
             <h4
               style={{
                 fontSize: "1.8rem",
                 fontWeight: "bold",
-                color: "#a2682a",
+                color: colors.accent,
                 marginBottom: "1rem",
               }}
             >
@@ -158,7 +160,7 @@ function ConfirmOrder() {
                       display: "flex",
                       alignItems: "center",
                       marginBottom: "1rem",
-                      color: "#1a1a1a",
+                      color: colors.textPrimary,
                     }}
                   >
                     <img
@@ -174,7 +176,7 @@ function ConfirmOrder() {
                     <Link
                       to={`/product/${item.productId._id}`}
                       style={{
-                        color: "#a2682a",
+                        color: colors.accent,
                         fontWeight: "bold",
                         textDecoration: "none",
                         flex: 1,
@@ -182,7 +184,7 @@ function ConfirmOrder() {
                     >
                       {item.itemName}
                     </Link>
-                    <p style={{ margin: 0, color: "#333" }}>
+                    <p style={{ margin: 0, color: colors.textSecondary }}>
                       {/* {item.quantity} x ${item.finalPrice} ={" "} */}
                       <b>
                         {item.type} | {item.noOfBottles} Bottles | ₹
@@ -190,7 +192,7 @@ function ConfirmOrder() {
                       </b>
                     </p>
                   </div>
-                  <hr style={{ borderColor: "#e0e0e0" }} />
+                  <hr style={{ borderColor: colors.borderLight }} />
                 </Fragment>
               ))}
           </div>
@@ -198,41 +200,41 @@ function ConfirmOrder() {
           <div className="col-12 col-lg-3 my-4">
             <div
               style={{
-                backgroundColor: "#fafafa",
+                backgroundColor: colors.bgSubtle,
                 padding: "1rem",
                 borderRadius: "10px",
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-                border: "1px solid #e8e8e8",
+                border: `1px solid ${colors.borderLight}`,
               }}
             >
               <h4
                 style={{
                   fontSize: "1.5rem",
                   fontWeight: "bold",
-                  color: "#a2682a",
+                  color: colors.accent,
                   marginBottom: "1rem",
                 }}
               >
                 Order Summary
               </h4>
-              <hr style={{ borderColor: "#e0e0e0" }} />
-              <p style={{ color: "#1a1a1a" }}>
+              <hr style={{ borderColor: colors.borderLight }} />
+              <p style={{ color: colors.textPrimary }}>
                 Subtotal: <span style={{ float: "right" }}>₹{itemsPrice}</span>
               </p>
-              <p style={{ color: "#1a1a1a" }}>
+              <p style={{ color: colors.textPrimary }}>
                 Shipping:{" "}
                 <span style={{ float: "right" }}>₹{shippingPrice}</span>
               </p>
-              <p style={{ color: "#1a1a1a" }}>
+              <p style={{ color: colors.textPrimary }}>
                 Tax: <span style={{ float: "right" }}>₹{taxPrice}</span>
               </p>
-              <hr style={{ borderColor: "#e0e0e0" }} />
-              <p style={{ color: "#1a1a1a", fontWeight: "bold" }}>
+              <hr style={{ borderColor: colors.borderLight }} />
+              <p style={{ color: colors.textPrimary, fontWeight: "bold" }}>
                 Total: <span style={{ float: "right" }}>₹{totalPrice}</span>
               </p>
-              <hr style={{ borderColor: "#e0e0e0" }} />
+              <hr style={{ borderColor: colors.borderLight }} />
 
-              <p style={{ color: "#a2682a", textAlign: "center" }}>
+              <p style={{ color: colors.accent, textAlign: "center" }}>
                 Proceed to Payment
               </p>
               {/* <button

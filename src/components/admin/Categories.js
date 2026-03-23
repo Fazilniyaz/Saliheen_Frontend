@@ -153,11 +153,10 @@ export default function Categories() {
                           </td>
                           <td>
                             <span
-                              className={`badge ${
-                                category.isActive
-                                  ? "bg-success"
-                                  : "bg-warning text-dark"
-                              }`}
+                              className={`badge ${category.isActive
+                                ? "bg-success"
+                                : "bg-warning text-dark"
+                                }`}
                             >
                               {category.isActive ? "Active" : "Inactive"}
                             </span>
@@ -182,9 +181,8 @@ export default function Categories() {
                               </button>
                             )}
                             <button
-                              className={`btn ${
-                                category.isActive ? "btn-danger" : "btn-success"
-                              } btn-sm`}
+                              className={`btn ${category.isActive ? "btn-danger" : "btn-success"
+                                } btn-sm`}
                               onClick={() =>
                                 toggleCategoryStatus(
                                   category._id,

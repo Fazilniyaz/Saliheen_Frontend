@@ -76,6 +76,7 @@ const RazorpayPayment = ({
           shippingInfo: shippingInfo,
           customerName: name,
           customerPhone: phone,
+          orderData: orderData,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -114,18 +115,44 @@ const RazorpayPayment = ({
 
             console.log("Payment verified successfully");
 
-            // Step 3: REFRESH USER SESSION BEFORE CREATING ORDER
-           
-
-            // Step 4: Retrieve saved order data
-            const savedOrderData = JSON.parse(
-              sessionStorage.getItem("pendingOrder")
-            );
+            // Retrieve saved session data for cart cleanup
             const savedCartItems = JSON.parse(
               sessionStorage.getItem("cartItems")
             );
 
-            // Step 5: Build Order Object with payment info
+            // If backend created the order server-side, skip frontend createOrder
+            if (verificationResult.dbOrderId) {
+              console.log("Order created server-side:", verificationResult.dbOrderId);
+
+              // Clear cart and session storage
+              dispatch(orderCompleted());
+              if (savedCartItems) {
+                savedCartItems.forEach((item) => {
+                  removeFromLocalCart(item.productId);
+                });
+              }
+              sessionStorage.removeItem("pendingOrder");
+              sessionStorage.removeItem("cartItems");
+              sessionStorage.removeItem("orderInfo");
+
+              toast("Payment Success! Your order has been placed.", {
+                type: "success",
+                position: "bottom-center",
+                autoClose: 3000,
+              });
+
+              setIsProcessing(false);
+              navigate("/order/success", {
+                state: { orderId: verificationResult.dbOrderId },
+              });
+              return;
+            }
+
+            // Fallback: Create order from frontend if server-side creation failed
+            const savedOrderData = JSON.parse(
+              sessionStorage.getItem("pendingOrder")
+            );
+
             const order = {
               ...savedOrderData,
               paymentInfo: {
@@ -135,19 +162,16 @@ const RazorpayPayment = ({
               },
             };
 
-            console.log("Creating order with data:", order);
-
-            // Step 6: CREATE ORDER
+            console.log("Fallback: Creating order from frontend:", order);
             const result = await dispatch(createOrder(order));
+            console.log("Order created successfully (frontend fallback)");
 
-            console.log("Order created successfully");
-
-            // Step 7: Clear cart and session storage
             dispatch(orderCompleted());
-            savedCartItems.forEach((item) => {
-              removeFromLocalCart(item.productId);
-            });
-
+            if (savedCartItems) {
+              savedCartItems.forEach((item) => {
+                removeFromLocalCart(item.productId);
+              });
+            }
             sessionStorage.removeItem("pendingOrder");
             sessionStorage.removeItem("cartItems");
             sessionStorage.removeItem("orderInfo");
@@ -227,7 +251,7 @@ const RazorpayPayment = ({
         setIsProcessing(false);
         toast(
           "Payment failed: " +
-            (response.error.description || "Please try again"),
+          (response.error.description || "Please try again"),
           {
             type: "error",
             position: "bottom-center",
@@ -241,7 +265,7 @@ const RazorpayPayment = ({
       setIsProcessing(false);
       toast(
         "Failed to initiate payment: " +
-          (err.response?.data?.message || err.message),
+        (err.response?.data?.message || err.message),
         {
           type: "error",
           position: "bottom-center",

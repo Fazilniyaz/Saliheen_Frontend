@@ -37,7 +37,7 @@ const authSlice = createSlice({
       return { ...state, loading: false, error: action.payload };
     },
     loadUserRequest(state, action) {
-      return { ...state, loading: true, isAuthenticated: false };
+      return { ...state, loading: true };
     },
     loadUserSuccess(state, action) {
       return {
@@ -47,7 +47,7 @@ const authSlice = createSlice({
       };
     },
     loadUserFail(state, action) {
-      return { ...state, loading: false };
+      return { ...state, loading: false, isAuthenticated: false };
     },
     logoutSuccess(state, action) {
       return {

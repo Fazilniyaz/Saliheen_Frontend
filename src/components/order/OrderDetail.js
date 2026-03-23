@@ -134,8 +134,7 @@ export default function OrderDetail() {
     );
     doc.text(`Amount Paid: $${totalPrice}`, 10, 60);
     doc.text(
-      `Payment Method: ${
-        paymentInfo.type == "COD" ? "Cash On Delivery" : "Online Payment"
+      `Payment Method: ${paymentInfo.type == "COD" ? "Cash On Delivery" : "Online Payment"
       }`,
       10,
       70

@@ -310,19 +310,17 @@ const AllProducts = () => {
                       <label className="option-label decorate">Type:</label>
                       <div className="button-group">
                         <Button
-                          className={`type-btn ${
-                            selectedType[product._id] === "attar" ? "active" : ""
-                          }`}
+                          className={`type-btn ${selectedType[product._id] === "attar" ? "active" : ""
+                            }`}
                           onClick={() => handleTypeChange(product._id, "attar")}
                         >
                           Attar
                         </Button>
                         <Button
-                          className={`type-btn ${
-                            selectedType[product._id] === "perfume"
-                              ? "active"
-                              : ""
-                          }`}
+                          className={`type-btn ${selectedType[product._id] === "perfume"
+                            ? "active"
+                            : ""
+                            }`}
                           onClick={() =>
                             handleTypeChange(product._id, "perfume")
                           }
@@ -338,11 +336,10 @@ const AllProducts = () => {
                         {quantities.map((q) => (
                           <Button
                             key={q.value}
-                            className={`quantity-btn ${
-                              selectedQuantity[product._id] === q.value
-                                ? "active"
-                                : ""
-                            }`}
+                            className={`quantity-btn ${selectedQuantity[product._id] === q.value
+                              ? "active"
+                              : ""
+                              }`}
                             onClick={() =>
                               handleQuantityChange(
                                 product._id,
@@ -384,12 +381,10 @@ const AllProducts = () => {
 
                     <div className="price-display decorate">
                       {selectedPrice[product._id]
-                        ? `Price: ₹${selectedPrice[product._id]} × ${
-                            selectedBottles[product._id] || 1
-                          } = ₹${
-                            selectedPrice[product._id] *
-                            (selectedBottles[product._id] || 1)
-                          }`
+                        ? `Price: ₹${selectedPrice[product._id]} × ${selectedBottles[product._id] || 1
+                        } = ₹${selectedPrice[product._id] *
+                        (selectedBottles[product._id] || 1)
+                        }`
                         : "Select type & quantity"}
                     </div>
                   </div>
@@ -408,10 +403,10 @@ const AllProducts = () => {
                       } else if (!selectedQuantity[product._id]) {
                         toast.error("Please select a quantity first!");
                       } else if (
-!(selectedBottles[product._id] ?? 1) ||
-                      (selectedBottles[product._id] ?? 1) < 1
-                    ) {
-                      toast.error("Please select at least 1 bottle.");
+                        !(selectedBottles[product._id] ?? 1) ||
+                        (selectedBottles[product._id] ?? 1) < 1
+                      ) {
+                        toast.error("Please select at least 1 bottle.");
                       } else if (isProductInCart(product._id)) {
                         navigate("/cart");
                       } else {

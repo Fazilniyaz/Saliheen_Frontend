@@ -211,9 +211,8 @@ const CartPage = () => {
               />
               <div style={styles.itemDetails}>
                 <Link
-                  to={`/product/${
-                    userId ? item.productId._id : item.productId
-                  }`}
+                  to={`/product/${userId ? item.productId._id : item.productId
+                    }`}
                 >
                   {item.itemName}
                 </Link>

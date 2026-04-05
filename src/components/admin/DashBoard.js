@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [ordersCount, setOrdersCount] = useState(0);
   const [usersCount, setUsersCount] = useState(0);
   const [totalSales, setTotalSales] = useState(0);
+  const [couponsCount, setCouponsCount] = useState(0);
   const [boolean, setBoolean] = useState(false);
 
   let outOfStock = 0;
@@ -31,7 +32,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [ordersRes, usersRes, salesRes] = await Promise.all([
+        const [ordersRes, usersRes, salesRes, couponsRes] = await Promise.all([
           axios.get(
             "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/getAllOrdersCount",
             { withCredentials: true }
@@ -44,11 +45,16 @@ export default function Dashboard() {
             "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/salesReport?filterBy=yearly",
             { withCredentials: true }
           ),
+          axios.get(
+            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/coupons",
+            { withCredentials: true }
+          ),
         ]);
 
         setOrdersCount(ordersRes.data.orderCount);
         setUsersCount(usersRes.data.userCount);
         setTotalSales(salesRes.data.totalAmount);
+        setCouponsCount(couponsRes.data.coupons?.length || 0);
         setBoolean(true);
       } catch (err) {
         console.error("Dashboard data fetch failed:", err);
@@ -195,6 +201,54 @@ export default function Dashboard() {
                 color="warning"
                 noLink
               />
+            </div>
+          </div>
+
+          {/* Coupons & Offers Module */}
+          <div className="row mt-4">
+            <div className="col-12">
+              <div className="quick-actions-card">
+                <div className="card-body p-4">
+                  <h5 className="mb-4 gold-gradient-text fw-bold">
+                    <i className="fas fa-ticket-alt me-2"></i>
+                    Coupons &amp; Offers
+                  </h5>
+                  <div className="row g-3 align-items-center">
+                    <div className="col-12 col-md-4">
+                      <div className="stats-card stats-card-primary h-100" style={{ cursor: "default" }}>
+                        <div className="card-body p-3 p-md-4">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="stats-icon-wrapper icon-primary me-3">
+                              <i className="fas fa-tag"></i>
+                            </div>
+                            <div>
+                              <div className="stats-value gold-gradient-text" style={{ fontSize: "2rem" }}>{couponsCount}</div>
+                              <div className="stats-label">Active Coupons</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card-shine-effect"></div>
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-8">
+                      <div className="row g-3">
+                        <div className="col-6">
+                          <Link to="/admin/coupon" className="quick-action-btn">
+                            <i className="fas fa-plus-circle mb-2"></i>
+                            <span>Create Coupon</span>
+                          </Link>
+                        </div>
+                        <div className="col-6">
+                          <Link to="/admin/coupon" className="quick-action-btn">
+                            <i className="fas fa-list mb-2"></i>
+                            <span>View All Coupons</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

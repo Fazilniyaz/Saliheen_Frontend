@@ -46,9 +46,8 @@ export default function Sidebar() {
             <li className="nav-item mb-2">
               <Link
                 to="/admin/dashboard"
-                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${
-                  isActive("/admin/dashboard") ? "active" : ""
-                }`}
+                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${isActive("/admin/dashboard") ? "active" : ""
+                  }`}
               >
                 <i className="fas fa-tachometer-alt me-3 fs-5"></i>
                 <span className="fw-semibold">Dashboard</span>
@@ -65,9 +64,8 @@ export default function Sidebar() {
                   </div>
                 }
                 id="products-dropdown"
-                className={`custom-dropdown ${
-                  isActive("/admin/products") ? "active" : ""
-                }`}
+                className={`custom-dropdown ${isActive("/admin/products") ? "active" : ""
+                  }`}
               >
                 <NavDropdown.Item
                   onClick={() => navigate("/admin/products")}
@@ -90,9 +88,8 @@ export default function Sidebar() {
             <li className="nav-item mb-2">
               <Link
                 to="/admin/orders"
-                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${
-                  isActive("/admin/orders") ? "active" : ""
-                }`}
+                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${isActive("/admin/orders") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-shopping-basket me-3 fs-5"></i>
                 <span className="fw-semibold">Orders</span>
@@ -103,9 +100,8 @@ export default function Sidebar() {
             <li className="nav-item mb-2">
               <Link
                 to="/admin/users"
-                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${
-                  isActive("/admin/users") ? "active" : ""
-                }`}
+                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${isActive("/admin/users") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-users me-3 fs-5"></i>
                 <span className="fw-semibold">Users</span>
@@ -116,12 +112,23 @@ export default function Sidebar() {
             <li className="nav-item mb-2">
               <Link
                 to="/admin/categories"
-                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${
-                  isActive("/admin/categories") ? "active" : ""
-                }`}
+                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${isActive("/admin/categories") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-tags me-3 fs-5"></i>
                 <span className="fw-semibold">Categories</span>
+              </Link>
+            </li>
+
+            {/* Coupons */}
+            <li className="nav-item mb-2">
+              <Link
+                to="/admin/coupon"
+                className={`nav-link d-flex align-items-center px-3 py-3 rounded-3 ${isActive("/admin/coupon") ? "active" : ""
+                  }`}
+              >
+                <i className="fas fa-ticket-alt me-3 fs-5"></i>
+                <span className="fw-semibold">Coupons &amp; Offers</span>
               </Link>
             </li>
           </ul>
@@ -136,9 +143,8 @@ export default function Sidebar() {
             <div className="col">
               <Link
                 to="/admin/dashboard"
-                className={`bottom-nav-item ${
-                  isActive("/admin/dashboard") ? "active" : ""
-                }`}
+                className={`bottom-nav-item ${isActive("/admin/dashboard") ? "active" : ""
+                  }`}
               >
                 <i className="fas fa-tachometer-alt fs-5"></i>
                 <span className="nav-label">Dashboard</span>
@@ -149,9 +155,8 @@ export default function Sidebar() {
             <div className="col">
               <Link
                 to="/admin/products"
-                className={`bottom-nav-item ${
-                  isActive("/admin/products") ? "active" : ""
-                }`}
+                className={`bottom-nav-item ${isActive("/admin/products") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-product-hunt fs-5"></i>
                 <span className="nav-label">Products</span>
@@ -162,9 +167,8 @@ export default function Sidebar() {
             <div className="col">
               <Link
                 to="/admin/orders"
-                className={`bottom-nav-item ${
-                  isActive("/admin/orders") ? "active" : ""
-                }`}
+                className={`bottom-nav-item ${isActive("/admin/orders") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-shopping-basket fs-5"></i>
                 <span className="nav-label">Orders</span>
@@ -175,9 +179,8 @@ export default function Sidebar() {
             <div className="col">
               <Link
                 to="/admin/users"
-                className={`bottom-nav-item ${
-                  isActive("/admin/users") ? "active" : ""
-                }`}
+                className={`bottom-nav-item ${isActive("/admin/users") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-users fs-5"></i>
                 <span className="nav-label">Users</span>
@@ -188,12 +191,23 @@ export default function Sidebar() {
             <div className="col">
               <Link
                 to="/admin/categories"
-                className={`bottom-nav-item ${
-                  isActive("/admin/categories") ? "active" : ""
-                }`}
+                className={`bottom-nav-item ${isActive("/admin/categories") ? "active" : ""
+                  }`}
               >
                 <i className="fa fa-tags fs-5"></i>
                 <span className="nav-label">Categories</span>
+              </Link>
+            </div>
+
+            {/* Coupons */}
+            <div className="col">
+              <Link
+                to="/admin/coupon"
+                className={`bottom-nav-item ${isActive("/admin/coupon") ? "active" : ""
+                  }`}
+              >
+                <i className="fas fa-ticket-alt fs-5"></i>
+                <span className="nav-label">Coupons</span>
               </Link>
             </div>
           </div>

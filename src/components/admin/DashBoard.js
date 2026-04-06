@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 import { getAdminProducts } from "../../actions/productActions";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { ThreeDots } from "react-loader-spinner";
 import AdminLoader from "./AdminLoader";
 import "./Dashboard.css";
 

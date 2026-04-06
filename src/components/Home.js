@@ -110,18 +110,7 @@ const PerfumeProcess = React.lazy(() =>
 
 // ============= MEMOIZED COMPONENTS =============
 
-const Loader = memo(() => (
-  <div className="flex justify-center items-center h-screen w-full theme-bg-page">
-    <ThreeDots
-      height="80"
-      width="80"
-      radius="9"
-      color="#1a1a1a"
-      ariaLabel="three-dots-loading"
-      visible={true}
-    />
-  </div>
-));
+
 
 const SmallLoader = memo(() => (
   <div className="text-center py-5">

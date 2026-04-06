@@ -85,11 +85,11 @@ export default function Dashboard() {
         <div className="revenue-hero">
           <div>
             <div className="revenue-label">
-              <i className="fas fa-dollar-sign" style={{ marginRight: 6 }}></i>
+              <i className="fas fa-rupee-sign" style={{ marginRight: 6 }}></i>
               Total Sales (All Orders)
             </div>
             <Link to="/admin/salesReport" className="revenue-amount">
-              ${stats.sales.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ₹{stats.sales.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </Link>
             <p className="revenue-sub">Click to view detailed breakdown →</p>
           </div>

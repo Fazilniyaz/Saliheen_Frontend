@@ -98,36 +98,26 @@ function App() {
 
   useEffect(() => {
     store.dispatch(loadUser);
+  }, []);
+
+  useEffect(() => {
     async function getStripeApiKey() {
       try {
-        const { data } = await axios.get(
-          "https://saliheenperfumes-zd2i.onrender.com/api/v1/stripeapi",
-          { withCredentials: true }
-        );
-        setstripeApiKey(data.stripeApiKey);
-        return;
-      } catch (err) {
-        toast(err.response?.data?.message, {
-          type: "error",
-          position: "bottom-center",
-        });
-        return;
-      }
-      try {
         if (user && userId) {
-          const { data } = await axios.get("/api/v1/stripeapi", {
-            withCredentials: true,
-          });
+          const { data } = await axios.get(
+            "https://saliheenperfumes-zd2i.onrender.com/api/v1/stripeapi",
+            { withCredentials: true }
+          );
           setstripeApiKey(data.stripeApiKey);
-        } else {
-          return;
         }
       } catch (err) {
-        console.log(err);
+        console.error("Failed to fetch Stripe API key: ", err);
       }
     }
-    getStripeApiKey();
-  }, [stripeApiKey]);
+    if (user && userId && !stripeApiKey) {
+      getStripeApiKey();
+    }
+  }, [user, userId, stripeApiKey]);
 
   const Layout = ({ children }) => {
     const location = useLocation();

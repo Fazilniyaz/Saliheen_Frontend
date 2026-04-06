@@ -1,301 +1,207 @@
 import { useDispatch, useSelector } from "react-redux";
 import SideBar from "./SideBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getAdminProducts } from "../../actions/productActions";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import "./Dashboard.css";
 
+const API = "https://saliheenperfumes-zd2i.onrender.com/api/v1";
+
 export default function Dashboard() {
   const { products = [] } = useSelector((state) => state.productsState);
   const dispatch = useDispatch();
-  const [ordersCount, setOrdersCount] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
-  const [totalSales, setTotalSales] = useState(0);
-  const [boolean, setBoolean] = useState(false);
+  const [stats, setStats] = useState({ orders: 0, users: 0, sales: 0, coupons: 0 });
+  const [ready, setReady] = useState(false);
 
-  let outOfStock = 0;
-  if (products.length > 0) {
-    products.forEach((product) => {
-      if (product.stock === 0) {
-        outOfStock += 1;
-      }
-    });
-  }
+  const outOfStock = useMemo(
+    () => products.filter((p) => p.stock === 0).length,
+    [products]
+  );
+
+  useEffect(() => { dispatch(getAdminProducts); }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAdminProducts);
-  }, [dispatch]);
+    const controller = new AbortController();
+    const { signal } = controller;
 
-  useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
-        const [ordersRes, usersRes, salesRes] = await Promise.all([
-          axios.get(
-            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/getAllOrdersCount",
-            { withCredentials: true }
-          ),
-          axios.get(
-            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/GetCountOfUsers",
-            { withCredentials: true }
-          ),
-          axios.get(
-            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/salesReport?filterBy=yearly",
-            { withCredentials: true }
-          ),
+        const [ordersRes, usersRes, salesRes, couponsRes] = await Promise.all([
+          axios.get(`${API}/admin/getAllOrdersCount`, { withCredentials: true, signal }),
+          axios.get(`${API}/admin/GetCountOfUsers`, { withCredentials: true, signal }),
+          axios.get(`${API}/admin/salesReport?filterBy=yearly`, { withCredentials: true, signal }),
+          axios.get(`${API}/admin/coupons`, { withCredentials: true, signal }),
         ]);
-
-        setOrdersCount(ordersRes.data.orderCount);
-        setUsersCount(usersRes.data.userCount);
-        setTotalSales(salesRes.data.totalAmount);
-        setBoolean(true);
+        setStats({
+          orders: ordersRes.data.orderCount,
+          users: usersRes.data.userCount,
+          sales: salesRes.data.totalAmount || 0,
+          coupons: Array.isArray(couponsRes.data.coupons)
+            ? couponsRes.data.coupons.length
+            : (couponsRes.data.count || 0),
+        });
       } catch (err) {
-        console.error("Dashboard data fetch failed:", err);
-        setBoolean(true);
+        if (!axios.isCancel(err)) console.error("Dashboard fetch error:", err);
+      } finally {
+        setReady(true);
       }
-    };
+    })();
 
-    fetchData();
+    return () => controller.abort();
   }, []);
 
-  return boolean ? (
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+
+  if (!ready) {
+    return (
+      <div className="loading-wrapper">
+        <ThreeDots height="48" width="48" radius="6" color="#ffffff" ariaLabel="loading" visible />
+        <p className="loading-text">Loading dashboard…</p>
+      </div>
+    );
+  }
+
+  return (
     <div className="dashboard-wrapper">
       <SideBar />
 
       <main className="dashboard-content">
-        <div className="container-fluid px-3 px-md-4 py-4">
-          {/* Header Section */}
-          <div className="row mb-4">
-            <div className="col-12">
-              <div className="dashboard-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <div className="mb-3 mb-md-0">
-                  <h1 className="dashboard-title gold-gradient-text mb-2">
-                    <i className="fas fa-chart-line me-2"></i>
-                    Dashboard Overview
-                  </h1>
-                  <p className="text-muted mb-0 d-none d-md-block">
-                    Welcome back! Here's what's happening with your store today.
-                  </p>
-                </div>
-                <div className="dashboard-date-badge">
-                  <div className="d-flex flex-column align-items-end">
-                    <span className="date-value">
-                      <i className="fas fa-calendar-alt me-2"></i>
-                      {new Date().toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <span className="time-value">
-                      <i className="fas fa-clock me-2"></i>
-                      {new Date().toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-                </div>
-              </div>
+        {/* ── Page Header ── */}
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">
+              <i className="fas fa-chart-line"></i>
+              Dashboard
+            </h1>
+            <p className="page-subtitle">Store overview · Saliheen Perfumes</p>
+          </div>
+          <div className="date-chip">
+            <strong>{dateStr}</strong>
+            <span>{timeStr}</span>
+          </div>
+        </div>
+
+        {/* ── Revenue Hero ── */}
+        <div className="revenue-hero">
+          <div>
+            <div className="revenue-label">
+              <i className="fas fa-dollar-sign" style={{ marginRight: 6 }}></i>
+              Yearly Sales Report
+            </div>
+            <Link to="/admin/salesReport" className="revenue-amount">
+              ${stats.sales.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </Link>
+            <p className="revenue-sub">Click to view detailed breakdown →</p>
+          </div>
+          <div className="revenue-badge">View Report</div>
+        </div>
+
+        {/* ── Stat Grid ── */}
+        <div className="stats-grid">
+          <StatCell
+            icon="fas fa-boxes"
+            value={products.length}
+            label="Products"
+            link="/admin/products"
+            dot="ok"
+          />
+          <StatCell
+            icon="fas fa-shopping-bag"
+            value={stats.orders}
+            label="Orders"
+            link="/admin/orders"
+            dot="ok"
+          />
+          <StatCell
+            icon="fas fa-users"
+            value={stats.users}
+            label="Users"
+            link="/admin/users"
+            dot="ok"
+          />
+          <StatCell
+            icon="fas fa-exclamation-triangle"
+            value={outOfStock}
+            label="Out of Stock"
+            dot={outOfStock > 0 ? "warn" : "ok"}
+            noLink
+          />
+        </div>
+
+        {/* ── Coupons Module ── */}
+        <div className="module-card">
+          <div className="module-header">
+            <i className="fas fa-ticket-alt"></i>
+            <span className="module-title">Coupons &amp; Offers</span>
+          </div>
+          <div className="module-body">
+            <div className="coupon-count-display">
+              <div className="big-num">{stats.coupons}</div>
+              <div className="count-label">Active<br />Coupons</div>
+            </div>
+            <div className="actions-grid" style={{ gridTemplateColumns: "repeat(2,1fr)" }}>
+              <Link to="/admin/coupon" className="action-btn">
+                <i className="fas fa-plus-circle"></i>
+                Create Coupon
+              </Link>
+              <Link to="/admin/coupon" className="action-btn">
+                <i className="fas fa-list"></i>
+                View All
+              </Link>
             </div>
           </div>
+        </div>
 
-          {/* Total Sales - Featured Card */}
-          <div className="row mb-4">
-            <div className="col-12">
-              <div className="featured-card gold-card position-relative overflow-hidden">
-                <div className="card-body p-4 p-md-5">
-                  <div className="row align-items-center">
-                    <div className="col-md-8">
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="featured-icon-wrapper me-3">
-                          <i className="fas fa-dollar-sign"></i>
-                        </div>
-                        <div>
-                          <h5 className="card-subtitle text-gold-muted mb-1">
-                            Total Revenue
-                          </h5>
-                          <h2 className="card-title gold-gradient-text mb-0 fw-bold">
-                            Yearly Sales Report
-                          </h2>
-                        </div>
-                      </div>
-                      <div className="featured-amount-wrapper">
-                        <Link
-                          to="/admin/salesReport"
-                          className="featured-amount text-decoration-none d-inline-block"
-                        >
-                          $
-                          {(totalSales || 0).toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </Link>
-                      </div>
-                      <p className="text-muted mt-3 mb-0 d-none d-md-block">
-                        <i className="fas fa-info-circle me-2"></i>
-                        Click to view detailed sales report
-                      </p>
-                    </div>
-                    <div className="col-md-4 d-none d-md-flex justify-content-center">
-                      <div className="sales-icon-large">
-                        <i className="fas fa-chart-line"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-glow-effect"></div>
-              </div>
-            </div>
+        {/* ── Quick Actions (desktop) ── */}
+        <div className="module-card d-lg-block d-none">
+          <div className="module-header">
+            <i className="fas fa-bolt"></i>
+            <span className="module-title">Quick Actions</span>
           </div>
-
-          {/* Stats Cards Grid */}
-          <div className="row g-3 g-md-4">
-            {/* Products */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-boxes"
-                value={products.length}
-                label="Total Products"
-                link="/admin/products"
-                color="primary"
-              />
-            </div>
-
-            {/* Orders */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-shopping-bag"
-                value={ordersCount}
-                label="Total Orders"
-                link="/admin/orders"
-                color="success"
-              />
-            </div>
-
-            {/* Users */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-users"
-                value={usersCount}
-                label="Total Users"
-                link="/admin/users"
-                color="info"
-              />
-            </div>
-
-            {/* Out of Stock */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-exclamation-triangle"
-                value={outOfStock}
-                label="Out of Stock"
-                link="/admin/products"
-                color="warning"
-                noLink
-              />
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="row mt-4 d-none d-lg-flex">
-            <div className="col-12">
-              <div className="quick-actions-card">
-                <div className="card-body p-4">
-                  <h5 className="mb-4 gold-gradient-text fw-bold">
-                    <i className="fas fa-bolt me-2"></i>
-                    Quick Actions
-                  </h5>
-                  <div className="row g-3">
-                    <div className="col-md-3">
-                      <Link
-                        to="/admin/products/create"
-                        className="quick-action-btn"
-                      >
-                        <i className="fas fa-plus-circle mb-2"></i>
-                        <span>Add Product</span>
-                      </Link>
-                    </div>
-                    <div className="col-md-3">
-                      <Link to="/admin/orders" className="quick-action-btn">
-                        <i className="fas fa-list-alt mb-2"></i>
-                        <span>View Orders</span>
-                      </Link>
-                    </div>
-                    <div className="col-md-3">
-                      <Link to="/admin/users" className="quick-action-btn">
-                        <i className="fas fa-user-plus mb-2"></i>
-                        <span>Manage Users</span>
-                      </Link>
-                    </div>
-                    <div className="col-md-3">
-                      <Link to="/admin/categories" className="quick-action-btn">
-                        <i className="fas fa-tags mb-2"></i>
-                        <span>Categories</span>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div className="module-body">
+            <div className="actions-grid">
+              <Link to="/admin/products/create" className="action-btn">
+                <i className="fas fa-plus-circle"></i>Add Product
+              </Link>
+              <Link to="/admin/orders" className="action-btn">
+                <i className="fas fa-list-alt"></i>View Orders
+              </Link>
+              <Link to="/admin/users" className="action-btn">
+                <i className="fas fa-user-plus"></i>Manage Users
+              </Link>
+              <Link to="/admin/categories" className="action-btn">
+                <i className="fas fa-tags"></i>Categories
+              </Link>
             </div>
           </div>
         </div>
       </main>
     </div>
-  ) : (
-    <div className="loading-wrapper">
-      <div className="loading-content">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#d4af37"
-          ariaLabel="three-dots-loading"
-          visible={true}
-        />
-        <p className="loading-text mt-3">Loading dashboard...</p>
-      </div>
-    </div>
   );
 }
 
-// Reusable Stats Card Component
-function StatsCard({ icon, value, label, link, color, noLink }) {
-  const colorClasses = {
-    primary: "stats-card-primary",
-    success: "stats-card-success",
-    info: "stats-card-info",
-    warning: "stats-card-warning",
-  };
-
-  return (
-    <div className={`stats-card ${colorClasses[color] || ""} h-100`}>
-      <div className="card-body p-3 p-md-4">
-        <div className="d-flex justify-content-between align-items-start mb-3">
-          <div className={`stats-icon-wrapper icon-${color}`}>
-            <i className={icon}></i>
-          </div>
-          <div className="stats-badge">
-            <i className="fas fa-arrow-up me-1"></i>
-          </div>
-        </div>
-        <div className="stats-value gold-gradient-text mb-2">{value}</div>
-        <div className="stats-label mb-3">{label}</div>
-        {!noLink && (
-          <Link to={link} className="stats-link">
-            View Details
-            <i className="fas fa-arrow-right ms-2"></i>
-          </Link>
-        )}
-        {noLink && (
-          <div className="stats-link disabled">
-            <i className="fas fa-info-circle me-2"></i>
-            Check inventory
-          </div>
-        )}
+function StatCell({ icon, value, label, link, dot, noLink }) {
+  const inner = (
+    <>
+      <div className="stat-icon-row">
+        <div className="stat-icon"><i className={icon}></i></div>
+        <div className={`stat-dot ${dot || ""}`}></div>
       </div>
-      <div className="card-shine-effect"></div>
-    </div>
+      <div className="stat-value">{value}</div>
+      <div className="stat-label">{label}</div>
+      {!noLink && (
+        <span className="stat-link">View <i className="fas fa-arrow-right"></i></span>
+      )}
+    </>
+  );
+
+  return noLink ? (
+    <div className="stat-cell">{inner}</div>
+  ) : (
+    <Link to={link} className="stat-cell" style={{ textDecoration: "none" }}>{inner}</Link>
   );
 }

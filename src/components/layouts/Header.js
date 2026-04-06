@@ -24,6 +24,13 @@ function Header() {
     dispatch(logout);
   };
 
+  const isAdmin = window.location.pathname.startsWith('/admin');
+
+  if (isAdmin) {
+    return null;
+  }
+
+
   return (
     <Fragment>
       <nav className="navbar navbar-compact">

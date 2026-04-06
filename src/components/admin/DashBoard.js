@@ -1,301 +1,227 @@
-import { useDispatch, useSelector } from "react-redux";
-import SideBar from "./SideBar";
-import { useEffect, useState } from "react";
-import { getAdminProducts } from "../../actions/productActions";
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { ThreeDots } from "react-loader-spinner";
-import "./Dashboard.css";
+import { toast } from "react-toastify";
 
-export default function Dashboard() {
-  const { products = [] } = useSelector((state) => state.productsState);
-  const dispatch = useDispatch();
-  const [ordersCount, setOrdersCount] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
-  const [totalSales, setTotalSales] = useState(0);
-  const [boolean, setBoolean] = useState(false);
+const BASE_URL = "https://saliheenperfumes-zd2i.onrender.com/api/v1";
 
-  let outOfStock = 0;
-  if (products.length > 0) {
-    products.forEach((product) => {
-      if (product.stock === 0) {
-        outOfStock += 1;
-      }
-    });
-  }
+const CouponTable = forwardRef(function CouponTable(props, ref) {
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    dispatch(getAdminProducts);
-  }, [dispatch]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [ordersRes, usersRes, salesRes] = await Promise.all([
-          axios.get(
-            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/getAllOrdersCount",
-            { withCredentials: true }
-          ),
-          axios.get(
-            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/GetCountOfUsers",
-            { withCredentials: true }
-          ),
-          axios.get(
-            "https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/salesReport?filterBy=yearly",
-            { withCredentials: true }
-          ),
-        ]);
-
-        setOrdersCount(ordersRes.data.orderCount);
-        setUsersCount(usersRes.data.userCount);
-        setTotalSales(salesRes.data.totalAmount);
-        setBoolean(true);
-      } catch (err) {
-        console.error("Dashboard data fetch failed:", err);
-        setBoolean(true);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return boolean ? (
-    <div className="dashboard-wrapper">
-      <SideBar />
-
-      <main className="dashboard-content">
-        <div className="container-fluid px-3 px-md-4 py-4">
-          {/* Header Section */}
-          <div className="row mb-4">
-            <div className="col-12">
-              <div className="dashboard-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                <div className="mb-3 mb-md-0">
-                  <h1 className="dashboard-title gold-gradient-text mb-2">
-                    <i className="fas fa-chart-line me-2"></i>
-                    Dashboard Overview
-                  </h1>
-                  <p className="text-muted mb-0 d-none d-md-block">
-                    Welcome back! Here's what's happening with your store today.
-                  </p>
-                </div>
-                <div className="dashboard-date-badge">
-                  <div className="d-flex flex-column align-items-end">
-                    <span className="date-value">
-                      <i className="fas fa-calendar-alt me-2"></i>
-                      {new Date().toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <span className="time-value">
-                      <i className="fas fa-clock me-2"></i>
-                      {new Date().toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Total Sales - Featured Card */}
-          <div className="row mb-4">
-            <div className="col-12">
-              <div className="featured-card gold-card position-relative overflow-hidden">
-                <div className="card-body p-4 p-md-5">
-                  <div className="row align-items-center">
-                    <div className="col-md-8">
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="featured-icon-wrapper me-3">
-                          <i className="fas fa-dollar-sign"></i>
-                        </div>
-                        <div>
-                          <h5 className="card-subtitle text-gold-muted mb-1">
-                            Total Revenue
-                          </h5>
-                          <h2 className="card-title gold-gradient-text mb-0 fw-bold">
-                            Yearly Sales Report
-                          </h2>
-                        </div>
-                      </div>
-                      <div className="featured-amount-wrapper">
-                        <Link
-                          to="/admin/salesReport"
-                          className="featured-amount text-decoration-none d-inline-block"
-                        >
-                          $
-                          {(totalSales || 0).toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </Link>
-                      </div>
-                      <p className="text-muted mt-3 mb-0 d-none d-md-block">
-                        <i className="fas fa-info-circle me-2"></i>
-                        Click to view detailed sales report
-                      </p>
-                    </div>
-                    <div className="col-md-4 d-none d-md-flex justify-content-center">
-                      <div className="sales-icon-large">
-                        <i className="fas fa-chart-line"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-glow-effect"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Cards Grid */}
-          <div className="row g-3 g-md-4">
-            {/* Products */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-boxes"
-                value={products.length}
-                label="Total Products"
-                link="/admin/products"
-                color="primary"
-              />
-            </div>
-
-            {/* Orders */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-shopping-bag"
-                value={ordersCount}
-                label="Total Orders"
-                link="/admin/orders"
-                color="success"
-              />
-            </div>
-
-            {/* Users */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-users"
-                value={usersCount}
-                label="Total Users"
-                link="/admin/users"
-                color="info"
-              />
-            </div>
-
-            {/* Out of Stock */}
-            <div className="col-6 col-lg-3">
-              <StatsCard
-                icon="fas fa-exclamation-triangle"
-                value={outOfStock}
-                label="Out of Stock"
-                link="/admin/products"
-                color="warning"
-                noLink
-              />
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="row mt-4 d-none d-lg-flex">
-            <div className="col-12">
-              <div className="quick-actions-card">
-                <div className="card-body p-4">
-                  <h5 className="mb-4 gold-gradient-text fw-bold">
-                    <i className="fas fa-bolt me-2"></i>
-                    Quick Actions
-                  </h5>
-                  <div className="row g-3">
-                    <div className="col-md-3">
-                      <Link
-                        to="/admin/products/create"
-                        className="quick-action-btn"
-                      >
-                        <i className="fas fa-plus-circle mb-2"></i>
-                        <span>Add Product</span>
-                      </Link>
-                    </div>
-                    <div className="col-md-3">
-                      <Link to="/admin/orders" className="quick-action-btn">
-                        <i className="fas fa-list-alt mb-2"></i>
-                        <span>View Orders</span>
-                      </Link>
-                    </div>
-                    <div className="col-md-3">
-                      <Link to="/admin/users" className="quick-action-btn">
-                        <i className="fas fa-user-plus mb-2"></i>
-                        <span>Manage Users</span>
-                      </Link>
-                    </div>
-                    <div className="col-md-3">
-                      <Link to="/admin/categories" className="quick-action-btn">
-                        <i className="fas fa-tags mb-2"></i>
-                        <span>Categories</span>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  ) : (
-    <div className="loading-wrapper">
-      <div className="loading-content">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#d4af37"
-          ariaLabel="three-dots-loading"
-          visible={true}
-        />
-        <p className="loading-text mt-3">Loading dashboard...</p>
-      </div>
-    </div>
-  );
-}
-
-// Reusable Stats Card Component
-function StatsCard({ icon, value, label, link, color, noLink }) {
-  const colorClasses = {
-    primary: "stats-card-primary",
-    success: "stats-card-success",
-    info: "stats-card-info",
-    warning: "stats-card-warning",
+  const fetchCoupons = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`${BASE_URL}/admin/coupons`, {
+        withCredentials: true,
+      });
+      setCoupons(data.coupons || []);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch coupons.");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Expose refresh method to parent via ref
+  useImperativeHandle(ref, () => ({ refresh: fetchCoupons }));
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
+  const handleDelete = async (couponId) => {
+    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+    try {
+      await axios.delete(`${BASE_URL}/admin/coupon/${couponId}`, {
+        withCredentials: true,
+      });
+      toast.success("Coupon deleted successfully.");
+      setCoupons((prev) => prev.filter((c) => c._id !== couponId));
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete coupon.");
+    }
+  };
+
+  const isExpired = (date) => new Date(date) < new Date();
+
   return (
-    <div className={`stats-card ${colorClasses[color] || ""} h-100`}>
-      <div className="card-body p-3 p-md-4">
-        <div className="d-flex justify-content-between align-items-start mb-3">
-          <div className={`stats-icon-wrapper icon-${color}`}>
-            <i className={icon}></i>
-          </div>
-          <div className="stats-badge">
-            <i className="fas fa-arrow-up me-1"></i>
-          </div>
+    <div
+      style={{
+        background: "rgba(255,255,255,0.05)",
+        border: "1px solid rgba(212,175,55,0.3)",
+        borderRadius: "12px",
+        padding: "1.5rem",
+        backdropFilter: "blur(10px)",
+      }}
+    >
+      <h5
+        style={{
+          color: "#d4af37",
+          fontWeight: "bold",
+          marginBottom: "1.2rem",
+        }}
+      >
+        <i className="fas fa-list me-2"></i>
+        All Coupons
+      </h5>
+
+      {loading ? (
+        <div className="text-center py-4">
+          <div
+            className="spinner-border"
+            style={{ color: "#d4af37" }}
+            role="status"
+          ></div>
+          <p style={{ color: "#d4af37", marginTop: "0.5rem" }}>
+            Loading coupons...
+          </p>
         </div>
-        <div className="stats-value gold-gradient-text mb-2">{value}</div>
-        <div className="stats-label mb-3">{label}</div>
-        {!noLink && (
-          <Link to={link} className="stats-link">
-            View Details
-            <i className="fas fa-arrow-right ms-2"></i>
-          </Link>
-        )}
-        {noLink && (
-          <div className="stats-link disabled">
-            <i className="fas fa-info-circle me-2"></i>
-            Check inventory
-          </div>
-        )}
-      </div>
-      <div className="card-shine-effect"></div>
+      ) : coupons.length === 0 ? (
+        <p
+          style={{
+            color: "rgba(255,255,255,0.5)",
+            textAlign: "center",
+            padding: "2rem",
+          }}
+        >
+          No coupons created yet.
+        </p>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr
+                style={{
+                  borderBottom: "1px solid rgba(212,175,55,0.4)",
+                }}
+              >
+                {["Code", "Discount", "Expiry Date", "Status", "Action"].map(
+                  (h) => (
+                    <th
+                      key={h}
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#d4af37",
+                        fontWeight: "600",
+                        textAlign: "left",
+                        fontSize: "0.85rem",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                      }}
+                    >
+                      {h}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {coupons.map((coupon) => {
+                const expired = isExpired(coupon.expiryDate);
+                return (
+                  <tr
+                    key={coupon._id}
+                    style={{
+                      borderBottom: "1px solid rgba(255,255,255,0.06)",
+                      transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) =>
+                    (e.currentTarget.style.background =
+                      "rgba(212,175,55,0.05)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "transparent")
+                    }
+                  >
+                    <td
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontFamily: "monospace",
+                        letterSpacing: "1px",
+                      }}
+                    >
+                      {coupon.code}
+                    </td>
+                    <td
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#f5e27a",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {coupon.discount}%
+                    </td>
+                    <td
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: expired
+                          ? "rgba(255,100,100,0.9)"
+                          : "rgba(255,255,255,0.7)",
+                      }}
+                    >
+                      {new Date(coupon.expiryDate).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td style={{ padding: "0.75rem 1rem" }}>
+                      <span
+                        style={{
+                          background: expired
+                            ? "rgba(255,59,59,0.2)"
+                            : "rgba(34,197,94,0.2)",
+                          color: expired ? "#ff6b6b" : "#4ade80",
+                          border: `1px solid ${expired ? "#ff6b6b" : "#4ade80"}`,
+                          borderRadius: "20px",
+                          padding: "2px 10px",
+                          fontSize: "0.78rem",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {expired ? "Expired" : "Active"}
+                      </span>
+                    </td>
+                    <td style={{ padding: "0.75rem 1rem" }}>
+                      <button
+                        onClick={() => handleDelete(coupon._id)}
+                        style={{
+                          background: "rgba(255,59,59,0.15)",
+                          border: "1px solid rgba(255,59,59,0.5)",
+                          color: "#ff6b6b",
+                          borderRadius: "6px",
+                          padding: "4px 12px",
+                          cursor: "pointer",
+                          fontSize: "0.82rem",
+                          fontWeight: "600",
+                          transition: "all 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = "rgba(255,59,59,0.3)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = "rgba(255,59,59,0.15)";
+                        }}
+                      >
+                        <i className="fas fa-trash-alt me-1"></i> Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
-}
+});
+
+export default CouponTable;

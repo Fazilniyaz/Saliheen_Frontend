@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteUser, getUsers } from "../../actions/userActions";
 import { clearError, clearUserDeleted } from "../../slices/userSlice";
-import Loader from "../layouts/Loader";
+import AdminLoader from "./AdminLoader";
 import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
 import Sidebar from "./SideBar";
@@ -99,7 +99,7 @@ export default function UserList() {
         {/* Table */}
         <div className="table-card">
           {loading ? (
-            <Loader />
+            <AdminLoader />
           ) : (
             <MDBDataTable
               data={tableData}

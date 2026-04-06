@@ -5,6 +5,7 @@ import { getAdminProducts } from "../../actions/productActions";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
+import AdminLoader from "./AdminLoader";
 import "./Dashboard.css";
 
 const API = "https://saliheenperfumes-zd2i.onrender.com/api/v1";
@@ -31,7 +32,7 @@ export default function Dashboard() {
         const [ordersRes, usersRes, salesRes, couponsRes] = await Promise.all([
           axios.get(`${API}/admin/getAllOrdersCount`, { withCredentials: true, signal }),
           axios.get(`${API}/admin/GetCountOfUsers`, { withCredentials: true, signal }),
-          axios.get(`${API}/admin/salesReport?filterBy=yearly`, { withCredentials: true, signal }),
+          axios.get(`${API}/admin/orders`, { withCredentials: true, signal }),
           axios.get(`${API}/admin/coupons`, { withCredentials: true, signal }),
         ]);
         setStats({
@@ -57,12 +58,7 @@ export default function Dashboard() {
   const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 
   if (!ready) {
-    return (
-      <div className="loading-wrapper">
-        <ThreeDots height="48" width="48" radius="6" color="#ffffff" ariaLabel="loading" visible />
-        <p className="loading-text">Loading dashboard…</p>
-      </div>
-    );
+    return <AdminLoader />;
   }
 
   return (
@@ -90,7 +86,7 @@ export default function Dashboard() {
           <div>
             <div className="revenue-label">
               <i className="fas fa-dollar-sign" style={{ marginRight: 6 }}></i>
-              Yearly Sales Report
+              Total Sales (All Orders)
             </div>
             <Link to="/admin/salesReport" className="revenue-amount">
               ${stats.sales.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

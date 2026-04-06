@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { MDBDataTable } from "mdbreact";
 import Sidebar from "./SideBar";
+import AdminLoader from "./AdminLoader";
+import "./Dashboard.css";
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newCategory, setNewCategory] = useState("");
   const [editingCategory, setEditingCategory] = useState(null);
   const [editCategoryName, setEditCategoryName] = useState("");
@@ -17,14 +21,17 @@ export default function Categories() {
   }, []);
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get(
         "https://saliheenperfumes-zd2i.onrender.com/api/v1/user/category",
         { withCredentials: true }
       );
-      setCategories(data.categories);
+      setCategories(data.categories || []);
     } catch (error) {
       toast.error("Failed to fetch categories");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,7 +70,8 @@ export default function Categories() {
     }
   };
 
-  const toggleCategoryStatus = async (id, isActive) => {
+  const toggleCategoryStatus = async (e, id, isActive) => {
+    e.currentTarget.disabled = true;
     try {
       const endpoint = isActive
         ? `https://saliheenperfumes-zd2i.onrender.com/api/v1/admin/category/disable/${id}`
@@ -77,287 +85,188 @@ export default function Categories() {
       fetchCategories();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update status");
+      e.currentTarget.disabled = false;
     }
   };
 
+  const tableData = {
+    columns: [
+      { label: "No.", field: "no", sort: "asc" },
+      { label: "Name", field: "name", sort: "asc" },
+      { label: "Status", field: "status", sort: "asc" },
+      { label: "Actions", field: "actions", sort: "disabled" },
+    ],
+    rows: categories.map((category, index) => ({
+      no: index + 1,
+      name:
+        editingCategory?._id === category._id ? (
+          <input
+            type="text"
+            className="coupon-input"
+            style={{ padding: "6px 10px", width: "100%", maxWidth: "300px" }}
+            value={editCategoryName}
+            onChange={(e) => setEditCategoryName(e.target.value)}
+            autoFocus
+          />
+        ) : (
+          category.name
+        ),
+      status: (
+        <span className={`status-pill ${category.isActive ? "active" : "disabled"}`}>
+          {category.isActive ? "Active" : "Inactive"}
+        </span>
+      ),
+      actions: (
+        <Fragment>
+          {editingCategory?._id === category._id ? (
+            <button className="tbl-btn tbl-btn-enable" onClick={saveEditCategory}>
+              <i className="fa fa-save"></i> Save
+            </button>
+          ) : (
+            <button
+              className="tbl-btn tbl-btn-edit text-warning"
+              onClick={() => {
+                setEditingCategory(category);
+                setEditCategoryName(category.name);
+              }}
+            >
+              <i className="fa fa-pencil"></i> Edit
+            </button>
+          )}
+
+          <button
+            className={`tbl-btn ${category.isActive ? "tbl-btn-disable" : "tbl-btn-enable"}`}
+            onClick={(e) => toggleCategoryStatus(e, category._id, category.isActive)}
+          >
+            <i className={`fa ${category.isActive ? "fa-ban" : "fa-check"}`}></i>{" "}
+            {category.isActive ? "Disable" : "Enable"}
+          </button>
+        </Fragment>
+      ),
+    })),
+  };
+
   return (
-    <div className="categories-wrapper">
-      <div className="categories-container">
-        {/* Sidebar */}
-        <Sidebar />
+    <div className="admin-page-wrapper">
+      <Sidebar />
+      <div className="admin-page-content">
 
-        {/* Main Content */}
-        <main className="categories-main-content">
-          <div className="categories-content-wrapper">
-            <h1 className="categories-heading text-center mb-4">
-              Manage Categories
+        {/* Page Header */}
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">
+              <i className="fa fa-tags"></i>
+              Categories
             </h1>
+            <p className="page-subtitle">Manage product categories</p>
+          </div>
+        </div>
 
-            {/* Create New Category */}
-            <div className="mb-4">
-              <label htmlFor="newCategory" className="form-label">
-                New Category:
-              </label>
-              <div className="d-flex">
-                <input
-                  type="text"
-                  id="newCategory"
-                  className="form-control me-2"
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                  placeholder="Enter category name"
-                />
-                <button className="btn btn-primary" onClick={createCategory}>
-                  Add
-                </button>
-              </div>
+        {/* Create Category Card */}
+        <div className="table-card" style={{ padding: "24px 28px" }}>
+          <div className="module-header" style={{ padding: "0 0 18px 0", marginBottom: "20px" }}>
+            <i className="fas fa-plus-circle"></i>
+            <span className="module-title">Create New Category</span>
+          </div>
+
+          <div className="coupon-form-grid" style={{ gridTemplateColumns: "1fr auto" }}>
+            <div className="coupon-field">
+              <label className="coupon-label">Category Name</label>
+              <input
+                type="text"
+                className="coupon-input"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                placeholder="e.g. Perfumes"
+              />
             </div>
-
-            {/* Categories Table */}
-            <div className="categories-table-card">
-              <div className="table-responsive">
-                <table className="table table-striped table-hover">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Name</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {categories.length === 0 ? (
-                      <tr>
-                        <td colSpan="4" className="text-center py-4 text-muted">
-                          No categories found.
-                        </td>
-                      </tr>
-                    ) : (
-                      categories.map((category, index) => (
-                        <tr key={category._id}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {editingCategory?._id === category._id ? (
-                              <input
-                                type="text"
-                                className="form-control form-control-sm"
-                                value={editCategoryName}
-                                onChange={(e) =>
-                                  setEditCategoryName(e.target.value)
-                                }
-                                autoFocus
-                              />
-                            ) : (
-                              category.name
-                            )}
-                          </td>
-                          <td>
-                            <span
-                              className={`badge ${category.isActive
-                                ? "bg-success"
-                                : "bg-warning text-dark"
-                                }`}
-                            >
-                              {category.isActive ? "Active" : "Inactive"}
-                            </span>
-                          </td>
-                          <td>
-                            {editingCategory?._id === category._id ? (
-                              <button
-                                className="btn btn-success btn-sm"
-                                onClick={saveEditCategory}
-                              >
-                                Save
-                              </button>
-                            ) : (
-                              <button
-                                className="btn btn-warning btn-sm me-2"
-                                onClick={() => {
-                                  setEditingCategory(category);
-                                  setEditCategoryName(category.name);
-                                }}
-                              >
-                                Edit
-                              </button>
-                            )}
-                            <button
-                              className={`btn ${category.isActive ? "btn-danger" : "btn-success"
-                                } btn-sm`}
-                              onClick={() =>
-                                toggleCategoryStatus(
-                                  category._id,
-                                  category.isActive
-                                )
-                              }
-                            >
-                              {category.isActive ? "Disable" : "Enable"}
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+            <div className="coupon-field">
+              <label className="coupon-label">&nbsp;</label>
+              <button
+                className="btn-primary-action"
+                onClick={createCategory}
+              >
+                <i className="fa fa-plus"></i> Add
+              </button>
             </div>
           </div>
-        </main>
+        </div>
+
+        {/* Categories Table */}
+        <div className="table-card">
+          <div className="module-header" style={{ padding: "18px 24px" }}>
+            <i className="fas fa-list"></i>
+            <span className="module-title">All Categories</span>
+          </div>
+
+          <div className="table-responsive">
+            {loading ? (
+              <AdminLoader />
+            ) : categories.length === 0 ? (
+              <p className="text-center text-muted py-4">No categories found.</p>
+            ) : (
+              <MDBDataTable
+                data={tableData}
+                bordered={false}
+                striped={false}
+                hover
+                className="admin-table"
+                responsive
+                entries={10}
+                entriesOptions={[5, 10, 20, 50]}
+                noBottomColumns
+              />
+            )}
+          </div>
+        </div>
+
       </div>
 
-      <style jsx>{`
-        .categories-wrapper {
-          background-color: #000;
-          min-height: 100vh;
-          color: white;
+      {/* Reuse some form styles from the coupon page */}
+      <style>{`
+        .coupon-form-grid {
+          display: grid;
+          gap: 16px;
+          align-items: end;
         }
 
-        .categories-container {
+        @media (max-width: 600px) {
+          .coupon-form-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        .coupon-field {
           display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .coupon-label {
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--gray-3);
+          font-family: var(--font-mono);
+        }
+
+        .coupon-input {
+          background: var(--black-3);
+          border: 1px solid var(--gray-1);
+          color: var(--white);
+          border-radius: var(--radius-sm);
+          padding: 10px 14px;
+          font-size: 0.9rem;
+          font-family: var(--font-body);
+          transition: var(--transition);
+          outline: none;
           width: 100%;
         }
 
-        .categories-main-content {
-          flex: 1;
-          padding-left: 0;
-          transition: padding-left 0.3s ease;
-        }
-
-        @media (min-width: 768px) {
-          .categories-main-content {
-            padding-left: 280px;
-          }
-        }
-
-        .categories-content-wrapper {
-          padding: 1.5rem;
-        }
-
-        .categories-heading {
-          background-image: repeating-linear-gradient(
-            to right,
-            #a2682a 0%,
-            #be8c3c 8%,
-            #be8c3c 18%,
-            #d3b15f 27%,
-            #faf0a0 35%,
-            #ffffc2 40%,
-            #faf0a0 50%,
-            #d3b15f 58%,
-            #be8c3c 67%,
-            #b17b32 77%,
-            #bb8332 83%,
-            #d4a245 88%,
-            #e1b453 93%,
-            #a4692a 100%
-          );
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          font-size: 2rem;
-          font-weight: bold;
-          font-family: "Yantramanav", sans-serif;
-          animation: MoveBackgroundPosition 6s ease-in-out infinite;
-          margin-bottom: 1.5rem;
-        }
-
-        .categories-table-card {
-          background: #111;
-          border-radius: 10px;
-          padding: 1.2rem;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .form-control {
-          background-color: #222;
-          color: white;
-          border: 1px solid #be8c3c;
-        }
-
-        .form-control:focus {
-          background-color: #222;
-          color: white;
-          border-color: #d4a245;
-          box-shadow: 0 0 0 0.2rem rgba(212, 162, 69, 0.25);
-        }
-
-        .btn-primary {
-          background-color: #be8c3c;
-          border-color: #a2682a;
-        }
-
-        .btn-primary:hover {
-          background-color: #d4a245;
-          border-color: #be8c3c;
-        }
-
-        .btn-warning {
-          background-color: #e4b644;
-          border-color: #c7982e;
-          color: black;
-        }
-
-        .btn-warning:hover {
-          background-color: #ffd863;
-          color: black;
-        }
-
-        .btn-danger {
-          background-color: #b93131;
-          border-color: #9b1c1c;
-        }
-
-        .btn-success {
-          background-color: #4caf50;
-          border-color: #388e3c;
-        }
-
-        .table {
-          color: white;
-        }
-
-        .table th,
-        .table td {
-          border-color: #444 !important;
-          vertical-align: middle;
-        }
-
-        .table-hover tbody tr:hover {
-          background-color: rgba(212, 175, 55, 0.07) !important;
-        }
-
-        /* Responsive */
-        @media (max-width: 767.98px) {
-          .categories-content-wrapper {
-            padding: 1rem;
-          }
-
-          .categories-heading {
-            font-size: 1.5rem;
-          }
-
-          .form-control,
-          .btn {
-            font-size: 0.875rem;
-          }
-
-          .table td,
-          .table th {
-            padding: 0.5rem;
-          }
-        }
-
-        @media (max-width: 575.98px) {
-          .d-flex > *:not(:last-child) {
-            margin-right: 0.25rem !important;
-          }
-
-          .me-2 {
-            margin-right: 0.25rem !important;
-          }
-
-          .btn-sm {
-            padding: 0.2rem 0.4rem !important;
-            font-size: 0.75rem !important;
-          }
+        .coupon-input:focus {
+          border-color: var(--gray-3);
+          background: var(--black-4);
         }
       `}</style>
     </div>

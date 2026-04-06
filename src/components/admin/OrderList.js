@@ -2,7 +2,7 @@ import { useEffect, Fragment, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import Loader from "../../components/layouts/Loader";
+import AdminLoader from "./AdminLoader";
 import { MDBDataTable } from "mdbreact";
 import Sidebar from "./SideBar";
 import {
@@ -262,7 +262,7 @@ function OrderDetailPopup({ orderId, currentUserId, onClose, onOrderUpdated }) {
                 <div className="pod-strip-item">
                   <span className="pod-strip-label">Payment Status</span>
                   <span className={`pod-pay-badge ${paymentStatus === "PAID" ? "paid" :
-                      paymentStatus === "NOT PAID YET" ? "unpaid" : "refunded"
+                    paymentStatus === "NOT PAID YET" ? "unpaid" : "refunded"
                     }`}>
                     {paymentStatus}
                   </span>
@@ -922,7 +922,7 @@ export default function OrderList() {
         {/* ── Table ── */}
         <div className="table-card">
           {loading ? (
-            <Loader />
+            <AdminLoader />
           ) : (
             <MDBDataTable
               data={tableData}

@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import CouponTable from "./CouponTable";
+import Sidebar from "./SideBar";
+import "./Dashboard.css";
 
 const BASE_URL = "https://saliheenperfumes-zd2i.onrender.com/api/v1";
 
@@ -29,7 +31,6 @@ export default function CouponForm() {
       );
       toast.success(data.message || "Coupon created successfully!");
       setCouponData({ code: "", discount: "", expiryDate: "" });
-      // Trigger table refresh
       if (tableRef.current?.refresh) tableRef.current.refresh();
     } catch (error) {
       toast.error(
@@ -41,151 +42,174 @@ export default function CouponForm() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #1a1200 0%, #2d1f00 50%, #1a1200 100%)",
-        padding: "2rem 1rem",
-      }}
-    >
-      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-        <h2
-          style={{
-            textAlign: "center",
-            marginBottom: "1.5rem",
-            background: "linear-gradient(135deg, #d4af37, #f5e27a, #d4af37)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontWeight: "bold",
-            fontSize: "1.8rem",
-          }}
-        >
-          <i className="fas fa-ticket-alt me-2"></i>
-          Coupons &amp; Offers
-        </h2>
+    <div className="admin-page-wrapper">
+      <Sidebar />
+      <div className="admin-page-content">
 
-        {/* Create Coupon Form */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(212,175,55,0.3)",
-            borderRadius: "12px",
-            padding: "1.5rem",
-            marginBottom: "2rem",
-            backdropFilter: "blur(10px)",
-          }}
-        >
-          <h5
-            style={{
-              color: "#d4af37",
-              fontWeight: "bold",
-              marginBottom: "1.2rem",
-            }}
-          >
-            <i className="fas fa-plus-circle me-2"></i>
-            Create New Coupon
-          </h5>
+        {/* Page Header */}
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">
+              <i className="fas fa-ticket-alt"></i>
+              Coupons &amp; Offers
+            </h1>
+            <p className="page-subtitle">Manage discount coupons and promotional offers</p>
+          </div>
+        </div>
+
+        {/* Create Coupon Card */}
+        <div className="table-card" style={{ padding: "24px 28px" }}>
+          <div className="module-header" style={{ padding: "0 0 18px 0", marginBottom: "20px" }}>
+            <i className="fas fa-plus-circle"></i>
+            <span className="module-title">Create New Coupon</span>
+          </div>
+
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label style={{ color: "#d4af37", fontWeight: "600" }}>
-                Coupon Code
-              </label>
-              <input
-                type="text"
-                className="form-control mt-1"
-                name="code"
-                value={couponData.code}
-                onChange={handleChange}
-                placeholder="e.g. SAVE20"
-                required
-                style={{
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(212,175,55,0.4)",
-                  color: "#fff",
-                  borderRadius: "8px",
-                }}
-              />
+            <div className="coupon-form-grid">
+              {/* Coupon Code */}
+              <div className="coupon-field">
+                <label className="coupon-label">Coupon Code</label>
+                <input
+                  type="text"
+                  className="coupon-input"
+                  name="code"
+                  value={couponData.code}
+                  onChange={handleChange}
+                  placeholder="e.g. SAVE020"
+                  required
+                />
+              </div>
+
+              {/* Discount */}
+              <div className="coupon-field">
+                <label className="coupon-label">Discount (%)</label>
+                <input
+                  type="number"
+                  className="coupon-input"
+                  name="discount"
+                  value={couponData.discount}
+                  onChange={handleChange}
+                  placeholder="e.g. 20"
+                  required
+                  min="1"
+                  max="100"
+                />
+              </div>
+
+              {/* Expiry Date */}
+              <div className="coupon-field">
+                <label className="coupon-label">Expiry Date</label>
+                <input
+                  type="date"
+                  className="coupon-input"
+                  name="expiryDate"
+                  value={couponData.expiryDate}
+                  onChange={handleChange}
+                  required
+                  min={new Date().toISOString().split("T")[0]}
+                />
+              </div>
+
+              {/* Submit */}
+              <div className="coupon-field coupon-submit-field">
+                <label className="coupon-label">&nbsp;</label>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary-action"
+                  style={{ width: "100%", justifyContent: "center" }}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-plus "></i>
+                      <span className="text-white">Create Coupon</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="mb-3">
-              <label style={{ color: "#d4af37", fontWeight: "600" }}>
-                Discount (%)
-              </label>
-              <input
-                type="number"
-                className="form-control mt-1"
-                name="discount"
-                value={couponData.discount}
-                onChange={handleChange}
-                placeholder="e.g. 20"
-                required
-                min="1"
-                max="100"
-                style={{
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(212,175,55,0.4)",
-                  color: "#fff",
-                  borderRadius: "8px",
-                }}
-              />
-            </div>
-            <div className="mb-4">
-              <label style={{ color: "#d4af37", fontWeight: "600" }}>
-                Expiry Date
-              </label>
-              <input
-                type="date"
-                className="form-control mt-1"
-                name="expiryDate"
-                value={couponData.expiryDate}
-                onChange={handleChange}
-                required
-                min={new Date().toISOString().split("T")[0]}
-                style={{
-                  background: "rgba(255,255,255,0.08)",
-                  border: "1px solid rgba(212,175,55,0.4)",
-                  color: "#fff",
-                  borderRadius: "8px",
-                  colorScheme: "dark",
-                }}
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                background: "linear-gradient(135deg, #d4af37, #b8960c)",
-                color: "#1a1200",
-                border: "none",
-                borderRadius: "8px",
-                padding: "0.6rem 2rem",
-                fontWeight: "bold",
-                width: "100%",
-                fontSize: "1rem",
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.7 : 1,
-              }}
-            >
-              {loading ? (
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                  ></span>
-                  Creating...
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-plus me-2"></i>
-                  Create Coupon
-                </>
-              )}
-            </button>
           </form>
         </div>
 
         {/* Coupon Table */}
-        <CouponTable ref={tableRef} />
+        <div className="table-card">
+          <div className="module-header" style={{ padding: "18px 24px" }}>
+            <i className="fas fa-list"></i>
+            <span className="module-title">All Coupons</span>
+          </div>
+          <CouponTable ref={tableRef} />
+        </div>
+
       </div>
+
+      <style>{`
+        .coupon-form-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr) auto;
+          gap: 16px;
+          align-items: end;
+        }
+
+        @media (max-width: 900px) {
+          .coupon-form-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+          .coupon-submit-field { grid-column: span 2; }
+        }
+
+        @media (max-width: 550px) {
+          .coupon-form-grid {
+            grid-template-columns: 1fr;
+          }
+          .coupon-submit-field { grid-column: span 1; }
+        }
+
+        .coupon-field {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .coupon-label {
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--gray-3);
+          font-family: var(--font-mono);
+        }
+
+        .coupon-input {
+          background: var(--black-3);
+          border: 1px solid var(--gray-1);
+          color: var(--white);
+          border-radius: var(--radius-sm);
+          padding: 10px 14px;
+          font-size: 0.9rem;
+          font-family: var(--font-body);
+          transition: var(--transition);
+          outline: none;
+          width: 100%;
+        }
+
+        .coupon-input:focus {
+          border-color: var(--gray-3);
+          background: var(--black-4);
+        }
+
+        .coupon-input[type="date"] {
+          color-scheme: dark;
+        }
+
+        .coupon-input::placeholder {
+          color: var(--gray-2);
+        }
+      `}</style>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
-import Loader from "../../components/layouts/Loader";
+import AdminLoader from "./AdminLoader";
 import { MDBDataTable } from "mdbreact";
 import Sidebar from "./SideBar";
 import {
@@ -133,7 +133,7 @@ export default function ProductList() {
         {/* Desktop Table */}
         <div className="table-card d-lg-block d-none">
           {loading ? (
-            <Loader />
+            <AdminLoader />
           ) : (
             <MDBDataTable
               data={tableData}
@@ -152,7 +152,7 @@ export default function ProductList() {
         {/* Mobile Cards */}
         <div className="d-lg-none">
           {loading ? (
-            <Loader />
+            <AdminLoader />
           ) : (
             <div className="mobile-cards-container">
               {products.map((product) => (

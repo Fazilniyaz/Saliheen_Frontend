@@ -308,9 +308,10 @@ export const Home = () => {
     fetchCategories();
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // Removed global loading block to allow fast First Contentful Paint.
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   if (underService) {
     return (
@@ -396,7 +397,8 @@ export const Home = () => {
                   src={image}
                   alt={`Perfume Collection ${index + 1}`}
                   className="carousel-image"
-                  loading={index < 2 ? "eager" : "lazy"}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchpriority={index === 0 ? "high" : "auto"}
                   decoding="async"
                 />
                 <div className="carousel-overlay">
@@ -425,15 +427,19 @@ export const Home = () => {
           <span className="heading-text">Shop By Category</span>
           <div className="heading-underline"></div>
         </h2>
-        <div className="categories-grid">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category._id}
-              category={category}
-              onClick={() => handleCategoryClick(category.name)}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <SmallLoader />
+        ) : (
+          <div className="categories-grid">
+            {categories.map((category) => (
+              <CategoryCard
+                key={category._id}
+                category={category}
+                onClick={() => handleCategoryClick(category.name)}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Our Branches - Flowchart style */}

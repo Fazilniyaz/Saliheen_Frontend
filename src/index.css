@@ -1,4 +1,6 @@
-/* Tailwind directives removed — not processed by CRA react-scripts */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --bg-page: #ffffff;
@@ -55,9 +57,17 @@ h1 {
 }
 
 @keyframes MoveBackgroundPosition {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Scroll Bar */
@@ -156,10 +166,23 @@ nav {
   color: #fff !important;
 }
 
-.stock { color: #c62828; }
-.stock-2 { color: #c62828; font-weight: 300; }
-.stock-3 { color: var(--text-primary); font-weight: 300; }
-.stock-4 { color: #2e7d32; }
+.stock {
+  color: #c62828;
+}
+
+.stock-2 {
+  color: #c62828;
+  font-weight: 300;
+}
+
+.stock-3 {
+  color: var(--text-primary);
+  font-weight: 300;
+}
+
+.stock-4 {
+  color: #2e7d32;
+}
 
 .headings {
   font-size: 1.75rem;
@@ -360,8 +383,13 @@ footer {
   margin-left: 0.3rem;
 }
 
-.redColor { color: #c62828; }
-.greenColor { color: #2e7d32; }
+.redColor {
+  color: #c62828;
+}
+
+.greenColor {
+  color: #2e7d32;
+}
 
 #product_image {
   margin-top: 6rem;
@@ -390,8 +418,13 @@ footer {
 }
 
 @keyframes lds-dual-ring {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .cart-item {
@@ -788,7 +821,7 @@ footer {
   margin-right: 0.3rem;
 }
 
-#sidebar ul li.active > a,
+#sidebar ul li.active>a,
 a[aria-expanded="true"] {
   color: var(--text-primary);
   background: var(--bg-muted);
@@ -909,7 +942,9 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-#root, body, html {
+#root,
+body,
+html {
   height: 100%;
 }
 

@@ -6,7 +6,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-// semantic-ui-css is NOT loaded globally — import it only in admin components that need it
+import "semantic-ui-css/semantic.min.css";
 import { CartProvider } from "./components/cart/cartContext";
 import { ThemeProvider } from "./context";
 

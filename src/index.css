@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind directives removed — not processed by CRA react-scripts */
 
 :root {
   --bg-page: #ffffff;

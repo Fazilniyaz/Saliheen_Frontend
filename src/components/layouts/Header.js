@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Dropdown, Image } from "react-bootstrap";
 import { logout } from "../../actions/userActions";
-import { Icon } from "semantic-ui-react";
+// Icon replaced with inline SVG — no Semantic UI CSS needed in critical path
 import { CartContext } from "../cart/cartContext";
 import GoogleAuthModal from "../user/GoogleAuthModel";
 import { useTheme } from "../../context";
@@ -135,7 +135,9 @@ function Header() {
           {/* Always show cart icon */}
           <span id="cart_count">
             <Link to="/cart" className="cart-icon-link">
-              <Icon name="shopping cart" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" style={{ verticalAlign: "middle" }}>
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM5 13a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+              </svg>
               {localCart.length}
             </Link>
           </span>

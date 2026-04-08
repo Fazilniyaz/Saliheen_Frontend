@@ -223,6 +223,16 @@ export default function OrderDetail() {
             <div className="row d-flex justify-content-between">
               <div className="col-12 col-lg-8 mt-5 order-details">
                 <h1 className="mt-2 stock-3">Order # {orderDetail._id}</h1>
+                {order.createdAt && (
+                  <p className="mb-3" style={{ color: "#666", fontSize: "0.95rem" }}>
+                    <b>Order Date:</b>{" "}
+                    {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                )}
 
                 <h4 className="mb-4 headings">Shipping Info</h4>
                 <p className="mb-4">

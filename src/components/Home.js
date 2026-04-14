@@ -18,12 +18,12 @@ import { useTheme } from "../context/ThemeContext";
 
 // ─── ImageKit URLs ───────────────────────────────────────────────────────────
 const carouselImages = [
-  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0731%20(1).jpg?tr=q-80,f-webp,w-1200",
-  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0727.jpg?tr=q-80,f-webp,w-1200",
-  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0713.jpg?tr=q-80,f-webp,w-1200",
-  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg?tr=q-80,f-webp,w-1200",
-  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg?tr=q-80,f-webp,w-1200",
-  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?tr=q-80,f-webp,w-1200",
+  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0731%20(1).jpg?tr=q-80,f-auto,w-1200",
+  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0727.jpg?tr=q-80,f-auto,w-1200",
+  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0713.jpg?tr=q-80,f-auto,w-1200",
+  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg?tr=q-80,f-auto,w-1200",
+  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg?tr=q-80,f-auto,w-1200",
+  "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?tr=q-80,f-auto,w-1200",
 ];
 
 const carouselSlides = [
@@ -632,6 +632,7 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
           .ph-left-col { display: none; }
           .ph-topbar { padding: 18px 20px; }
           .ph-ornament { display: none; }
+          .ph-overlay-bottom { opacity: 0.72; }
           .ph-arrow-prev { right: 52px; }
           .ph-arrow-next { right: 16px; }
           .ph-cta { padding: 12px 22px; }
@@ -1372,12 +1373,12 @@ export default Home;
 
 // // ImageKit URLs - Optimized carousel images with transformations
 // const carouselImages = [
-//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0731%20(1).jpg?tr=q-80,f-webp,w-1200",
-//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0727.jpg?tr=q-80,f-webp,w-1200",
-//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0713.jpg?tr=q-80,f-webp,w-1200",
-//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg?tr=q-80,f-webp,w-1200",
-//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg?tr=q-80,f-webp,w-1200",
-//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?tr=q-80,f-webp,w-1200",
+//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0731%20(1).jpg?tr=q-80,f-auto,w-1200",
+//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0727.jpg?tr=q-80,f-auto,w-1200",
+//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0713.jpg?tr=q-80,f-auto,w-1200",
+//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg?tr=q-80,f-auto,w-1200",
+//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg?tr=q-80,f-auto,w-1200",
+//   "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?tr=q-80,f-auto,w-1200",
 // ];
 
 // // Unique title and subtitle for each carousel slide

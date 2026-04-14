@@ -33,7 +33,7 @@ const carouselSlides = [
       "Timeless scents, unforgettable moments. Crafted for those who appreciate the finest.",
     tag: "New Collection",
     image:
-      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0731%20(1).jpg?tr=q-80,f-webp,w-600",
+      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0731%20(1).jpg",
   },
   {
     title: "Pure Attars & Oud",
@@ -41,7 +41,7 @@ const carouselSlides = [
       "Traditional oils distilled with care. Long-lasting, natural, and deeply personal.",
     tag: "Heritage",
     image:
-      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0727.jpg?tr=q-80,f-webp,w-600",
+      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0727.jpg",
   },
   {
     title: "Elegance in Every Drop",
@@ -49,7 +49,7 @@ const carouselSlides = [
       "From inspired blends to signature collections—find the scent that speaks to you.",
     tag: "Signature",
     image:
-      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0713.jpg?tr=q-80,f-webp,w-600",
+      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0713.jpg",
   },
   {
     title: "The Art of Perfume",
@@ -57,7 +57,7 @@ const carouselSlides = [
       "Where heritage meets modernity. Premium ingredients, exceptional craftsmanship.",
     tag: "Craftsmanship",
     image:
-      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg?tr=q-80,f-webp,w-600",
+      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0724.jpg",
   },
   {
     title: "Your Scent, Your Story",
@@ -65,7 +65,7 @@ const carouselSlides = [
       "Explore our range of attars, perfumes, and custom fragrances for every occasion.",
     tag: "Personal",
     image:
-      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg?tr=q-80,f-webp,w-600",
+      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0723.jpg",
   },
   {
     title: "Shop Saliheen Perfumes",
@@ -73,7 +73,7 @@ const carouselSlides = [
       "Authentic fragrances delivered to your door. Experience the difference today.",
     tag: "Exclusive",
     image:
-      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg?tr=q-80,f-webp,w-600",
+      "https://ik.imagekit.io/thesolocompilers2025/jpeg_photos/IMG_0716.jpg",
   },
 ];
 
@@ -143,7 +143,9 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
   const goTo = useCallback(
     (idx) => {
       const safeIndex = ((idx % total) + total) % total;
-      setCurrent((prevCurrent) => (prevCurrent === safeIndex ? prevCurrent : safeIndex));
+      setCurrent((prevCurrent) =>
+        prevCurrent === safeIndex ? prevCurrent : safeIndex,
+      );
       setProductImageError(false);
       setProgress(0);
       startRef.current = performance.now();
@@ -866,7 +868,11 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
         style={{ zIndex: 15 }}
       >
         <img
-          src={productImageError ? carouselImages[current] : carouselSlides[current].image}
+          src={
+            productImageError
+              ? carouselImages[current]
+              : carouselSlides[current].image
+          }
           alt={carouselSlides[current].title}
           className="ph-product-image"
           loading="lazy"

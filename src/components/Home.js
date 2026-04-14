@@ -133,10 +133,10 @@ const TRANSITION_DURATION = 1000; // ms crossfade
 
 const PremiumHero = memo(({ onExplore, isDark }) => {
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [productImageError, setProductImageError] = useState(false);
   const startRef = useRef(null);
+  const progressFillRef = useRef(null);
 
   const total = carouselImages.length;
 
@@ -147,7 +147,9 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
         prevCurrent === safeIndex ? prevCurrent : safeIndex,
       );
       setProductImageError(false);
-      setProgress(0);
+      if (progressFillRef.current) {
+        progressFillRef.current.style.width = "0%";
+      }
       startRef.current = performance.now();
     },
     [total],
@@ -171,7 +173,9 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
     const tick = (now) => {
       const elapsed = now - startRef.current;
       const pct = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(pct);
+      if (progressFillRef.current) {
+        progressFillRef.current.style.width = `${pct}%`;
+      }
       if (pct < 100) {
         rafId = requestAnimationFrame(tick);
       } else {
@@ -195,8 +199,6 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
     >
       {/* ── Google Fonts ── */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
-
         /* ── Hero Shell ── */
         .ph-hero {
           position: relative;
@@ -925,7 +927,7 @@ const PremiumHero = memo(({ onExplore, isDark }) => {
 
       {/* ── Progress Bar ── */}
       <div className="ph-progress-track" style={{ zIndex: 30 }}>
-        <div className="ph-progress-fill" style={{ width: `${progress}%` }} />
+        <div ref={progressFillRef} className="ph-progress-fill" style={{ width: "0%" }} />
       </div>
 
       {/* ── Pause indicator ── */}
